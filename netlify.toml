@@ -14,6 +14,10 @@
 # answers "not functional yet", private areas are closed and Supabase is
 # read-only (see middleware.ts and lib/preview.ts). Only the production
 # branch takes orders.
+# This draft repo runs in preview mode everywhere, production included.
+[context.production.environment]
+  NEXT_PUBLIC_PREVIEW_MODE = "true"
+
 [context.branch-deploy.environment]
   NEXT_PUBLIC_PREVIEW_MODE = "true"
 

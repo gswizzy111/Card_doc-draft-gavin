@@ -1,17 +1,28 @@
-# The Card Doc (redesign)
+# The Card Doc (redesign draft)
 
 @AGENTS.md
 
-Redesigned copy of The Card Doc site (source: `gswizzy111/card-restoration`,
-imported unchanged at commit 5019f00). Next.js 16 App Router, Tailwind v4,
-shadcn/ui, Supabase, Stripe, Shippo, Resend. Product facts live in
-`PRODUCT.md`; the visual system lives in `DESIGN.md` and `app/globals.css`.
+**This repo is a sandbox.** It is a copy of `gswizzy111/New-Website-Concept`
+(the live redesign, Netlify site nimble-chebakia-ecb45c,
+theonethatsaveditall.com) for experimenting with a new look. Work on `main`.
+Never connect this repo to the `nimble-chebakia-ecb45c` or `thecarddoc`
+Netlify sites, and never give it live Stripe, Shippo, Resend or Supabase
+service keys: it shares nothing with production and runs in preview mode
+everywhere (no checkout, no accounts, no database writes). Its build needs
+placeholder values for `RESEND_API_KEY`, `STRIPE_SECRET_KEY`,
+`SHIPPO_API_TOKEN`, `NEXT_PUBLIC_SUPABASE_URL`,
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`.
+
+Next.js 16 App Router, Tailwind v4, shadcn/ui, Supabase, Stripe, Shippo,
+Resend. Product facts live in `PRODUCT.md`; the visual system lives in
+`DESIGN.md` and `app/globals.css`. The notes below describe the live site's
+code, which this copy shares.
 
 Rules for this repo:
 
 - **Appearance only.** Do not change logic, data, routes, prices, policies or
   flows. **Never change the owner's wording**, including punctuation.
-- **Production is live.** The Netlify site (nimble-chebakia-ecb45c) gets
+- **The live site** (not this repo: Netlify site nimble-chebakia-ecb45c) gets
   every key from its Netlify environment variables; never put keys in
   `netlify.toml`. It shares the Supabase database and Stripe account with
   the old site (thecarddoc1.com, repo `gswizzy111/card-restoration`).
