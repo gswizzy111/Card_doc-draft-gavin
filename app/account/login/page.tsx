@@ -1,0 +1,205 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { Suspense } from "react";
+import { CheckEmail, type ConfirmSent } from "./check-email";
+
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  // Only paths on this site after signing in: a single leading slash, and no
+  // backslashes or control characters (browsers drop tabs and newlines, so
+  // "/<tab>/evil.example" would otherwise become "//evil.example")
+  const rawNext = searchParams.get("next");
+  const next = rawNext && /^\/(?!\/)/.test(rawNext) && !/[\\\u0000-\u001f\u007f]/.test(rawNext) ? rawNext : "/account";
+  const unconfirmed = searchParams.get("unconfirmed") === "1";
+
+  const [tab, setTab] = useState<"login" | "signup">(searchParams.get("tab") === "signup" ? "signup" : "login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  // The confirm email is on its way (after signing up, or signing in unconfirmed)
+  const [confirm, setConfirm] = useState<ConfirmSent | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    const url = tab === "login"
+      ? "/api/account/auth/login"
+      : "/api/account/auth/signup";
+    const body = tab === "login"
+      ? { email, password }
+      : { email, password, name };
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json().catch(() => ({}));
+    setLoading(false);
+
+    if (data.confirmationSent || data.code === "EMAIL_NOT_CONFIRMED") {
+      setConfirm({
+        email: email.trim(),
+        password,
+        sent: !!data.confirmationSent,
+        alreadySent: !!data.alreadySent,
+        sentFrom: data.sentFrom,
+        subject: data.subject,
+        message: data.error,
+      });
+      return;
+    }
+    if (!res.ok) {
+      setError(data.error ?? "Something went wrong. Please try again.");
+      return;
+    }
+
+    router.push(next);
+    router.refresh();
+  }
+
+  return (
+    <div className="min-h-screen bg-secondary/30 flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <Link href="/" className="font-heading font-black text-2xl text-foreground hover:text-primary transition-colors">
+            The Card Doc
+          </Link>
+          <p className="text-muted-foreground text-sm mt-2">Customer portal</p>
+          {/* The check-email view has its own heading */}
+          {!confirm && <h1 className="sr-only">{tab === "login" ? "Sign in" : "Create an account"}</h1>}
+        </div>
+
+        {unconfirmed && !confirm && (
+          <div role="status" className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            Please confirm your email to open your account. Sign in and we&apos;ll send you a new confirmation link.
+          </div>
+        )}
+
+        {confirm ? (
+          <CheckEmail
+            info={confirm}
+            onConfirmed={() => { router.push(next); router.refresh(); }}
+            onStartOver={() => { setConfirm(null); setTab("signup"); setEmail(""); setPassword(""); setError(""); }}
+            onBack={() => { setConfirm(null); setTab("login"); setPassword(""); setError(""); }}
+          />
+        ) : (
+        <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+          {/* Tabs */}
+          <div className="grid grid-cols-2 border-b border-border">
+            {(["login", "signup"] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                aria-pressed={tab === t}
+                onClick={() => { setTab(t); setError(""); }}
+                className={`py-3.5 text-sm font-bold transition-colors ${
+                  tab === t
+                    ? "text-primary border-b-2 border-primary bg-primary/5"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t === "login" ? "Sign In" : "Create Account"}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+            {tab === "signup" && (
+              <div>
+                <label htmlFor="login-name" className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1.5">Full Name</label>
+                <input
+                  id="login-name"
+                  type="text"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  placeholder="Jane Smith"
+                  className="w-full h-10 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                />
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1.5">Email</label>
+              <input
+                id="login-email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+                className="w-full h-10 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="login-password" className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1.5">Password</label>
+              <input
+                id="login-password"
+                type="password"
+                autoComplete={tab === "signup" ? "new-password" : "current-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={tab === "signup" ? 8 : 1}
+                placeholder={tab === "signup" ? "At least 8 characters" : ""}
+                className="w-full h-10 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            {error && (
+              <div role="alert" className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-11 bg-primary text-primary-foreground font-bold text-sm rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors"
+            >
+              {loading
+                ? "Please wait…"
+                : tab === "login"
+                  ? "Sign In"
+                  : "Create Account"}
+            </button>
+
+            {tab === "login" && (
+              <p className="text-sm text-center">
+                <Link href="/account/forgot-password" className="font-semibold text-primary hover:underline">Forgot your password?</Link>
+              </p>
+            )}
+
+            {tab === "signup" && (
+              <p className="text-xs text-center text-muted-foreground">
+                Use the same email you used when placing your order so your orders appear automatically.
+              </p>
+            )}
+          </form>
+        </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  );
+}

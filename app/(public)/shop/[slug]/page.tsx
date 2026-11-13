@@ -1,0 +1,177 @@
+import { cache } from "react";
+import type { Metadata } from "next";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { JsonLd } from "@/components/seo/json-ld";
+import { ORG_ID, SITE, breadcrumbs, canonical } from "@/lib/seo";
+import { formatCurrency } from "@/lib/utils";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { AddToCartButtonLarge } from "./add-to-cart-button-large";
+import { Info, RefreshCw } from "lucide-react";
+import { isSoldOut } from "@/lib/site-config";
+import { PixelViewContent } from "@/components/pixel-view-content";
+import { getSubscriptionPriceCents } from "@/lib/store-config";
+
+export const dynamic = "force-dynamic";
+
+const getProduct = cache(async (slug: string) => {
+  const admin = createAdminClient();
+  const { data } = await admin.from("products").select("*").eq("slug", slug).eq("active", true).single();
+  return data;
+});
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+  if (!product) return {};
+  const description = typeof product.description === "string" ? product.description.slice(0, 160) : undefined;
+  const image = product.images?.[0];
+  return {
+    title: `${product.name} | The Card Doc`,
+    description,
+    alternates: canonical(`/shop/${slug}`),
+    openGraph: image ? { images: [image] } : undefined,
+  };
+}
+
+function DescriptionBlock({ text }: { text: string }) {
+  // If description contains "includes:" pull out the items after it and render as bullets
+  const match = text.match(/^(.+?includes:)\s*/i);
+  if (match) {
+    const itemsText = text.slice(match[0].length);
+    // Split before each quantity pattern like "10x", "2x", "5×", "1×"
+    const items = itemsText.split(/\s+(?=\d+[x×])/).filter(Boolean);
+    if (items.length > 1) {
+      return (
+        <ul className="flex flex-col gap-2">
+          {items.map((item, i) => (
+            <li key={i} className="flex items-start gap-2.5 text-sm">
+              <span className="mt-[9px] h-1 w-1 rounded-full bg-rx shrink-0" aria-hidden />
+              <span className="text-muted-foreground">{item.trim()}</span>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+  }
+  return <p className="text-muted-foreground leading-relaxed text-sm">{text}</p>;
+}
+
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const [product, subscriptionPriceCents] = await Promise.all([getProduct(slug), getSubscriptionPriceCents()]);
+
+  if (!product) notFound();
+
+  const inStock = !isSoldOut() && (product.inventory_count === null || product.inventory_count === undefined || product.inventory_count > 0);
+  const structured = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description: product.description ?? undefined,
+      image: product.images?.length ? product.images : undefined,
+      sku: String(product.id),
+      category: product.category ?? undefined,
+      brand: { "@type": "Brand", name: "The Card Doc" },
+      offers: {
+        "@type": "Offer",
+        price: (product.price_cents / 100).toFixed(2),
+        priceCurrency: "USD",
+        availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        url: `${SITE}/shop/${product.slug}`,
+        seller: { "@id": ORG_ID },
+      },
+    },
+    breadcrumbs([
+      { name: "Shop Kits", path: "/shop" },
+      { name: product.name, path: `/shop/${product.slug}` },
+    ]),
+  ];
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 md:px-10 py-10 md:py-14">
+      <JsonLd data={structured} />
+      <PixelViewContent contentName={product.name} contentCategory={product.category ?? "Shop"} />
+      <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 block">
+        &larr; Back to Shop
+      </Link>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+        {/* Images */}
+        <div className="flex flex-col gap-3">
+          <div className="aspect-square bg-secondary overflow-hidden rounded-lg border border-rule">
+            {product.images?.[0] ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-secondary" />
+            )}
+          </div>
+          {product.images?.length > 1 && (
+            <div className="flex gap-2">
+              {product.images.slice(1).map((url: string, i: number) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={i} src={url} alt={product.name} className="w-16 h-16 object-cover rounded-md border border-rule" />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="flex flex-col gap-6">
+          <div>
+            <p className="rx-label text-rx mb-2">
+              {product.category}
+            </p>
+            <h1 className="font-heading text-3xl md:text-5xl font-extrabold tracking-[-0.015em] text-ink mb-3">{product.name}</h1>
+
+            <p className="font-heading text-3xl font-bold tracking-[-0.01em] text-ink tabular-nums">{formatCurrency(product.price_cents)}</p>
+          </div>
+
+          {product.description && <DescriptionBlock text={product.description} />}
+
+          {product.inventory_count > 0 && product.inventory_count <= 5 && (
+            <p className="font-mono text-xs text-rx">Only {product.inventory_count} left in stock</p>
+          )}
+
+          <div className="border-t border-border pt-6 flex flex-col gap-4">
+            {isSoldOut() ? (
+              <div className="flex items-center justify-center h-13 rounded-md bg-secondary border border-rule">
+                <span className="font-bold text-muted-foreground tracking-widest uppercase text-sm">Sold Out — Back Soon</span>
+              </div>
+            ) : product.inventory_count === 0 ? (
+              <p className="text-muted-foreground font-medium">Out of stock</p>
+            ) : (
+              <AddToCartButtonLarge
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  price_cents: product.price_cents,
+                  slug: product.slug,
+                  image: product.images?.[0],
+                }}
+                requiresSize={product.name.toLowerCase().includes("glove")}
+              />
+            )}
+
+            {!isSoldOut() && product.name.toLowerCase().includes("kit") && (
+              <Link
+                href="/subscribe"
+                className="w-full flex items-center justify-center gap-2 h-13 font-semibold text-sm tracking-wide border border-ink/70 text-ink hover:border-rx hover:text-rx active:scale-[0.98] transition-all duration-150 rounded-md"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Subscribe — {formatCurrency(subscriptionPriceCents)}/mo · Save every month
+              </Link>
+            )}
+
+            <p className="flex items-start gap-2 text-sm text-ink">
+              <Info className="h-4 w-4 mt-0.5 shrink-0 text-rx" strokeWidth={1.75} />
+              All sales final. Defective or missing items are replaced or refunded.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

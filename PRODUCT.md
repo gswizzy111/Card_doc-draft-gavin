@@ -1,0 +1,159 @@
+# Product
+
+<!-- impeccable:product-schema 1 -->
+
+## Platform
+
+web
+
+## Users
+
+Primary: people who just watched a The Card Doc video on TikTok, Instagram,
+YouTube or Facebook and tap through, usually on a phone, on their first visit.
+They are deciding whether to trust a stranger with a card that matters to them
+(sentimental or valuable), then picking a service and ordering.
+
+Secondary (inferred from the codebase, not confirmed as a priority): returning
+customers tracking orders or managing subscriptions, affiliates and partners
+using their dashboards, and the business owner using the admin area.
+
+## Product Purpose
+
+The Card Doc sells three things for trading cards (Pokémon, sports, Magic,
+Yu-Gi-Oh! and more):
+
+1. **Restoration**: cleaning surfaces, softening corners, reducing scuffs and
+   scratches, in tiers (Bronze, Silver, Gold, Platinum, Diamond, Fast Pass).
+2. **Prep**: preparing cards for submission to graders (PSA, BGS, CGC).
+3. **DIY kits**: the same tools used in the videos, sold in the shop.
+
+Success: a first-time visitor from a video trusts the service enough to place
+an order, and ordering, paying, shipping and tracking all work without help.
+
+## Positioning
+
+Built by collectors, trusted with collections. The Card Doc was started by
+two collectors, Owen and Gavin, with 30+ years of combined collecting
+experience. They began by restoring their own cards, posted the results
+online, and other collectors started asking; it grew into the business. Both
+still work on customer cards. Customers are dealing with the founders, not a
+faceless shop. (Confirmed by the owner, Oct 2026. No founding year,
+surnames, credentials, team size or separate roles have been confirmed: don't
+state any.)
+
+## Operating Context
+
+- All marketing happens on Instagram (@the_card_doc), TikTok, YouTube and
+  Facebook; the site is where that audience converts.
+- Customers ship physical cards in (prepaid label or their own tracked,
+  insured shipping), then track progress online.
+- Order flow: service or tier selection, multi-step order builder (cards,
+  photo upload, customer details, shipping, review, signature), cart with
+  upsell, Stripe checkout.
+
+## Capabilities and Constraints
+
+- Next.js 16 (App Router), Tailwind v4, shadcn/ui, Supabase, Stripe, Shippo,
+  Resend. Deployed via Vercel/Netlify from `gswizzy111/card-restoration`.
+- Functionality is complete and correct. **Redesign changes appearance only**:
+  no changes to logic, data, routes, prices, policies or flows, except the
+  features the owner asks for (see "Owner-requested features" below).
+- **All visible wording stays exactly as it is** (owner's instruction). This
+  includes existing em-dashes and punctuation in copy.
+- Public pages: home, services, tier selection, restoration, prep, prep order,
+  order builder, shop and product pages, cart, upsell, checkout, gift cards,
+  subscriptions, tracking, account, FAQ, how it works, about, terms, privacy.
+- Admin, affiliate, partner and accountant areas exist; they inherit the new
+  theme but their layouts are out of scope.
+
+## Brand Commitments
+
+- Name: The Card Doc.
+- `/public/card-doctor.jpg` is used as a logo image (brand mark), not a
+  portrait to feature.
+
+## Evidence on Hand
+
+- Before/after images: `public/before-after-hero.png`,
+  `public/before-after-garchomp.png`, `public/before-after-mickey-mantle.png`.
+- Customer message screenshots: `public/testimonial-*.{png,jpeg}` plus
+  testimonials loaded from the database (no longer shown on the home,
+  Restorations or Prep pages; the owner asked for the text reviews instead).
+- Customer reviews as text, word for word from the "Client Reviews"
+  Instagram highlight, with the Charizard case study ($400 with an edge lift,
+  back as a PSA 10 worth over $2,500): `lib/reviews.ts`. Never edit a quote
+  without the owner: they trimmed the featured quote to "…you are the best
+  of the best when it comes to card restoration." and asked that every
+  attribution read "Repeat customer" (no individual names).
+- "Cards Restored" is live: cards sent in on website orders (not abandoned or
+  cancelled) plus 600 done outside the website, the owner's figure
+  (`lib/site-stats.ts`). It also counts unfinished cards, cards not yet
+  received and prep cards. The About page uses a narrower live figure instead:
+  cards on paid, finished website orders, labelled "Cards restored and
+  prepped" (`getCardsFinishedStat`). "100% documented" is the owner's claim.
+  The owner removed fixed ratings (the home "4.9★" and the shop's star
+  ratings): show none, and do not add new numbers or claims.
+- Trusted by (`lib/trusted-by.ts`): only people with a confirmed order or
+  conversation (Joey Valence, Boston Scott). Unconfirmed contacts stay out.
+- Facts the owner corrected: cards are insured only when the customer adds
+  insurance (no "all cards are insured" claim); kits never ship free; the
+  owner does not answer email, so the site points people to Instagram DMs.
+  The Privacy Policy keeps its email for data requests.
+
+## Owner-requested features (Oct 2026, new site)
+
+- **Bulk pricing**: 10+ cards 10% off, 20+ cards 15% off the per-card price,
+  every tier except Diamond (`lib/bulk-pricing.ts`). Discounts never combine:
+  the biggest of bulk, creator code and loyalty applies. The Restorations
+  page has an Individual / 10+ / 20+ switch showing the per-card price.
+  Cards added to an order get the percent for the order's new size (cards
+  already paid keep their price); a tier upgrade pays the difference with the
+  order's bulk percent off.
+- **Prep bulk pricing** (new site only; the old site's prep stays full price):
+  the same 10+ / 20+ percents off the per-card prep fee of every card,
+  including cards $1,500 and over (2% of value). Pre-Grade, slab removal, shipping
+  and insurance are never discounted, and tax is charged after the discount.
+  Prep takes no creator, loyalty or gift card codes, so bulk is its only
+  discount. The Prep page has the same Individual / 10+ / 20+ switch.
+- **Restoration and prep shipping** is priced from the Shippo rate from the
+  customer's address to us, looked up again on the server
+  (`lib/inbound-rate.ts`). A prepaid label costs that rate twice (to us and
+  back). Customers who send their cards in their own way still pay it once,
+  for the trip back; the service they paid for is kept in
+  `orders.return_carrier` / `return_service_level` for the return label.
+- **Kit shipping** is priced live for the customer's address and the speed
+  they pick: carrier postage plus $2 handling in the US, $10 abroad
+  (`lib/kit-shipping.ts`); home and nav say "US shipping at cost + $2
+  handling". The rate they pick is bought as the label when they pay (Stripe
+  webhook; the live webhook runs on the old site). If live rates are down, US
+  orders fall back to $5.99 Standard Shipping and the label is bought by hand
+  ($5.99 is only that fallback, not a flat rate).
+- **Kit Club price** comes from the admin setting (`store_config`
+  `subscription_price_cents`, $89.99 today and the fallback); the manage page
+  shows what that subscriber was last billed.
+- **PSA Prep** takes US and Puerto Rico addresses only, like restorations.
+- **Restorations closed**: Restorations (`/tier-selection`) shows the plain
+  line "Restorations are currently closed." (no countdown), and `/order`
+  sends people there.
+- **Restoration slots**: one slot is one order, whatever its card count; an
+  order with cards on several tiers takes one slot in each.
+- **Request an update** on an order in the customer's account: once a week
+  per order, filed as an Update Request case for the admin.
+- **Address suggestions** come from Google (Places API (New), key in
+  `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, restricted to the site's domains) on the
+  cart, order builder, prep order form, subscriptions and Settings.
+- **Accounts**: new accounts confirm their email before signing in (orders
+  link to accounts by email), forgot/reset password, and Settings (name,
+  phone, default address, password) that prefills checkout.
+
+## Product Principles
+
+1. Trust first: a first-time visitor must feel the card is in careful hands.
+2. Nothing breaks: every existing flow keeps working exactly as before.
+3. The words are the owner's: design around the existing copy.
+4. Phone first: most visitors arrive from social apps on a phone.
+
+## Accessibility & Inclusion
+
+WCAG AA contrast and keyboard access across all public pages; respect
+`prefers-reduced-motion`.

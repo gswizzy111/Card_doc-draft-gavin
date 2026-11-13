@@ -1,0 +1,528 @@
+import { createAdminClient } from "@/lib/supabase/admin";
+import { SignedAgreements, type SignedAgreement } from "@/components/agreements/signed-agreements";
+import { shippo } from "@/lib/shippo";
+import { ORDER_STATUSES, STATUS_TIMELINE, type OrderStatus } from "@/lib/constants";
+import { formatCurrency } from "@/lib/utils";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import type { Track } from "shippo/models/components";
+import { UpgradeSection } from "./upgrade-section";
+import { AddCardsSection } from "./add-cards-section";
+import type { RestorationTierId } from "@/lib/restoration-tiers";
+import { ReportProblem } from "@/components/orders/report-problem";
+import { FileDown } from "lucide-react";
+import { trackingCarrier, trackingLink } from "@/lib/tracking-carrier";
+import { hasUnappliedUpgrade } from "@/lib/pending-upgrade";
+
+function EmailMismatch() {
+  return (
+    <div className="max-w-md mx-auto px-6 py-24 text-center">
+      <p className="rx-label text-rx mb-3">Order Tracking</p>
+      <h1 className="font-heading font-black text-2xl text-foreground mb-3">We couldn&apos;t find that order</h1>
+      <p className="text-muted-foreground text-sm mb-8">
+        The order number and email address didn&apos;t match. Double-check both and try again.
+      </p>
+      <Link
+        href="/track"
+        className="inline-block bg-primary text-primary-foreground text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-primary/90 transition-colors"
+      >
+        Try Again
+      </Link>
+    </div>
+  );
+}
+
+function shippoCarrierToken(provider: string): string {
+  const map: Record<string, string> = {
+    USPS: "usps",
+    FedEx: "fedex",
+    UPS: "ups",
+    DHLExpress: "dhl_express",
+    "DHL Express": "dhl_express",
+    DHL: "dhl",
+    Canada: "canadapost",
+    CanadaPost: "canadapost",
+  };
+  return map[provider] ?? provider.toLowerCase().replace(/\s+/g, "_");
+}
+
+const TRACKING_BADGE: Record<string, { label: string; cls: string }> = {
+  UNKNOWN:     { label: "Label Created",  cls: "bg-gray-100 text-gray-700" },
+  PRE_TRANSIT: { label: "Label Created",  cls: "bg-gray-100 text-gray-700" },
+  TRANSIT:     { label: "In Transit",     cls: "bg-ink text-paper" },
+  DELIVERED:   { label: "Delivered",      cls: "bg-green-100 text-green-700" },
+  RETURNED:    { label: "Returned",       cls: "bg-orange-100 text-orange-700" },
+  FAILURE:     { label: "Delivery Issue", cls: "bg-red-100 text-red-700" },
+};
+
+const KIT_STATUS_LABELS: Record<string, string> = {
+  paid:       "Order Received",
+  processing: "Processing",
+  shipped:    "Shipped",
+  delivered:  "Delivered",
+};
+const KIT_STATUS_TIMELINE = ["paid", "processing", "shipped", "delivered"];
+
+type ShopOrderItem = { product_name: string; quantity: number; price_cents: number };
+
+async function KitOrderView({ kitNumber, email }: { kitNumber: string; email: string }) {
+  const admin = createAdminClient();
+  const kitNum = parseInt(kitNumber, 10);
+  const { data: order } = await admin
+    .from("shop_orders")
+    .select("*")
+    .eq("order_number", isNaN(kitNum) ? kitNumber : kitNum)
+    .single();
+
+  if (!order) return <EmailMismatch />;
+  // Only block if the order has an email recorded and it doesn't match
+  if (order.customer_email && order.customer_email.trim().toLowerCase() !== email) {
+    return <EmailMismatch />;
+  }
+
+  // The kit label's carrier: the one saved with it, else told from the number
+  const kitLabels = Array.isArray(order.labels) ? (order.labels as { trackingNumber?: string | null; trackingUrl?: string | null; carrier?: string | null }[]) : [];
+  const kitLabel = kitLabels.find((l) => l?.trackingNumber === order.tracking_number) ?? null;
+  const kitCarrier = order.tracking_number ? trackingCarrier(order.tracking_number, order.carrier ?? kitLabel?.carrier ?? null) : null;
+  const kitTrackUrl = order.tracking_number ? trackingLink(order.tracking_number, order.carrier ?? kitLabel?.carrier ?? null, kitLabel?.trackingUrl ?? null) : null;
+
+  // A cancelled kit (admin Cancel & Refund) has no delivery to follow
+  const kitCancelled = order.status === "cancelled";
+  const kitRefundedCents = Number(order.refunded_cents ?? 0);
+
+  // Check Shippo for live tracking and opportunistically update DB status
+  let liveShippoStatus: string | null = null;
+  if (order.tracking_number && order.status !== "delivered" && !kitCancelled && kitCarrier) {
+    try {
+      const track = await shippo.trackingStatus.get(order.tracking_number, kitCarrier.token);
+      liveShippoStatus = track.trackingStatus?.status ?? null;
+
+      // Update DB status if Shippo reports a further-along state. Only an open
+      // order moves (never a cancelled one), checked again in the update
+      const DELIVERABLE = ["paid", "processing", "shipped"];
+      if (liveShippoStatus === "DELIVERED" && DELIVERABLE.includes(order.status)) {
+        const { data: moved } = await admin.from("shop_orders").update({ status: "delivered" }).eq("id", order.id).in("status", DELIVERABLE).select("id");
+        if (moved?.length) order.status = "delivered";
+      } else if (
+        (liveShippoStatus === "TRANSIT" || liveShippoStatus === "PRE_TRANSIT") &&
+        order.status === "processing"
+      ) {
+        const { data: moved } = await admin.from("shop_orders").update({ status: "shipped" }).eq("id", order.id).eq("status", "processing").select("id");
+        if (moved?.length) order.status = "shipped";
+      }
+    } catch {
+      // fail silently
+    }
+  }
+
+  const items = (order.items ?? []) as ShopOrderItem[];
+  const currentIdx = KIT_STATUS_TIMELINE.indexOf(order.status);
+
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-12">
+      <div className="mb-8">
+        <p className="rx-label text-rx mb-2">Order Tracking</p>
+        <h1 className="font-heading font-black text-3xl text-foreground">Order K{order.order_number}</h1>
+        <p className="text-muted-foreground text-sm mt-1">Placed {new Date(order.created_at).toLocaleDateString()}</p>
+      </div>
+
+      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <h2 className="font-heading font-black text-lg text-foreground mb-5">Status</h2>
+        {kitCancelled ? (
+          <div className="flex flex-col gap-1 text-sm">
+            <p className="font-bold text-foreground">This order was cancelled.</p>
+            {kitRefundedCents > 0 && (
+              <p className="text-muted-foreground">A refund of {formatCurrency(kitRefundedCents)} was issued.</p>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {KIT_STATUS_TIMELINE.map((s) => {
+              const sIdx = KIT_STATUS_TIMELINE.indexOf(s);
+              const isDone = sIdx < currentIdx;
+              const isCurrent = s === order.status;
+              return (
+                <div key={s} className="flex items-center gap-3">
+                  <div className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center ${
+                    isCurrent ? "bg-primary" : isDone ? "bg-primary/30" : "bg-border"
+                  }`}>
+                    {isDone && <span className="text-white text-xs">✓</span>}
+                    {isCurrent && <span className="w-2 h-2 rounded-full bg-white block" />}
+                  </div>
+                  <span className={`text-sm font-medium ${isCurrent ? "text-primary font-bold" : isDone ? "text-muted-foreground" : "text-muted-foreground/50"}`}>
+                    {KIT_STATUS_LABELS[s]}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {order.tracking_number && (
+        <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6 mb-5">
+          <p className="rx-label text-rx mb-1">Shipment Tracking</p>
+          <p className="font-mono font-black text-xl text-cyan-900 tracking-widest mb-3 break-all">{order.tracking_number}</p>
+          <a
+            href={kitTrackUrl ?? undefined}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+          >
+            Track Package →
+          </a>
+        </div>
+      )}
+
+      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <h2 className="font-heading font-black text-lg text-foreground mb-4">Order Summary</h2>
+        <div className="flex flex-col gap-2 text-sm">
+          {items.map((item, i) => (
+            <div key={i} className="flex justify-between">
+              <span className="text-muted-foreground">{item.product_name} × {item.quantity}</span>
+              <span className="font-medium">{formatCurrency(item.price_cents * item.quantity)}</span>
+            </div>
+          ))}
+          <div className="border-t border-border mt-1 pt-2 flex justify-between font-bold">
+            <span>Total</span>
+            <span className="text-primary">{formatCurrency(order.total_cents)}</span>
+          </div>
+        </div>
+      </div>
+
+      {!kitCancelled && <ReportProblem orderRef={`K${order.order_number}`} email={email} />}
+
+      <p className="text-center text-sm text-muted-foreground">
+        Questions? DM us on Instagram{" "}
+        <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="text-primary font-medium">
+          @the_card_doc
+        </a>
+      </p>
+    </div>
+  );
+}
+
+export default async function OrderDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ orderNumber: string }>;
+  searchParams: Promise<{ email?: string; added?: string; upgraded?: string }>;
+}) {
+  const { orderNumber } = await params;
+  const { email: rawEmail, added, upgraded } = await searchParams;
+  const email = (rawEmail ?? "").trim().toLowerCase();
+
+  // No email in URL — customer likely came from an old confirmation email link.
+  // Redirect to the track page with the order number pre-filled.
+  if (!email) redirect(`/track?order=${encodeURIComponent(orderNumber)}`);
+
+  // Normalize: strip optional leading R, then detect K (kit) vs restoration
+  let cleaned = orderNumber;
+  if (cleaned.startsWith("R")) cleaned = cleaned.slice(1); // RCD-1209 → CD-1209, R1209 → 1209, RK5 → K5
+
+  // Kit orders
+  if (cleaned.startsWith("K")) {
+    return <KitOrderView kitNumber={cleaned.slice(1)} email={email} />;
+  }
+
+  // Strip CD- or CD prefix to isolate the numeric part
+  let numericPart = cleaned;
+  if (numericPart.startsWith("CD-")) numericPart = numericPart.slice(3);
+  else if (numericPart.startsWith("CD")) numericPart = numericPart.slice(2);
+  // numericPart is now just the number, e.g. "1209"
+
+  const admin = createAdminClient();
+  const num = parseInt(numericPart, 10);
+
+  // Search DB with every likely stored format
+  const candidates: (string | number)[] = [
+    `CD-${numericPart}`,                   // "CD-1209" — legacy string in DB
+    numericPart,                           // "1209"    — plain string
+    ...(isNaN(num) ? [] : [num]),          //  1209     — integer serial
+  ];
+
+  let order: Record<string, any> | null = null;
+  for (const candidate of [...new Set(candidates)]) {
+    const { data } = await admin.from("orders").select("*").eq("order_number", candidate).maybeSingle();
+    if (data) { order = data; break; }
+  }
+
+  if (!order) return <EmailMismatch />;
+  // Only block if the order has an email recorded and it doesn't match
+  if (order.customer_email && order.customer_email.trim().toLowerCase() !== email) {
+    return <EmailMismatch />;
+  }
+
+  // A paid upgrade not on the order yet (asked of Stripe while the rest loads;
+  // null when Stripe didn't answer in time)
+  const unappliedUpgrade: Promise<boolean | null> = order.status === "awaiting_cards"
+    ? hasUnappliedUpgrade({ id: order.id, customer_email: order.customer_email, restoration_tier: order.restoration_tier })
+    : Promise.resolve(false);
+
+  const { data: cards } = await admin.from("cards").select("*").eq("order_id", order.id);
+  // The customer's copy of what they signed; a high-value agreement shows once its card is on the order
+  const { data: signedRows } = await admin
+    .from("order_agreements")
+    .select("id, kind, version, signer_name, signed_at, card_name, declared_value_cents, cards, agreement_text")
+    .eq("order_id", order.id)
+    .order("signed_at");
+  const cardNames = new Set((cards ?? []).map((c) => String(c.card_name).trim()));
+  const signedAgreements = ((signedRows ?? []) as SignedAgreement[]).filter((a) => a.kind !== "high_value" || cardNames.has(a.card_name ?? ""));
+  const { data: services } = await admin.from("order_services").select("*").eq("order_id", order.id);
+  // Documents signed under the Terms of Service v1.0 and later
+  const { data: signatures } = await admin.from("signatures").select("id, type, document_title, typed_full_name, signed_at, card_snapshot").eq("order_id", order.id).order("signed_at");
+  const docUrl = (id: string) => `/api/orders/${encodeURIComponent(String(order.order_number))}/documents/${id}?email=${encodeURIComponent(email)}`;
+  const signedDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "America/New_York" });
+
+  // Fetch live inbound tracking from Shippo (only while awaiting cards)
+  let inboundTrack: Track | null = null;
+  if (
+    order.inbound_tracking_number &&
+    order.inbound_carrier &&
+    (order.status === "awaiting_cards" || order.status === "received")
+  ) {
+    try {
+      inboundTrack = await shippo.trackingStatus.get(
+        order.inbound_tracking_number,
+        shippoCarrierToken(order.inbound_carrier)
+      );
+    } catch {
+      // fail silently — don't break the page
+    }
+  }
+
+  const currentIndex = STATUS_TIMELINE.indexOf(order.status as OrderStatus);
+  const visibleStatuses = STATUS_TIMELINE.filter(s => s !== "awaiting_payment");
+  // A paid upgrade not recorded yet: no upgrade is offered until the order
+  // shows it, so it can't be paid twice. Just back from paying (upgraded=1)
+  // counts only when Stripe can't say, so the address doesn't hide the offers
+  // for good once the webhook has run
+  const pendingUpgrade = await unappliedUpgrade;
+  const showUpgradeReceived = upgraded === "1" || pendingUpgrade === true;
+  const hideUpgradeOffer = pendingUpgrade === true || (pendingUpgrade === null && upgraded === "1");
+
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-12">
+      {/* Header */}
+      <div className="mb-8">
+        <p className="rx-label text-rx mb-2">Order Tracking</p>
+        <h1 className="font-heading font-black text-3xl text-foreground">
+          Order {/^\d+$/.test(String(order.order_number)) ? `R${order.order_number}` : order.order_number}
+        </h1>
+        <p className="text-muted-foreground text-sm mt-1">Placed {new Date(order.created_at).toLocaleDateString()}</p>
+      </div>
+
+      {/* Status timeline */}
+      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <h2 className="font-heading font-black text-lg text-foreground mb-5">Status</h2>
+        <div className="flex flex-col gap-3">
+          {visibleStatuses.map((s) => {
+            const sIndex = STATUS_TIMELINE.indexOf(s);
+            const isDone = sIndex < currentIndex;
+            const isCurrent = s === order.status;
+            return (
+              <div key={s} className="flex items-center gap-3">
+                <div className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center ${
+                  isCurrent ? "bg-primary" : isDone ? "bg-primary/30" : "bg-border"
+                }`}>
+                  {isDone && <span className="text-white text-xs">✓</span>}
+                  {isCurrent && <span className="w-2 h-2 rounded-full bg-white block" />}
+                </div>
+                <span className={`text-sm font-medium ${isCurrent ? "text-primary font-bold" : isDone ? "text-muted-foreground" : "text-muted-foreground/50"}`}>
+                  {ORDER_STATUSES[s]?.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Cards-added success banner */}
+      {added === "1" && (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-5 mb-5">
+          <p className="text-sm font-bold text-green-800">Cards added successfully!</p>
+          <p className="text-sm text-green-800 mt-0.5">
+            Your payment was received. The new cards have been added to your order.
+          </p>
+        </div>
+      )}
+
+      {/* Upgrade success banner */}
+      {showUpgradeReceived && (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-5 mb-5">
+          <p className="text-sm font-bold text-green-800">Upgrade received!</p>
+          <p className="text-sm text-green-800 mt-0.5">
+            Your payment was received. Your order will show the new service level shortly.
+          </p>
+        </div>
+      )}
+
+      {/* Upgrade section — only while awaiting cards, and not while a paid upgrade is on its way */}
+      {order.status === "awaiting_cards" && !hideUpgradeOffer && (
+        <UpgradeSection
+          orderNumber={order.order_number}
+          customerEmail={order.customer_email}
+          currentTier={(order.restoration_tier as RestorationTierId | null)}
+          currentSubtotalCents={order.subtotal_cents ?? 0}
+          cardCount={cards?.length ?? 1}
+        />
+      )}
+
+      {/* Add cards section — only while awaiting cards, and not while a paid
+          upgrade is still on its way (the cards would be priced at the old tier) */}
+      {order.status === "awaiting_cards" && !hideUpgradeOffer && (
+        <AddCardsSection
+          orderNumber={String(order.order_number)}
+          customerEmail={order.customer_email}
+          tier={(order.restoration_tier as RestorationTierId) ?? "regular"}
+          cardsOnOrder={cards?.length ?? 0}
+        />
+      )}
+
+      {/* Live inbound tracking (while we're waiting for the cards) */}
+      {inboundTrack && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-5">
+          <p className="rx-label text-rx mb-3">Inbound Shipment Tracking</p>
+          <div className="flex items-center gap-2 mb-2">
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+              TRACKING_BADGE[inboundTrack.trackingStatus?.status ?? "UNKNOWN"]?.cls ?? "bg-gray-100 text-gray-700"
+            }`}>
+              {TRACKING_BADGE[inboundTrack.trackingStatus?.status ?? "UNKNOWN"]?.label ?? "Unknown"}
+            </span>
+          </div>
+          {inboundTrack.trackingStatus?.statusDetails && (
+            <p className="text-sm text-blue-800 mb-2">{inboundTrack.trackingStatus.statusDetails}</p>
+          )}
+          {inboundTrack.eta && (
+            <p className="text-sm font-semibold text-blue-900">
+              Estimated arrival: {new Date(inboundTrack.eta).toLocaleDateString("en-US", {
+                weekday: "long", month: "long", day: "numeric"
+              })}
+            </p>
+          )}
+          <p className="font-mono text-xs text-blue-600 mt-3">{order.inbound_tracking_number}</p>
+        </div>
+      )}
+
+      {/* Return tracking number */}
+      {order.tracking_number && (
+        <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6 mb-5">
+          <p className="rx-label text-rx mb-1">Return Tracking</p>
+          <p className="font-mono font-black text-xl text-cyan-900 tracking-widest mb-3 break-all">{order.tracking_number}</p>
+          <a
+            href={order.outbound_tracking_number === order.tracking_number
+              ? trackingLink(order.tracking_number, order.outbound_carrier ?? null, order.outbound_tracking_url ?? null)
+              : trackingLink(order.tracking_number)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+          >
+            Track Package →
+          </a>
+        </div>
+      )}
+
+      {/* Prepaid shipping label */}
+      {order.inbound_method === "buy_label" && order.shipping_label_url && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-5">
+          <h2 className="font-heading font-black text-lg text-blue-900 mb-2">Your Prepaid Shipping Label</h2>
+          <p className="text-sm text-blue-800 mb-4">Print this label, attach it to your package, and drop it off at the carrier.</p>
+          <a
+            href={order.shipping_label_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Download Label (PDF)
+          </a>
+        </div>
+      )}
+
+      {/* Restoration photos & notes */}
+      {(order.restoration_photos?.length > 0 || order.completion_notes) && (
+        <div className="bg-white rounded-xl border border-border p-6 mb-5">
+          <h2 className="font-heading font-black text-lg text-foreground mb-4">Restoration Results</h2>
+
+          {order.completion_notes && (
+            <div className="mb-4 p-4 bg-secondary/40 rounded-lg">
+              <p className="rx-label text-rx mb-2">Notes from The Card Doc</p>
+              <p className="text-sm text-foreground whitespace-pre-wrap">{order.completion_notes}</p>
+            </div>
+          )}
+
+          {order.restoration_photos?.length > 0 && (
+            <div className="flex flex-wrap gap-3">
+              {(order.restoration_photos as string[]).map((url: string, i: number) => (
+                <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt="Restored card" className="w-28 h-28 object-cover rounded-xl border border-border hover:opacity-90 transition-opacity" />
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Cards */}
+      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <h2 className="font-heading font-black text-lg text-foreground mb-4">Your Cards ({cards?.length ?? 0})</h2>
+        <div className="flex flex-col gap-3">
+          {cards?.map((card, i) => (
+            <div key={card.id} className="text-sm p-3 rounded-lg bg-secondary/40">
+              <p className="font-semibold text-foreground">{i + 1}. {card.card_name}</p>
+              {card.card_set && <p className="text-muted-foreground">{card.card_set}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {(signatures?.length ?? 0) > 0 && (
+        <div className="bg-white rounded-xl border border-border p-6 mb-5">
+          <h2 className="font-heading font-black text-lg text-foreground mb-4">Documents You Signed</h2>
+          <ul className="flex flex-col gap-2.5 text-sm">
+            {(signatures ?? []).map((s) => (
+              <li key={s.id} className="flex flex-wrap items-center justify-between gap-2">
+                <span className="text-foreground">
+                  {s.document_title}{s.card_snapshot?.card_name ? `: ${s.card_snapshot.card_name}` : ""}
+                  <span className="text-muted-foreground"> · signed by {s.typed_full_name}, {signedDate(s.signed_at)}</span>
+                </span>
+                <a href={docUrl(s.id)} className="inline-flex items-center gap-1 text-primary font-semibold underline underline-offset-2"><FileDown className="h-3.5 w-3.5" />PDF</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {signedAgreements.length > 0 && (
+        <div className="bg-white rounded-xl border border-border p-6 mb-5">
+          <h2 className="font-heading font-black text-lg text-foreground mb-4">Agreements You Signed</h2>
+          <SignedAgreements agreements={signedAgreements} />
+        </div>
+      )}
+
+      {/* Services & total */}
+      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <h2 className="font-heading font-black text-lg text-foreground mb-4">Order Summary</h2>
+        <div className="flex flex-col gap-2 text-sm">
+          {services?.map((s) => (
+            <div key={s.id} className="flex justify-between">
+              <span className="text-muted-foreground">{s.service_name} × {s.quantity}</span>
+              <span className="font-medium">{formatCurrency(s.price_cents * s.quantity)}</span>
+            </div>
+          ))}
+          <div className="border-t border-border mt-1 pt-2 flex justify-between font-bold">
+            <span>Total</span>
+            <span className="text-primary">{formatCurrency(order.total_cents)}</span>
+          </div>
+        </div>
+      </div>
+
+      <ReportProblem orderRef={String(order.order_number)} email={email} />
+
+      <p className="text-center text-sm text-muted-foreground">
+        Questions? DM us on Instagram <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="text-primary font-medium">@the_card_doc</a>
+      </p>
+    </div>
+  );
+}

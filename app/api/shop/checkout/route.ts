@@ -1,0 +1,235 @@
+import { z } from "zod";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { stripe } from "@/lib/stripe";
+import Stripe from "stripe";
+import { isSoldOut } from "@/lib/site-config";
+import { addressProblem, normalizeAddress } from "@/lib/shipping-address";
+import { usAddressRejection } from "@/lib/verify-address";
+import { verifyKitRate } from "@/lib/kit-shipping";
+import { likeExact } from "@/lib/like-exact";
+import { siteUrl } from "@/lib/site-url";
+import {
+  GIFT_CARD_IN_USE_MESSAGE, attachGiftCardHold, giftCardExpiry, holdGiftCard, releaseGiftCardHold,
+} from "@/lib/gift-card-holds";
+
+const BodySchema = z.object({
+  items: z.array(z.object({ id: z.string(), quantity: z.number().int().positive(), slug: z.string(), size: z.string().optional() })).min(1),
+  customer: z.object({ name: z.string().min(1), email: z.string().email(), phone: z.string().min(10) }),
+  address: z.object({
+    street1: z.string().min(1),
+    street2: z.string().optional(),
+    city: z.string().min(1),
+    state: z.string(),
+    zip: z.string().min(1),
+    country: z.string().default("US"),
+  }),
+  affiliate_code: z.string().optional(),
+  gift_card_code: z.string().optional(),
+  // The shipping option the customer picked (/api/shop/shipping-rates)
+  shipping_rate_id: z.string().min(1).optional(),
+});
+
+export async function POST(request: Request) {
+  if (isSoldOut()) {
+    return Response.json({ error: "The shop is currently sold out. Please check back soon." }, { status: 503 });
+  }
+
+  const body = await request.json();
+  const parsed = BodySchema.safeParse(body);
+  if (!parsed.success) {
+    console.error("Shop checkout validation failed:", parsed.error.flatten());
+    return Response.json({ error: "Invalid order data." }, { status: 400 });
+  }
+
+  const data = parsed.data;
+  const isInternational = data.address.country !== "US";
+
+  if (isInternational && !data.shipping_rate_id) {
+    return Response.json({ error: "Please calculate shipping before proceeding." }, { status: 400 });
+  }
+
+  // No kit is paid for without a shippable address: complete, with a house
+  // number, a real state and ZIP, and (US) one USPS recognises.
+  const address = normalizeAddress({ ...data.address, country: isInternational ? data.address.country : "US" });
+  const problem = addressProblem(address);
+  if (problem) return Response.json({ error: problem }, { status: 400 });
+  if (!isInternational) {
+    const rejection = await usAddressRejection(address, data.customer.name);
+    if (rejection) {
+      const advice = /please check/i.test(rejection) ? "" : " Please check it and try again.";
+      return Response.json({ error: `We couldn't verify that address with USPS: ${rejection}${advice}` }, { status: 400 });
+    }
+  }
+
+  // Shipping: the option the customer picked, priced from Shippo (never from
+  // the browser) and only if it was quoted for this address. A page opened
+  // before live rates existed sends none: flat US shipping, label bought by hand.
+  let shippingCents = 599;
+  let shippingName = "Standard Shipping";
+  let kitRate: Awaited<ReturnType<typeof verifyKitRate>> = null;
+  if (data.shipping_rate_id) {
+    kitRate = await verifyKitRate(data.shipping_rate_id, address);
+    if (!kitRate) {
+      return Response.json({ error: "Your shipping quote expired or doesn't match your address. Please recalculate shipping." }, { status: 400 });
+    }
+    shippingCents = kitRate.priceCents;
+    shippingName = `Shipping — ${kitRate.provider} ${kitRate.service}`.trim();
+  }
+
+  const admin = createAdminClient();
+
+  // Strip size suffix (e.g. "gloves-Medium" → "gloves") for DB lookup
+  const baseId = (id: string) => id.replace(/-(?:Small|Medium|Large|XL)$/i, "");
+
+  // Fetch products from DB (never trust client prices)
+  const productIds = data.items.map((i) => baseId(i.id));
+  const { data: products, error: pErr } = await admin
+    .from("products")
+    .select("id, name, price_cents, inventory_count, active")
+    .in("id", productIds);
+
+  if (pErr || !products) {
+    return Response.json({ error: "Failed to load products." }, { status: 500 });
+  }
+
+  const productMap = Object.fromEntries(products.map((p) => [p.id, p]));
+
+  // Validate stock and build product line items
+  const lineItems: { price_data: { currency: string; product_data: { name: string }; unit_amount: number }; quantity: number }[] = [];
+  for (const item of data.items) {
+    const product = productMap[baseId(item.id)];
+    if (!product || !product.active) return Response.json({ error: "Product not available." }, { status: 400 });
+    if (product.inventory_count < item.quantity) return Response.json({ error: `Not enough stock for ${product.name}.` }, { status: 400 });
+    const displayName = item.size ? `${product.name} — ${item.size}` : product.name;
+    lineItems.push({
+      price_data: { currency: "usd", product_data: { name: displayName }, unit_amount: product.price_cents },
+      quantity: item.quantity,
+    });
+  }
+
+  const productSubtotalCents = data.items.reduce(
+    (sum, item) => sum + (productMap[baseId(item.id)]?.price_cents ?? 0) * item.quantity,
+    0
+  );
+
+  // Validate affiliate/coupon code and get discount
+  let validatedAffiliateCode: string | null = null;
+  let discountPercent = 0;
+  if (data.affiliate_code) {
+    const { data: affiliate } = await admin
+      .from("affiliates")
+      .select("code, discount_percent")
+      .ilike("code", likeExact(data.affiliate_code.trim()))
+      .single();
+    if (!affiliate) return Response.json({ error: "Invalid creator code." }, { status: 400 });
+    validatedAffiliateCode = affiliate.code;
+    discountPercent = affiliate.discount_percent ?? 0;
+  }
+  // Same math as the cart checkout page: discount on products, tax after discount
+  const discountCents = discountPercent > 0 ? Math.round(productSubtotalCents * discountPercent / 100) : 0;
+
+  // 6.625% sales tax on discounted product subtotal (not shipping)
+  const taxCents = Math.round((productSubtotalCents - discountCents) * 0.06625);
+  lineItems.push({
+    price_data: { currency: "usd", product_data: { name: "Sales Tax (6.625%)" }, unit_amount: taxCents },
+    quantity: 1,
+  });
+
+  // Shipping is a line item: the checked address above is the ship-to, so
+  // Stripe's page doesn't collect another one
+  lineItems.push({
+    price_data: { currency: "usd", product_data: { name: shippingName }, unit_amount: shippingCents },
+    quantity: 1,
+  });
+
+  // Gift card: covers up to the whole order. The amount is held for this
+  // checkout so the same balance can't discount another open one
+  // (lib/gift-card-holds.ts), and Stripe is always left $0 or at least 50
+  // cents to charge.
+  const orderTotalCents = productSubtotalCents - discountCents + taxCents + shippingCents;
+  const expiry = giftCardExpiry();
+  const hold = await holdGiftCard(admin, {
+    code: data.gift_card_code,
+    maxCents: orderTotalCents,
+    dueCents: orderTotalCents,
+    kind: "shop",
+    customerEmail: data.customer.email,
+    expiresAt: expiry.holdExpiresAt,
+  });
+  if (hold.status === "in_use") return Response.json({ error: GIFT_CARD_IN_USE_MESSAGE }, { status: 409 });
+  if (hold.status === "error") return Response.json({ error: "We couldn't apply your gift card. Please try again in a moment." }, { status: 503 });
+  const giftCardDiscountCents = hold.status === "held" ? hold.cents : 0;
+  const giftCardId: string | null = hold.status === "held" ? hold.giftCardId : null;
+  const holdId = hold.status === "held" ? hold.holdId : null;
+
+  // Discount and gift card go to Stripe as one fixed-amount coupon (Stripe
+  // refuses negative line items)
+  let stripeDiscounts: Stripe.Checkout.SessionCreateParams["discounts"] = undefined;
+  const couponCents = discountCents + giftCardDiscountCents;
+  if (couponCents > 0) {
+    const couponName = [
+      discountCents > 0 ? `${discountPercent}% Off — ${validatedAffiliateCode}` : null,
+      giftCardDiscountCents > 0 ? `Gift Card (${data.gift_card_code?.trim().toUpperCase()})` : null,
+    ].filter(Boolean).join(" + ").slice(0, 40);
+    try {
+      const coupon = await stripe.coupons.create({
+        amount_off: couponCents,
+        currency: "usd",
+        duration: "once",
+        name: couponName,
+      });
+      stripeDiscounts = [{ coupon: coupon.id }];
+    } catch (err) {
+      console.error("Failed to create Stripe coupon:", err);
+      await releaseGiftCardHold(admin, holdId, "checkout_failed");
+      return Response.json({ error: "Payment provider error. Please try again." }, { status: 500 });
+    }
+  }
+
+  const appUrl = siteUrl();
+
+  const metadata: Record<string, string> = {
+    type: "shop",
+    customer_name: data.customer.name,
+    customer_phone: data.customer.phone,
+    items: JSON.stringify(data.items.map((i) => ({ id: baseId(i.id), qty: i.quantity, size: i.size ?? null }))),
+    affiliate_code: validatedAffiliateCode ?? "",
+    gift_card_id: giftCardId ?? "",
+    gift_card_discount_cents: giftCardDiscountCents > 0 ? String(giftCardDiscountCents) : "",
+  };
+
+  // The checked address travels with the order; the webhook ships to it
+  metadata.shipping_address_json = JSON.stringify(address);
+  if (isInternational) metadata.is_international = "true";
+  metadata.kit_shipping_cents = String(shippingCents);
+  if (kitRate) {
+    // The webhook buys this rate as the outbound label once the order is paid
+    metadata.kit_rate_object_id = kitRate.id;
+    metadata.kit_shipping_service = `${kitRate.provider} ${kitRate.service}`.trim().slice(0, 100);
+    // Saved with the label, so tracking links go to the right carrier
+    if (kitRate.provider) metadata.kit_carrier = kitRate.provider.slice(0, 50);
+  }
+
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      customer_email: data.customer.email,
+      line_items: lineItems,
+      discounts: stripeDiscounts,
+      // A held gift card balance comes back after its hold ends, so these
+      // sessions close after an hour (others keep Stripe's 24 hours)
+      ...(giftCardDiscountCents > 0 ? { expires_at: expiry.stripeExpiresAt } : {}),
+      success_url: `${appUrl}/shop/order-confirmed?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/cart`,
+      metadata,
+    });
+  } catch (err) {
+    console.error("Stripe shop session error:", err);
+    await releaseGiftCardHold(admin, holdId, "checkout_failed");
+    return Response.json({ error: "Payment provider error. Please try again." }, { status: 500 });
+  }
+
+  await attachGiftCardHold(admin, holdId, { sessionId: session.id });
+  return Response.json({ url: session.url });
+}
