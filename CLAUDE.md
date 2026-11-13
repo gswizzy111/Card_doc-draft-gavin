@@ -200,10 +200,32 @@ Several design skills live in `.claude/skills/` (sources in
 3. **Motion: Emil Kowalski's skills.** `animate` to build animations,
    `review-animations` / `improve-animations` to check them,
    `find-animation-opportunities` before adding motion, `emil-design-eng` for
-   general polish, `pick-ui-library` when choosing a library.
-4. **Verification: `playwright-cli`.** Open the running site, check desktop
-   (1440px) and phone (390px) widths in light and dark mode, and look at the
-   screenshots before calling UI work done.
+   general polish, `pick-ui-library` when choosing a library. Page-to-page
+   transitions: `react-view-transitions` (the `viewTransition` experiment is
+   already on). Scroll pinning and scrubbing only: the `gsap-*` skills
+   (start with `gsap-react` and `gsap-scrolltrigger`).
+4. **Graphics.** `frontend-design` for the overall visual idea;
+   `svg-creator` for illustrations, mascots, icons and badges as SVG;
+   `pixelfx` for pixel-art sprite effects (sparkles, heal glows, pickups);
+   `shader-glsl` and `particle-system` for holo-foil, glow and confetti
+   effects; `threejs-*` (start with `threejs-react-three-fiber`) only when a
+   piece truly needs 3D, such as a tilting holographic card; `canvas-design`
+   and `algorithmic-art` for posters, patterns and generated textures.
+   Every graphic needs a lightweight fallback and a reduced-motion state.
+5. **Verification: `preview-site`.** Start the site in preview mode (no keys
+   needed), screenshot desktop (1440px) and phone (390px), check scroll
+   frames and reduced motion, and look at the images before calling UI work
+   done. `playwright-cli` and `webapp-testing` for anything more involved;
+   `web-design-guidelines` and `react-best-practices` for review passes.
+
+## Redesign direction (draft)
+
+This repo is a sandbox copy for a hospital / Pokémon-inspired redesign: the
+"card doctor" as a clinic for trading cards (check-in, triage, treatment,
+discharge), with playful creature-collector energy. Build it from original
+artwork: no Pokémon names, characters, Poké Balls, logos, fonts or game
+screenshots, since those are Nintendo / The Pokémon Company IP. Real customer
+card photos stay as they are.
 
 ## When the skills disagree
 
@@ -238,6 +260,7 @@ Other tie-breakers:
 
 - Impeccable's automatic hooks are not committed. Enable per machine with
   `/impeccable hooks on` (writes the gitignored `.claude/settings.local.json`).
-- `playwright-cli` needs the `@playwright/cli` package (not installed yet).
+- `preview-site` needs nothing extra. `playwright-cli` needs the
+  `@playwright/cli` package (not installed yet).
   In cloud sessions Chromium is
   preinstalled at `/opt/pw-browsers`; do not run `playwright install`.
