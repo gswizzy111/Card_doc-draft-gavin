@@ -52,21 +52,21 @@ export function LogReferralButton() {
         value={clientName}
         onChange={(e) => setClientName(e.target.value)}
         placeholder="Client name"
-        className="w-full px-frame px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
+        className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
       />
       <input
         type="text"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notes — e.g. restoration, PSA prep (optional)"
-        className="w-full px-frame px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
+        className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
       />
       {error && <p className="text-xs text-destructive">{error}</p>}
       <div className="flex gap-2">
         <button
           onClick={submit}
           disabled={saving}
-          className="text-sm font-bold px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          className="px-btn px-4 disabled:opacity-50 h-11 text-base"
         >
           {saving ? "Saving..." : "Log Referral"}
         </button>

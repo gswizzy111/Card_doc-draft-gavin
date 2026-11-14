@@ -48,7 +48,7 @@ export function UpdateRequestPanel({
 
   return (
     <div id="update" className="px-window-ink p-5 scroll-mt-24">
-      <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-3">Request an Update</h2>
+      <h2 className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft mb-3">Request an Update</h2>
 
       {lastReply && (
         <div className="mb-4 p-4 bg-secondary/40">
@@ -78,7 +78,7 @@ export function UpdateRequestPanel({
             type="button"
             onClick={ask}
             disabled={sending}
-            className="w-full h-11 bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors disabled:opacity-60"
+            className="px-btn w-full h-11 disabled:opacity-60 px-5 text-base"
           >
             {sending ? "Sending..." : "Request an update"}
           </button>

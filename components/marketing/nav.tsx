@@ -111,7 +111,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
     >
       <ShoppingCart className="h-5 w-5" strokeWidth={2} />
       {itemCount > 0 && (
-        <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 bg-coral-fill text-ink font-pixel text-[11px] leading-none flex items-center justify-center shadow-[0_0_0_2px_var(--ink)]">
+        <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 bg-coral-fill text-ink font-pixel text-xs leading-none flex items-center justify-center shadow-[0_0_0_2px_var(--ink)]">
           {itemCount}
         </span>
       )}
@@ -214,7 +214,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                               <MenuCursor />
                               <span className={`text-[15px] font-semibold ${current ? "text-coral-deep" : "text-ink"}`}>{l.label}</span>
                               {TAB_HINTS[l.href] && (
-                                <span className="col-start-2 font-pixel text-[11px] text-ink-soft tabular-nums">{TAB_HINTS[l.href]}</span>
+                                <span className="col-start-2 font-pixel text-xs text-ink-soft tabular-nums">{TAB_HINTS[l.href]}</span>
                               )}
                             </MenuPrimitive.LinkItem>
                           );
@@ -379,7 +379,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                   >
                     {l.label}
                     {l.href === "/cart" && itemCount > 0 && (
-                      <span className="min-w-5 h-5 px-1.5 bg-coral-fill font-pixel text-[11px] text-ink flex items-center justify-center shadow-[0_0_0_2px_var(--ink)]">{itemCount}</span>
+                      <span className="min-w-5 h-5 px-1.5 bg-coral-fill font-pixel text-xs text-ink flex items-center justify-center shadow-[0_0_0_2px_var(--ink)]">{itemCount}</span>
                     )}
                   </Link>
                 ))}

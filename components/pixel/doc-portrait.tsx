@@ -33,7 +33,7 @@ export function DocPortrait({
         </span>
       </span>
       {nameplate && (
-        <span className="-mt-1 inline-flex h-6 items-center bg-butter px-2 font-pixel text-[0.6875rem] uppercase leading-none text-ink px-frame">
+        <span className="-mt-1 inline-flex h-6 items-center bg-butter px-2 font-pixel text-xs uppercase leading-none text-ink px-frame">
           {nameplate}
         </span>
       )}

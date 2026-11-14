@@ -112,7 +112,7 @@ export default function GiftCardsPage() {
                 </span>
               </div>
             </div>
-            <div className="relative mx-auto h-10 w-full lg:h-24">
+            <div className="relative mx-auto -mb-4 h-20 w-full lg:mb-0 lg:h-24">
               <HealSparkles count={4} />
             </div>
           </div>

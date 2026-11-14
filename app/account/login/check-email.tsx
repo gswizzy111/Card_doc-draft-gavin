@@ -86,7 +86,7 @@ export function CheckEmail({ info, onConfirmed, onStartOver, onBack }: {
 
   return (
     <div className="px-window-ink p-6 sm:p-8">
-      <h1 ref={heading} tabIndex={-1} className="font-heading font-black text-2xl text-foreground text-center outline-none">
+      <h1 ref={heading} tabIndex={-1} className="font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink text-center outline-none">
         {state.sent ? "Check your email" : "We couldn't send your link"}
       </h1>
 
@@ -120,7 +120,7 @@ export function CheckEmail({ info, onConfirmed, onStartOver, onBack }: {
           type="button"
           onClick={sendAgain}
           disabled={busy || wait > 0}
-          className="mt-5 w-full h-11 bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 disabled:opacity-60 transition-colors"
+          className="px-btn mt-5 w-full h-11 disabled:opacity-60 px-5 text-base"
         >
           {busy ? "Sending…" : "Send it again"}
           {!busy && wait > 0 && <span className="font-medium"> (in {wait}s)</span>}

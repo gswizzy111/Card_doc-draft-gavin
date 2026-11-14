@@ -16,11 +16,11 @@ export default async function AccountSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/30">
+    <div className="min-h-screen page-glow">
       <AccountHeader email={user.email} active="settings" />
       <div className="max-w-2xl mx-auto px-6 py-10 flex flex-col gap-6">
         <div>
-          <h1 className="font-heading font-black text-3xl text-foreground">Settings</h1>
+          <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)]">Settings</h1>
           <p className="text-sm text-muted-foreground mt-1">Your details fill in automatically when you check out.</p>
         </div>
         <ProfileForm

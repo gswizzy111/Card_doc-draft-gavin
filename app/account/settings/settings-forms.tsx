@@ -46,7 +46,7 @@ export function ProfileForm({ email, initial }: { email: string; initial: Profil
 
   return (
     <form onSubmit={save} className="px-window-ink p-6 flex flex-col gap-4">
-      <h2 className="font-heading font-black text-lg text-foreground">Your details</h2>
+      <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">Your details</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="p-name" className={LABEL_CN}>Full name</label>
@@ -131,7 +131,7 @@ export function PasswordForm() {
 
   return (
     <form onSubmit={save} className="px-window-ink p-6 flex flex-col gap-4">
-      <h2 className="font-heading font-black text-lg text-foreground">Change password</h2>
+      <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">Change password</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="pw-current" className={LABEL_CN}>Current password</label>

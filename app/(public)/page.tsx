@@ -296,10 +296,10 @@ export default async function HomePage() {
             <ul key={copy} aria-hidden={copy === 1 || undefined} className={`flex items-center ${copy === 1 ? "marquee-dupe" : ""}`}>
               {FIXES.map((word, i) => (
                 <li key={word} className="flex items-center">
-                  <span className={`whitespace-nowrap font-heading uppercase leading-none text-[clamp(2.5rem,7vw,5.5rem)] ${i % 2 ? "text-mint" : "text-panel"}`}>
+                  <span className={`whitespace-nowrap font-heading uppercase leading-none text-[clamp(2.5rem,7vw,5.5rem)] motion-reduce:text-[clamp(2rem,7vw,5.5rem)] ${i % 2 ? "text-mint" : "text-panel"}`}>
                     {word}
                   </span>
-                  <span aria-hidden className="mx-6 shrink-0 md:mx-10">
+                  <span aria-hidden className="mx-6 shrink-0 motion-reduce:mx-3 md:mx-10 md:motion-reduce:mx-8">
                     <PixelIcon name="heart-plus" size={32} />
                   </span>
                 </li>

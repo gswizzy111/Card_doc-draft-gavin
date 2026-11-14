@@ -18,12 +18,12 @@ const DEFAULT_TIERS = getAllTiers();
 
 // One selection style for every tier (clinic theme)
 const TIER_STYLES: Record<string, { selected: string; normal: string }> = {
-  regular: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  expedited: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  premium: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  ultra_premium: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  elite: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  fast_pass: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  regular: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  expedited: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  premium: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  ultra_premium: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  elite: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  fast_pass: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
 };
 
 function parseCents(str: string): number {

@@ -93,8 +93,8 @@ export function StepWalkthrough({ title, steps }: { title: string; steps: Step[]
               >
                 {step.n}
               </span>
-              <div className={`transition-opacity duration-150 [transition-timing-function:steps(2,end)] ${i === active ? "opacity-100" : "md:opacity-75"}`}>
-                <p className="font-heading text-2xl md:text-[1.75rem] uppercase leading-none text-ink">{step.title}</p>
+              <div className={`min-w-0 flex-1 transition-opacity duration-150 [transition-timing-function:steps(2,end)] ${i === active ? "opacity-100" : "md:opacity-75"}`}>
+                <p className="font-heading text-[1.375rem] sm:text-2xl md:text-[1.75rem] uppercase leading-none text-ink [overflow-wrap:anywhere]">{step.title}</p>
                 {step.note && <p className="mt-1 font-pixel text-xs text-coral-deep leading-relaxed max-w-[52ch]">{step.note}</p>}
                 {typeof step.body === "string" ? (
                   <p className="mt-1.5 text-[15px] md:text-base text-muted-foreground leading-relaxed max-w-[48ch]">{step.body}</p>

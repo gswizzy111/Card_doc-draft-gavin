@@ -41,13 +41,13 @@ export default async function PartnerDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/30">
+    <div className="min-h-screen page-glow">
       <div className="max-w-3xl mx-auto px-6 py-10">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-heading font-black text-3xl text-foreground">{partner.store_name ?? partner.name}</h1>
+            <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)]">{partner.store_name ?? partner.name}</h1>
             <p className="text-muted-foreground text-sm mt-1">Partner Dashboard — The Card Doc</p>
           </div>
           <form action="/api/partners/logout" method="POST">
@@ -59,7 +59,7 @@ export default async function PartnerDashboard() {
         <div className="bg-ink p-6 mb-4 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-primary-foreground/70 mb-1">Total Profit Earned</p>
-            <p className="font-heading font-black text-4xl text-primary-foreground">${totalProfit.toFixed(2)}</p>
+            <p className="font-heading text-4xl text-primary-foreground">${totalProfit.toFixed(2)}</p>
           </div>
           <div className="text-right text-primary-foreground/70 text-xs space-y-0.5">
             <p>{kitsSold} kit{kitsSold !== 1 ? "s" : ""} × $18.50</p>
@@ -77,7 +77,7 @@ export default async function PartnerDashboard() {
           ].map(({ label, allocated, sold, remaining }) => (
             <div key={label} className="bg-panel px-frame p-4">
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">{label}</p>
-              <p className="font-heading font-black text-2xl text-foreground">{remaining}<span className="text-sm font-normal text-muted-foreground">/{allocated}</span></p>
+              <p className="font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink">{remaining}<span className="text-sm font-normal text-muted-foreground">/{allocated}</span></p>
               <p className="text-xs text-muted-foreground mt-1">{sold} sold</p>
             </div>
           ))}
@@ -91,7 +91,7 @@ export default async function PartnerDashboard() {
 
         {/* Sales history */}
         <div className="px-window-ink p-6 mb-4">
-          <h2 className="font-heading font-black text-lg text-foreground mb-4">Sales History</h2>
+          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">Sales History</h2>
           {!allSales.length ? (
             <p className="text-sm text-muted-foreground">No sales logged yet.</p>
           ) : (
@@ -111,7 +111,7 @@ export default async function PartnerDashboard() {
 
         {/* Referrals history */}
         <div className="px-window-ink p-6">
-          <h2 className="font-heading font-black text-lg text-foreground mb-4">
+          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">
             Referrals <span className="text-muted-foreground font-normal text-sm">({referrals?.length ?? 0} total)</span>
           </h2>
           {!referrals?.length ? (

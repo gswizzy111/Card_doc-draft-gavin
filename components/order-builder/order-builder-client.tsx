@@ -22,6 +22,7 @@ import { cardProblems } from "./step-cards";
 import type { Service, CardEntry, CustomerInfo, ShippingRate, InsuranceSelection } from "@/lib/types";
 import type { RestorationTier, RestorationTierId } from "@/lib/restoration-tiers";
 import { fbq } from "@/lib/pixel";
+import { WindowTab } from "@/components/pixel/window";
 
 function defaultCard(serviceId: string, tier?: RestorationTierId): CardEntry {
   return {
@@ -290,9 +291,7 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
       <InAppBrowserBanner />
       <SlabAuthorizationDialog card={slabDialogCard} state={signing} onChange={changeSigning} onClose={closeSlabDialog} />
       <div className="px-window mb-12 px-4 pt-8 pb-5 sm:px-8">
-        <span aria-hidden className="absolute -top-4 left-4 z-[1] inline-flex h-7 items-center gap-2 bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame">
-          <span className="text-coral-deep">▶</span>CHECK-IN
-        </span>
+        <WindowTab aria-hidden cursor>CHECK-IN</WindowTab>
         <ProgressIndicator currentStep={step} />
       </div>
 

@@ -6,6 +6,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { pixelButton } from "@/components/pixel/pixel-button";
 import { DocSprite } from "@/components/pixel/sprites";
+import { WindowTab } from "@/components/pixel/window";
 
 const SIZES = ["Small", "Medium", "Large", "XL"] as const;
 
@@ -180,7 +181,7 @@ function UpsellInner() {
           {/* Right — order summary + continue */}
           <div className="w-full shrink-0 lg:sticky lg:top-24 lg:w-80">
             <div className="px-window mt-4 p-6">
-              <span aria-hidden className="absolute -top-4 left-4 z-[1] inline-flex h-7 items-center bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame">▶ BAG</span>
+              <WindowTab aria-hidden cursor>BAG</WindowTab>
               <h2 className="mb-4 font-heading text-2xl uppercase tracking-[0.02em] text-ink">Your Cart</h2>
               <div className="flex flex-col gap-2 mb-4">
                 {items.map((item) => (

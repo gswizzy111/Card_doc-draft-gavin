@@ -53,7 +53,7 @@ function SetupForm() {
 
   return (
     <>
-      <h1 className="font-heading font-black text-2xl text-foreground mb-1">Set your password</h1>
+      <h1 className="font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink mb-1">Set your password</h1>
       <p className="text-sm text-muted-foreground mb-6">You're setting up accountant access to The Card Doc admin.</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
@@ -63,7 +63,7 @@ function SetupForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={`At least ${MIN} characters`}
-            className="w-full h-11 px-4 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
             required
             autoFocus
           />
@@ -75,7 +75,7 @@ function SetupForm() {
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             placeholder="Repeat your password"
-            className="w-full h-11 px-4 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
             required
           />
         </div>

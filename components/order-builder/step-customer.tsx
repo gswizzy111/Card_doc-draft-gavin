@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { Input, PIXEL_FIELD } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -14,7 +14,7 @@ import { US_STATES } from "@/lib/constants";
 import type { CustomerInfo } from "@/lib/types";
 import { Need, Req } from "@/components/checkout/required";
 
-const INPUT_CN = "h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
+const INPUT_CN = PIXEL_FIELD;
 
 
 interface StepCustomerProps {

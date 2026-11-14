@@ -1,4 +1,4 @@
-export { Window } from "./window";
+export { Window, WindowTab } from "./window";
 export { StatusChip, type ClinicStatus } from "./status-chip";
 export { HpBar } from "./hp-bar";
 export { WallBand } from "./wall-band";

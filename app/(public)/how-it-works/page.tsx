@@ -158,7 +158,7 @@ export default function HowItWorksPage() {
           className="mb-12 md:mb-14"
           eyebrow="How It Works"
           title="How It Works"
-          sprite={<DocSprite scale={3} />}
+          sprite={<DocSprite scale={4} />}
           lead="The Card Doc is a trading card restoration and grading-prep shop in Ridgewood, New Jersey. Mail us your cards from anywhere in the US, we do the work by hand in our shop, and we ship them back ready for grading or your personal collection."
         />
 

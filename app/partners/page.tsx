@@ -29,9 +29,9 @@ export default function PartnerLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/30 flex items-center justify-center px-4">
+    <div className="min-h-screen page-glow flex items-center justify-center px-4">
       <div className="px-window-ink p-8 w-full max-w-sm">
-        <h1 className="font-heading font-black text-2xl text-foreground mb-1">Partner Portal</h1>
+        <h1 className="font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink mb-1">Partner Portal</h1>
         <p className="text-sm text-muted-foreground mb-6">The Card Doc</p>
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div>
@@ -43,7 +43,7 @@ export default function PartnerLoginPage() {
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
               placeholder="Enter your passcode"
-              className="w-full border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
               required
             />
           </div>
@@ -51,7 +51,7 @@ export default function PartnerLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-11 bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="px-btn w-full h-11 disabled:opacity-50 px-5 text-base"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>

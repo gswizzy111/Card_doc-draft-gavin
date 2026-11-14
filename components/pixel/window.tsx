@@ -41,11 +41,7 @@ export function Window({
       className={cn(TONE[tone], variant === "dialog" && "px-dialog", "p-5 md:p-6", title ? "mt-4" : "", className)}
       {...props}
     >
-      {title && (
-        <span className="absolute -top-4 left-4 z-[1] inline-flex h-7 items-center bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame">
-          {title}
-        </span>
-      )}
+      {title && <WindowTab>{title}</WindowTab>}
       {children}
       {variant === "dialog" && next && (
         <span aria-hidden className="px-dialog-next">
@@ -53,5 +49,33 @@ export function Window({
         </span>
       )}
     </Tag>
+  );
+}
+
+/**
+ * The butter tab that sits on a window's top edge. `<Window title>` uses it;
+ * use it directly on a plain `.px-window*` element (give that element
+ * `relative mt-4`). `cursor` adds the ▶ before the label.
+ */
+export function WindowTab({
+  cursor = false,
+  className,
+  children,
+  ...props
+}: {
+  cursor?: boolean;
+  children: React.ReactNode;
+} & React.HTMLAttributes<HTMLSpanElement>) {
+  return (
+    <span
+      {...props}
+      className={cn(
+        "absolute -top-4 left-4 z-[1] inline-flex h-7 items-center gap-1.5 bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame",
+        className
+      )}
+    >
+      {cursor && <span aria-hidden className="text-coral-deep">▶</span>}
+      {children}
+    </span>
   );
 }

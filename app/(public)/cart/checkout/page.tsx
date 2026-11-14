@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input, PIXEL_FIELD } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { KIT_US_STATES, addressProblem } from "@/lib/shipping-address";
 import { AddressAutocomplete } from "@/components/ui/address-autocomplete";
@@ -20,7 +20,7 @@ import { pixelButton } from "@/components/pixel/pixel-button";
 import { Window } from "@/components/pixel/window";
 import { PixelIcon } from "@/components/pixel/sprites";
 
-const INPUT_CN = "h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
+const INPUT_CN = PIXEL_FIELD;
 
 const COUNTRIES = [
   { code: "CA", name: "Canada" },
@@ -56,7 +56,7 @@ const COUNTRIES = [
 // If Shippo can't quote at all, US orders still go through at the old flat
 // rate (no rate ID, so the label is bought by hand as before)
 const FLAT_US_SHIPPING: KitRate = { id: "", provider: "", service: "Standard Shipping", days: null, postageCents: 599, priceCents: 599 };
-const SELECT_CN = "flex h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
+const SELECT_CN = `flex ${PIXEL_FIELD}`;
 
 function rateName(r: KitRate) {
   return [r.provider, r.service].filter(Boolean).join(" ");

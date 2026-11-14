@@ -56,7 +56,7 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
       <button
         onClick={() => setOpen(true)}
         disabled={!anyAvailable}
-        className="w-full h-14 bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-40 text-sm"
+        className="px-btn w-full h-14 disabled:opacity-40 px-5 text-base"
       >
         Log a Sale
       </button>
@@ -83,7 +83,7 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
               }`}
             >
               {p.label}
-              <span className="block text-[10px] font-normal opacity-70">{rem} left</span>
+              <span className="block text-xs font-normal">{rem} left</span>
             </button>
           );
         })}
@@ -98,7 +98,7 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
           max={remaining}
           value={quantity}
           onChange={(e) => setQuantity(Math.max(1, Math.min(remaining, parseInt(e.target.value) || 1)))}
-          className="w-20 border border-frame/50 px-3 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
+          className="w-20 text-center h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
         />
         <span className="text-xs text-frame-deep">of {remaining} remaining</span>
       </div>
@@ -108,7 +108,7 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notes (optional)"
-        className="w-full border border-frame/50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
+        className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
       />
 
       {error && <p className="text-xs text-destructive">{error}</p>}
@@ -117,7 +117,7 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
         <button
           onClick={submit}
           disabled={saving || remaining <= 0}
-          className="text-sm font-bold px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          className="px-btn px-4 disabled:opacity-50 h-11 text-base"
         >
           {saving ? "Saving..." : "Confirm Sale"}
         </button>

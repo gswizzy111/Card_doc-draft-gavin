@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DocPortrait, Window } from "@/components/pixel";
 import { MailWarning } from "lucide-react";
 import { lookupUnsubscribeToken } from "@/lib/email-unsubscribe";
 import { UnsubscribePanel } from "./unsubscribe-panel";
@@ -35,31 +36,32 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
   return (
     <div className="page-glow flex flex-1 flex-col min-h-screen">
       <div className="max-w-7xl w-full mx-auto px-4 md:px-10 py-5">
-        <Link href="/" className="inline-flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/card-doctor.jpg" alt="" className="w-9 h-9 object-cover ring-1 ring-rule" />
-          <span className="font-heading text-lg tracking-[0.02em] text-ink">The Card Doc</span>
+        <Link href="/" className="inline-flex min-h-11 items-center gap-3 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep">
+          <DocPortrait size="xs" alt="" />
+          <span className="font-heading text-xl tracking-[0.02em] text-ink">The Card Doc</span>
         </Link>
       </div>
       <div className="flex flex-1 items-center">
-        <div className="max-w-xl w-full mx-auto px-4 md:px-10 py-16 md:py-28">
+        <div className="mx-auto w-full max-w-xl px-4 py-16 md:px-10 md:py-28">
+          <Window variant="dialog" className="px-6 py-8 md:px-8">
           {found ? (
             <UnsubscribePanel token={token} email={found.email} alreadyUnsubscribed={found.unsubscribed} />
           ) : (
             <>
-              <span className="flex h-12 w-12 items-center justify-center bg-rx-soft text-rx mb-6">
+              <span className="mb-6 flex size-12 items-center justify-center bg-rx-soft text-coral-deep px-frame">
                 <MailWarning className="h-6 w-6" strokeWidth={1.75} aria-hidden />
               </span>
-              <h1 className="font-heading text-3xl md:text-4xl tracking-[0.02em] text-ink mb-4">
+              <h1 className="mb-4 font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink md:text-4xl">
                 {failed ? "Something went wrong" : "This link isn't valid"}
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-[17px] leading-relaxed text-ink-soft">
                 {failed
                   ? "We couldn't open your unsubscribe link just now. Please try again in a minute."
                   : "Open the unsubscribe link from the email again, or reply to that email and we'll take you off the list."}
               </p>
             </>
           )}
+          </Window>
         </div>
       </div>
     </div>

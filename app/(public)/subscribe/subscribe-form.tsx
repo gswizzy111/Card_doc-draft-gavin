@@ -122,22 +122,22 @@ export function SubscribeForm({ priceCents }: { priceCents: number }) {
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <Need missing={miss(form.name)}>
-              <label htmlFor="name" className="block text-sm font-semibold text-ink mb-1.5">Full Name<Req /></label>
+              <label htmlFor="name" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">Full Name<Req /></label>
               <input id="name" name="name" type="text" required value={form.name} onChange={handleChange}
                 placeholder="Jane Smith" className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3.5 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]" />
             </Need>
             <Need missing={miss(form.email)}>
-              <label htmlFor="email" className="block text-sm font-semibold text-ink mb-1.5">Email<Req /></label>
+              <label htmlFor="email" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">Email<Req /></label>
               <input id="email" name="email" type="email" required value={form.email} onChange={handleChange}
                 placeholder="jane@example.com" className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3.5 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]" />
             </Need>
             <Need missing={miss(form.phone)}>
-              <label htmlFor="phone" className="block text-sm font-semibold text-ink mb-1.5">Phone<Req /></label>
+              <label htmlFor="phone" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">Phone<Req /></label>
               <input id="phone" name="phone" type="tel" required value={form.phone} onChange={handleChange}
                 placeholder="(555) 555-5555" className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3.5 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]" />
             </Need>
             <Need missing={miss(form.street1)}>
-              <label htmlFor="street1" className="block text-sm font-semibold text-ink mb-1.5">Street Address<Req /></label>
+              <label htmlFor="street1" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">Street Address<Req /></label>
               <AddressAutocomplete
                 id="street1"
                 value={form.street1}
@@ -148,7 +148,7 @@ export function SubscribeForm({ priceCents }: { priceCents: number }) {
               />
             </Need>
             <div>
-              <label htmlFor="street2" className="block text-sm font-semibold text-ink mb-1.5">
+              <label htmlFor="street2" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">
                 Apt / Suite <span className="text-ink-soft font-normal">(optional)</span>
               </label>
               <input id="street2" name="street2" type="text" value={form.street2} onChange={handleChange}
@@ -156,12 +156,12 @@ export function SubscribeForm({ priceCents }: { priceCents: number }) {
             </div>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               <Need missing={miss(form.city)} className="col-span-2 sm:col-span-1">
-                <label htmlFor="city" className="block text-sm font-semibold text-ink mb-1.5">City<Req /></label>
+                <label htmlFor="city" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">City<Req /></label>
                 <input id="city" name="city" type="text" required value={form.city} onChange={handleChange}
                   placeholder="Chicago" className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3.5 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]" />
               </Need>
               <Need missing={miss(form.state)}>
-                <label htmlFor="state" className="block text-sm font-semibold text-ink mb-1.5">State<Req /></label>
+                <label htmlFor="state" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">State<Req /></label>
                 <select id="state" name="state" required value={form.state} onChange={handleChange}
                   className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3.5 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]">
                   <option value="">—</option>
@@ -169,7 +169,7 @@ export function SubscribeForm({ priceCents }: { priceCents: number }) {
                 </select>
               </Need>
               <Need missing={miss(form.zip)}>
-                <label htmlFor="zip" className="block text-sm font-semibold text-ink mb-1.5">ZIP<Req /></label>
+                <label htmlFor="zip" className="mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink">ZIP<Req /></label>
                 <input id="zip" name="zip" type="text" required value={form.zip} onChange={handleChange}
                   placeholder="60601" className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3.5 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]" />
               </Need>

@@ -86,7 +86,7 @@ function PhotoEditor({
           disabled={uploading}
           className="w-14 h-14 border-2 border-dashed border-border hover:border-primary transition-colors flex items-center justify-center text-muted-foreground hover:text-primary disabled:opacity-50"
         >
-          {uploading ? <span className="text-[10px]">...</span> : <Upload className="h-4 w-4" />}
+          {uploading ? <span className="text-xs">...</span> : <Upload className="h-4 w-4" />}
         </button>
       )}
       <input
@@ -184,7 +184,7 @@ export function CardEditor({ orderId, initialCards, locked, lockReason }: Props)
                     type="text"
                     value={card.card_name}
                     onChange={(e) => updateCard(card.id, { card_name: e.target.value })}
-                    className="w-full h-9 border border-border px-3 text-sm focus:outline-none focus:border-primary"
+                    className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
                   />
                 </Field>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -193,7 +193,7 @@ export function CardEditor({ orderId, initialCards, locked, lockReason }: Props)
                       type="text"
                       value={card.card_set ?? ""}
                       onChange={(e) => updateCard(card.id, { card_set: e.target.value || null })}
-                      className="w-full h-9 border border-border px-3 text-sm focus:outline-none focus:border-primary"
+                      className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
                     />
                   </Field>
                   <Field label="Year">
@@ -201,7 +201,7 @@ export function CardEditor({ orderId, initialCards, locked, lockReason }: Props)
                       type="text"
                       value={card.card_year ?? ""}
                       onChange={(e) => updateCard(card.id, { card_year: e.target.value || null })}
-                      className="w-full h-9 border border-border px-3 text-sm focus:outline-none focus:border-primary"
+                      className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
                     />
                   </Field>
                 </div>
@@ -215,7 +215,7 @@ export function CardEditor({ orderId, initialCards, locked, lockReason }: Props)
                       const v = parseFloat(e.target.value);
                       updateCard(card.id, { estimated_value_cents: isNaN(v) ? null : Math.round(v * 100) });
                     }}
-                    className="w-full h-9 border border-border px-3 text-sm focus:outline-none focus:border-primary"
+                    className="w-full h-11 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
                     placeholder="0"
                   />
                 </Field>
@@ -224,7 +224,7 @@ export function CardEditor({ orderId, initialCards, locked, lockReason }: Props)
                     value={card.notes ?? ""}
                     onChange={(e) => updateCard(card.id, { notes: e.target.value || null })}
                     rows={2}
-                    className="w-full border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary resize-none"
+                    className="w-full resize-none py-2.5 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
                     placeholder="Any special instructions for this card…"
                   />
                 </Field>
@@ -245,7 +245,7 @@ export function CardEditor({ orderId, initialCards, locked, lockReason }: Props)
         <button
           onClick={save}
           disabled={saving || !dirty}
-          className="px-6 h-10 bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 disabled:opacity-40 transition-colors"
+          className="px-btn px-6 h-11 disabled:opacity-40 text-base"
         >
           {saving ? "Saving…" : "Save Changes"}
         </button>

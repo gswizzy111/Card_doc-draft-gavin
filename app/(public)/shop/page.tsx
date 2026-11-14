@@ -226,7 +226,7 @@ export default async function ShopPage() {
               <div className="mt-1 h-5 border-[3px] border-ink bg-trim shadow-[5px_5px_0_var(--px-shadow)]" />
             </div>
             <div className="flex w-full items-end gap-3 md:gap-4">
-              <span aria-hidden className="mb-1 shrink-0"><DocSprite scale={3} /></span>
+              <span aria-hidden className="mb-1 shrink-0"><CardSprite variant="sleeve" scale={3} /></span>
               <Window variant="dialog" className="flex-1 py-6 pr-10 md:py-7">
                 <p className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink md:text-3xl">Products coming soon.</p>
               </Window>

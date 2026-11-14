@@ -11,7 +11,7 @@ function Stat({ label, value, note }: { label: string; value: string; note?: str
   return (
     <div className="px-window-ink p-5">
       <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className="font-heading font-black text-2xl sm:text-3xl text-foreground mt-2 tabular-nums">{value}</p>
+      <p className="font-heading text-2xl sm:text-3xl text-foreground mt-2 tabular-nums">{value}</p>
       {note && <p className="text-xs text-muted-foreground mt-1">{note}</p>}
     </div>
   );
@@ -44,14 +44,14 @@ export default async function AffiliateDashboard() {
   const fmtDate = (iso: string) => saleDate(iso);
 
   return (
-    <div className="min-h-screen bg-secondary/30">
+    <div className="min-h-screen page-glow">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-6">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Creator dashboard · The Card Doc</p>
-            <h1 className="font-heading font-black text-3xl text-foreground mt-1 [overflow-wrap:anywhere]">{creator.name}</h1>
+            <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] mt-1 [overflow-wrap:anywhere]">{creator.name}</h1>
           </div>
           <form action="/api/affiliates/logout" method="POST" className="shrink-0">
             <button className="text-sm text-muted-foreground hover:text-foreground transition-colors py-1">Sign out</button>
@@ -62,14 +62,14 @@ export default async function AffiliateDashboard() {
         <div className="bg-ink text-white p-6 sm:p-8 grid gap-6 sm:grid-cols-[1.4fr_1fr] sm:items-center">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-white/70">Commission earned</p>
-            <p className="font-heading font-black text-5xl mt-2 tabular-nums">{formatCurrency(s.all.commissionCents)}</p>
+            <p className="font-heading text-5xl mt-2 tabular-nums">{formatCurrency(s.all.commissionCents)}</p>
             <p className="text-white/70 text-sm mt-2">
               {oneRate ? `${formatPercent(rate)} of ` : "From "}{formatCurrency(s.all.cents)} in sales with your code
             </p>
           </div>
           <div className="sm:border-l sm:border-white/15 sm:pl-6">
             <p className="text-xs font-bold uppercase tracking-widest text-white/70">Your code</p>
-            <p className="font-mono font-black text-2xl tracking-wider mt-2 [overflow-wrap:anywhere]">{creator.code}</p>
+            <p className="font-mono font-bold text-2xl tracking-wider mt-2 [overflow-wrap:anywhere]">{creator.code}</p>
             <p className="text-white/70 text-xs mt-1 mb-3">
               {creator.discount_percent > 0
                 ? `Customers get ${creator.discount_percent}% off when they enter it at checkout.`
@@ -90,7 +90,7 @@ export default async function AffiliateDashboard() {
         <div className="grid gap-6 md:grid-cols-2">
           {/* By service */}
           <div className="px-window-ink p-6">
-            <h2 className="font-heading font-black text-lg text-foreground">By service</h2>
+            <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">By service</h2>
             <p className="text-xs text-muted-foreground mb-2">Sales and revenue, with your commission on the right</p>
             <ServiceRow label="Restorations" t={s.restoration} />
             <ServiceRow label="Restoration kits" t={s.kit} />
@@ -98,7 +98,7 @@ export default async function AffiliateDashboard() {
 
           {/* By month */}
           <div className="px-window-ink p-6">
-            <h2 className="font-heading font-black text-lg text-foreground mb-3">Last 6 months</h2>
+            <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-3">Last 6 months</h2>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
@@ -124,7 +124,7 @@ export default async function AffiliateDashboard() {
 
         {/* Recent sales */}
         <div className="px-window-ink p-6">
-          <h2 className="font-heading font-black text-lg text-foreground">Recent sales</h2>
+          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">Recent sales</h2>
           <p className="text-xs text-muted-foreground mb-3">The last {RECENT} orders with your code. Customer names and details aren&apos;t shown.</p>
           {sales.length === 0 ? (
             <p className="text-sm text-muted-foreground py-4">No sales with your code yet. Share it with your followers and they&apos;ll show up here.</p>

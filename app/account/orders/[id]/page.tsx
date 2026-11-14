@@ -120,7 +120,7 @@ export default async function AccountOrderPage({
   const currentIndex = STATUS_TIMELINE.indexOf(order.status as OrderStatus);
 
   return (
-    <div className="min-h-screen bg-secondary/30">
+    <div className="min-h-screen page-glow">
       {/* Header */}
       <header className="bg-panel border-b border-border sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -141,12 +141,12 @@ export default async function AccountOrderPage({
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <p className="rx-label text-rx mb-1">Restoration Order</p>
-            <h1 className="font-heading font-black text-3xl text-foreground">{orderLabel}</h1>
+            <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)]">{orderLabel}</h1>
             <p className="text-sm text-muted-foreground mt-1">
               Placed {new Date(order.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
             </p>
           </div>
-          <span className={`text-sm font-bold px-3 py-1.5 rounded-full ${STATUS_BADGE[order.status] ?? "bg-gray-100 text-gray-600"}`}>
+          <span className={`inline-flex h-8 items-center px-3 font-pixel text-xs uppercase tracking-[0.04em] px-frame ${STATUS_BADGE[order.status] ?? "bg-gray-100 text-gray-600"}`}>
             {ORDER_STATUSES[order.status as OrderStatus]?.label ?? order.status}
           </span>
         </div>
@@ -156,7 +156,7 @@ export default async function AccountOrderPage({
           <div className="lg:col-span-1 flex flex-col gap-4">
             {/* Status timeline */}
             <div className="px-window-ink p-5">
-              <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-4">Status</h2>
+              <h2 className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft mb-4">Status</h2>
               <div className="flex flex-col gap-3">
                 {visibleStatuses.map((s) => {
                   const sIndex = STATUS_TIMELINE.indexOf(s);
@@ -164,11 +164,11 @@ export default async function AccountOrderPage({
                   const isCurrent = s === order.status;
                   return (
                     <div key={s} className="flex items-center gap-3">
-                      <div className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs ${
+                      <div className={`size-5 shrink-0 px-frame flex items-center justify-center text-white text-xs ${
                         isCurrent ? "bg-primary" : isDone ? "bg-primary/40" : "bg-border"
                       }`}>
                         {isDone && "✓"}
-                        {isCurrent && <span className="w-2 h-2 rounded-full bg-panel block" />}
+                        {isCurrent && <span className="block size-2 bg-panel" />}
                       </div>
                       <span className={`text-xs font-medium ${isCurrent ? "text-primary font-bold" : isDone ? "text-muted-foreground" : "text-muted-foreground/40"}`}>
                         {ORDER_STATUSES[s]?.label}
@@ -196,7 +196,7 @@ export default async function AccountOrderPage({
               <div className="bg-powder/30 border border-frame/50 p-5">
                 <p className="rx-label text-rx mb-2">Inbound Tracking</p>
                 {inboundStatus && (
-                  <p className={`text-xs font-bold px-2 py-0.5 rounded-full inline-block mb-2 ${
+                  <p className={`inline-flex min-h-6 items-center px-2 font-pixel text-xs uppercase tracking-[0.04em] px-frame mb-2 ${
                     inboundStatus === "TRANSIT" ? "bg-blue-200 text-ink" :
                     inboundStatus === "DELIVERED" ? "bg-green-200 text-mint-deep" :
                     "bg-gray-200 text-gray-700"
@@ -215,12 +215,12 @@ export default async function AccountOrderPage({
             {/* Prepaid label download */}
             {order.inbound_method === "buy_label" && order.shipping_label_url && (
               <div className="px-window-ink p-5">
-                <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-3">Shipping Label</h2>
+                <h2 className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft mb-3">Shipping Label</h2>
                 <p className="text-xs text-muted-foreground mb-3">Print and attach to your package.</p>
                 {/* A button, not a link: analytics runs on this page (components/open-file-button.tsx) */}
                 <OpenFileButton
                   url={order.shipping_label_url}
-                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground text-xs font-bold px-4 py-2 hover:bg-primary/90 transition-colors cursor-pointer"
+                  className="px-btn inline-flex items-center gap-2 px-4 h-11 text-base"
                 >
                   Download Label (PDF)
                 </OpenFileButton>
@@ -231,7 +231,7 @@ export default async function AccountOrderPage({
             {order.tracking_number && (
               <div className="bg-cyan-50 border border-cyan-200 p-5">
                 <p className="rx-label text-rx mb-1">Return Tracking</p>
-                <p className="font-mono font-black text-base text-cyan-900 tracking-widest mb-3">{order.tracking_number}</p>
+                <p className="font-mono font-bold text-base text-ink tracking-widest mb-3">{order.tracking_number}</p>
                 <a
                   href={order.outbound_tracking_number === order.tracking_number
                     ? trackingLink(order.tracking_number, order.outbound_carrier ?? null, order.outbound_tracking_url ?? null)
@@ -247,7 +247,7 @@ export default async function AccountOrderPage({
 
             {/* Order summary */}
             <div className="px-window-ink p-5">
-              <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-3">Order Summary</h2>
+              <h2 className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft mb-3">Order Summary</h2>
               <div className="flex flex-col gap-2 text-sm">
                 {(services as { id: string; service_name: string; quantity: number; price_cents: number }[]).map((s) => (
                   <div key={s.id} className="flex justify-between">
@@ -270,7 +270,7 @@ export default async function AccountOrderPage({
             {/* Restoration results */}
             {(order.restoration_photos?.length > 0 || order.completion_notes) && (
               <div className="px-window-ink p-5">
-                <h2 className="font-heading font-black text-lg text-foreground mb-4">Restoration Results</h2>
+                <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">Restoration Results</h2>
                 {order.completion_notes && (
                   <div className="mb-4 p-4 bg-secondary/40">
                     <p className="rx-label text-rx mb-2">Notes from The Card Doc</p>
@@ -292,7 +292,7 @@ export default async function AccountOrderPage({
 
             {/* Card editor */}
             <div className="px-window-ink p-5">
-              <h2 className="font-heading font-black text-lg text-foreground mb-4">
+              <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">
                 Your Cards ({cards.length})
               </h2>
               <CardEditor

@@ -232,8 +232,8 @@ export function StepReview({
 
       {/* Bulk discount banner (it replaces a smaller code or loyalty discount) */}
       {discountKind === "bulk" && (
-        <div className="bg-rx-soft border border-rx/30 p-4 flex items-center gap-3">
-          <Trophy className="h-6 w-6 shrink-0 text-rx" strokeWidth={1.75} />
+        <div className="flex items-center gap-3 bg-mint/35 p-4 px-frame-shadow">
+          <Trophy className="h-6 w-6 shrink-0 text-mint-deep" strokeWidth={1.75} />
           <div>
             <p className="font-bold text-ink text-sm">{discountPercentApplied}% bulk discount applied!</p>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -246,11 +246,11 @@ export function StepReview({
       {/* Shipping */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h3 className="font-medium text-foreground">Shipping</h3>
+          <h3 className="font-heading text-xl uppercase tracking-[0.02em] text-ink">Shipping</h3>
           <button
             type="button"
             onClick={() => onEditStep(4)}
-            className="text-xs text-accent hover:text-accent/80 transition-colors"
+            className="-my-2 inline-flex min-h-11 items-center px-2 font-pixel text-xs uppercase tracking-[0.04em] text-coral-deep hover:bg-butter/40 hover:underline"
           >
             Edit
           </button>
@@ -266,18 +266,18 @@ export function StepReview({
 
       {/* Signature confirmation add-on */}
       {shippingMethod === "buy_label" && (
-        <div className={`border p-4 transition-colors ${addSignatureConfirmation ? "border-blue-400 bg-powder/30" : "border-border"}`}>
+        <div className={`p-4 px-frame ${addSignatureConfirmation ? "bg-powder/35" : "bg-panel"}`}>
           <label className="flex items-start gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={addSignatureConfirmation}
               onChange={(e) => onSignatureConfirmationChange(e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 accent-primary cursor-pointer"
+              className="mt-0.5 size-5 shrink-0 cursor-pointer accent-primary"
             />
             <div>
-              <p className="font-medium text-foreground text-sm">
+              <p className="text-[15px] font-semibold text-ink">
                 Add signature confirmation on delivery{" "}
-                <span className="text-primary font-semibold">+$5.00</span>
+                <span className="font-semibold text-coral-deep">+$5.00</span>
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Requires someone to sign for the package when delivered to you. Adds an extra layer of security for high-value cards.
@@ -296,7 +296,7 @@ export function StepReview({
           purchaseMissing={!(insurance.declaredValueCents > 0 && insurance.type !== "none")}
         >
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide" htmlFor="insurance-amount">Amount to insure<Req /></label>
+            <label className="font-pixel text-xs uppercase tracking-[0.04em] text-ink" htmlFor="insurance-amount">Amount to insure<Req /></label>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">$</span>
               <input
@@ -309,7 +309,7 @@ export function StepReview({
                 onChange={(e) => setInsuranceDollars(e.target.value)}
                 onBlur={handleDeclaredValueBlur}
                 placeholder="e.g. 500"
-                className="w-36 h-9 border border-border px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                className="h-11 w-40 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
               />
               {quotingInsurance && <span className="text-xs text-muted-foreground">Getting rate...</span>}
             </div>
@@ -322,7 +322,7 @@ export function StepReview({
                 const { label, sub } = INSURANCE_OPTION_LABELS[type];
                 const price = type === "round_trip" ? insuranceQuote.roundTripChargeCents : insuranceQuote.customerChargeCents;
                 return (
-                  <label key={type} className={`flex items-start gap-3 p-3 border cursor-pointer transition-colors ${insurance.type === type ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"}`}>
+                  <label key={type} className={`flex cursor-pointer items-start gap-3 p-3 px-frame has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-3 has-[:focus-visible]:outline-frame-deep ${insurance.type === type ? "bg-rx-soft" : "bg-panel hover:bg-butter/30"}`}>
                     <input
                       type="radio"
                       name="insurance-type"
@@ -332,7 +332,7 @@ export function StepReview({
                     />
                     <div className="flex-1">
                       <span className="text-sm font-medium text-foreground">{label}</span>
-                      <span className="text-sm font-semibold text-primary ml-2">{formatCurrency(price)}</span>
+                      <span className="ml-2 text-sm font-semibold text-coral-deep">{formatCurrency(price)}</span>
                       <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
                     </div>
                   </label>
@@ -348,18 +348,18 @@ export function StepReview({
       )}
 
       {/* Instagram Feature Add-on */}
-      <div className={`border p-5 transition-colors ${instagramFeature ? "border-rx bg-powder/30" : "border-border"}`}>
+      <div className={`p-5 px-frame ${instagramFeature ? "bg-powder/35" : "bg-panel"}`}>
         <label className="flex items-start gap-4 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={instagramFeature}
             onChange={(e) => onInstagramFeatureChange(e.target.checked)}
-            className="mt-0.5 h-4 w-4 shrink-0 accent-primary cursor-pointer"
+            className="mt-0.5 size-5 shrink-0 cursor-pointer accent-primary"
           />
           <div>
-            <p className="font-medium text-foreground">
+            <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">
               Feature my card in an Instagram video{" "}
-              <span className="text-rx font-semibold">+{formatCurrency(INSTAGRAM_FEATURE_CENTS)}</span>
+              <span className="text-coral-deep">+{formatCurrency(INSTAGRAM_FEATURE_CENTS)}</span>
             </p>
             <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
               We&apos;ll film your card being restored and post it to{" "}
@@ -371,10 +371,10 @@ export function StepReview({
       </div>
 
       {/* Tip */}
-      <div className="border border-border p-5">
-        <p className="font-medium text-foreground mb-1">Add a tip <span className="text-xs text-muted-foreground font-normal">(optional)</span></p>
+      <div className="px-window-ink p-5">
+        <p className="mb-1 font-heading text-xl uppercase tracking-[0.02em] text-ink">Add a tip <span className="font-sans text-xs normal-case tracking-normal text-ink-soft">(optional)</span></p>
         <p className="text-sm text-muted-foreground mb-3">100% goes to the technician working on your cards. Thank you!</p>
-        <div className="flex flex-wrap gap-2 mb-3">
+        <div className="mb-4 flex flex-wrap gap-3">
           {[0, ...TIP_PRESETS_CENTS].map((cents) => (
             <button
               key={cents}
@@ -384,10 +384,10 @@ export function StepReview({
                 setCustomTip("");
                 onTipCentsChange(cents);
               }}
-              className={`px-3 py-1.5 text-sm font-semibold border transition-colors ${
+              className={`px-btn h-11 px-3.5 text-base ${
                 tipCents === cents
-                  ? "border-rx bg-rx-soft text-ink ring-1 ring-rx"
-                  : "bg-panel border-rule text-muted-foreground hover:border-ink/40"
+                  ? "px-btn-mint"
+                  : "px-btn-panel"
               }`}
             >
               {cents === 0 ? "No tip" : formatCurrency(cents)}
@@ -395,7 +395,7 @@ export function StepReview({
           ))}
         </div>
         <div className="relative max-w-xs">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">$</span>
+          <span className="absolute left-3 top-1/2 z-[1] -translate-y-1/2 text-sm text-ink-soft">$</span>
           <input
             type="number"
             min={0}
@@ -411,7 +411,7 @@ export function StepReview({
               setCustomTip(v > MAX_TIP_CENTS ? String(MAX_TIP_CENTS / 100) : e.target.value);
               onTipCentsChange(Math.min(Math.max(v, 0), MAX_TIP_CENTS));
             }}
-            className="w-full h-9 border border-border pl-6 pr-3 text-sm focus:outline-none focus:border-primary transition-colors"
+            className="h-11 w-full rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] pl-7"
           />
         </div>
       </div>
@@ -431,7 +431,7 @@ export function StepReview({
       {/* Affiliate / creator code */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="affiliate-code">Creator or coupon code <span className="text-muted-foreground font-normal">(optional)</span></Label>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <input
             id="affiliate-code"
             type="text"
@@ -443,25 +443,25 @@ export function StepReview({
               onDiscountChange(0);
             }}
             placeholder="CREATOR123"
-            className="flex-1 h-9 border border-border px-3 text-sm font-mono uppercase focus:outline-none focus:border-primary transition-colors"
+            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
           />
           <button
             type="button"
             onClick={validateCode}
             disabled={!affiliateCode.trim()}
-            className="h-9 px-4 bg-secondary text-foreground text-sm font-semibold hover:bg-border transition-colors disabled:opacity-40"
+            className="px-btn px-btn-panel h-11 shrink-0 px-4 text-sm disabled:opacity-45"
           >
             Apply
           </button>
         </div>
         {codeStatus === "valid" && discountPercent > 0 && discountKind !== "bulk" && (
-          <p className="text-sm text-rx font-medium"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />{discountPercent}% discount applied — {codeName}</p>
+          <p className="text-sm font-semibold text-mint-deep"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />{discountPercent}% discount applied — {codeName}</p>
         )}
         {codeStatus === "valid" && discountPercent > 0 && discountKind === "bulk" && (
           <p className="text-sm text-muted-foreground">Your {bulkPercent}% bulk discount is bigger, so it applies instead of this code (discounts don&apos;t combine).</p>
         )}
         {codeStatus === "valid" && discountPercent === 0 && (
-          <p className="text-sm text-rx font-medium"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Code applied — {codeName}</p>
+          <p className="text-sm font-semibold text-mint-deep"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Code applied — {codeName}</p>
         )}
         {codeStatus === "invalid" && <p className="text-sm text-destructive">Invalid code.</p>}
       </div>
@@ -469,7 +469,7 @@ export function StepReview({
       {/* Gift card */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="gift-card-code">Gift card code <span className="text-muted-foreground font-normal">(optional)</span></Label>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <input
             id="gift-card-code"
             type="text"
@@ -480,19 +480,19 @@ export function StepReview({
               onGiftCardAmountChange(0);
             }}
             placeholder="GIFT-XXXX-XXXX"
-            className="flex-1 h-9 border border-border px-3 text-sm font-mono uppercase focus:outline-none focus:border-primary transition-colors"
+            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
           />
           <button
             type="button"
             onClick={validateGiftCard}
             disabled={!giftCardCode.trim()}
-            className="h-9 px-4 bg-secondary text-foreground text-sm font-semibold hover:bg-border transition-colors disabled:opacity-40"
+            className="px-btn px-btn-panel h-11 shrink-0 px-4 text-sm disabled:opacity-45"
           >
             Apply
           </button>
         </div>
         {gcStatus === "valid" && gcApplied > 0 && (
-          <p className="text-sm text-rx font-medium"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Gift card applied — {formatCurrency(gcApplied)} off</p>
+          <p className="text-sm font-semibold text-mint-deep"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Gift card applied — {formatCurrency(gcApplied)} off</p>
         )}
         {gcStatus === "invalid" && <p className="text-sm text-destructive">Invalid or already used gift card.</p>}
       </div>

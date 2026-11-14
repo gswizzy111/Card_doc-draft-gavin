@@ -4,6 +4,7 @@ import type { CardEntry, ShippingRate, InsuranceSelection } from "@/lib/types";
 import { INSURANCE_ENABLED } from "@/lib/site-config";
 import { computeOrderTotals, tierFor } from "@/lib/order-totals";
 import type { RestorationTier, RestorationTierId } from "@/lib/restoration-tiers";
+import { WindowTab } from "@/components/pixel/window";
 
 interface OrderSummaryProps {
   cards: CardEntry[];
@@ -69,9 +70,7 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
 
   return (
     <div className="px-window mt-4 flex flex-col gap-4 p-5 pt-7 sm:p-6 sm:pt-7">
-      <span aria-hidden className="absolute -top-4 left-4 z-[1] inline-flex h-7 items-center gap-2 bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame">
-        <span className="text-coral-deep">▶</span>CHART
-      </span>
+      <WindowTab aria-hidden cursor>CHART</WindowTab>
       <h3 className="font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink">Order Summary</h3>
 
       <div className="flex flex-col gap-1.5 border-b-[3px] border-dashed border-rule pb-4 text-sm">

@@ -14,7 +14,8 @@ const SPOTS = [
  * Healing sparkles: the art's mint sparkle sprite (12x12, drawn at 2x) twinkling
  * through its frames while it rises in stepped frames. Server-safe. Under
  * reduced motion they hold still as a static scatter of full stars. Place
- * inside a `relative` parent.
+ * inside a `relative` parent. Each spot is clamped so the 24px sprite always
+ * fits inside short containers.
  */
 export function HealSparkles({ count = 6, className }: { count?: number; className?: string }) {
   return (
@@ -23,7 +24,7 @@ export function HealSparkles({ count = 6, className }: { count?: number; classNa
         <span
           key={i}
           className="heal-sparkle heal-sparkle-sprite"
-          style={{ left: s.left, top: s.top, ["--delay" as string]: `${s.delay}s` }}
+          style={{ left: s.left, top: `min(${s.top}, calc(100% - 28px))`, ["--delay" as string]: `${s.delay}s` }}
         >
           <SparkleSprite scale={2} delay={s.delay} />
         </span>

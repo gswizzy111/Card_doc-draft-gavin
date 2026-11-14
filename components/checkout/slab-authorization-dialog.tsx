@@ -2,12 +2,14 @@
 
 import { useId, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CardSprite } from "@/components/pixel/sprites";
 import { LegalDocument } from "@/components/legal/legal-document";
 import { SLAB_FEE_CENTS, SLAB_TITLE, cardTitle, slabAuthorization } from "@/lib/legal/agreements-v1";
 import { signSlab, slabSignature, slabSigned, type SigningState, type SlabCard } from "./signing-section";
 import { Need, Req, revealMissing } from "./required";
+import { PIXEL_FIELD } from "@/components/ui/input";
 
-const FIELD = "h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
+const FIELD = PIXEL_FIELD;
 
 /**
  * The Slab Removal Authorization for one card, opened as soon as the customer
@@ -60,36 +62,36 @@ function SlabDialog({ card, state, onChange, onClose }: {
     <Dialog open onOpenChange={(open) => { if (!open) onClose(slabSigned(state, card)); }}>
       <DialogContent ref={setBox} className="sm:max-w-xl max-h-[92dvh] overflow-y-auto p-5 md:p-6 gap-5">
         <DialogHeader>
-          <DialogTitle className="font-heading text-xl font-bold text-foreground pr-6">{SLAB_TITLE}</DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">
+          <DialogTitle className="flex items-center gap-3 pr-8 font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink"><span aria-hidden className="grid size-12 shrink-0 place-items-center bg-powder px-frame"><CardSprite variant="slab" scale={1} animate={false} /></span>{SLAB_TITLE}</DialogTitle>
+          <DialogDescription className="text-[15px] text-ink-soft">
             {cardTitle(d) || "This card"}: slab cracking is ${(SLAB_FEE_CENTS / 100).toFixed(0)}. We only open this holder once you sign below.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-[38dvh] overflow-y-auto px-frame bg-panel p-3" tabIndex={0} aria-label={`${SLAB_TITLE} for ${d.card_name}`}>
+        <div className="max-h-[38dvh] overflow-y-auto bg-muted p-3 px-frame focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-frame-deep" tabIndex={0} aria-label={`${SLAB_TITLE} for ${d.card_name}`}>
           <LegalDocument blocks={doc.blocks} variant="compact" />
         </div>
 
         <Need missing={tried && !agreed} note="Check this box to authorize opening the slab.">
-          <label className="flex items-start gap-2.5 text-sm cursor-pointer">
-            <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-primary" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
-            <span className="text-foreground">I authorize The Card Doc to open this card&apos;s holder, as described above.<Req /></span>
+          <label className="flex cursor-pointer items-start gap-3 text-[15px] leading-relaxed">
+            <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-primary" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+            <span className="text-ink">I authorize The Card Doc to open this card&apos;s holder, as described above.<Req /></span>
           </label>
         </Need>
         <Need missing={tried && name.trim().length < 2} note="Type your full legal name to sign." className="flex flex-col gap-1.5">
-          <label htmlFor={`${id}-name`} className="text-xs font-semibold text-muted-foreground">Full legal name<Req /></label>
+          <label htmlFor={`${id}-name`} className="font-pixel text-xs uppercase tracking-[0.04em] text-ink">Full legal name<Req /></label>
           <input id={`${id}-name`} className={FIELD} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
-          <p className="text-xs text-muted-foreground">Typing your name signs this authorization for this card only. The date and time come from our server when you place the order.</p>
+          <p className="text-[13px] leading-relaxed text-ink-soft">Typing your name signs this authorization for this card only. The date and time come from our server when you place the order.</p>
         </Need>
 
         <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
-          <button type="button" onClick={() => onClose(false)} className="text-sm font-semibold text-muted-foreground underline underline-offset-2 hover:text-foreground self-start sm:self-auto">
+          <button type="button" onClick={() => onClose(false)} className="inline-flex min-h-11 items-center self-start text-sm font-semibold text-ink-soft underline underline-offset-2 hover:text-ink sm:self-auto">
             Don&apos;t open this slab
           </button>
           <button
             type="button"
             onClick={sign}
-            className="h-11 px-6 bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors"
+            className="px-btn h-12 px-6 text-base"
           >
             Sign slab authorization
           </button>

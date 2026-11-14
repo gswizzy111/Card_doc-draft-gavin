@@ -5,6 +5,7 @@ import { Search, X } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import type { FaqSection } from "./faq-data";
 import { DocSprite } from "@/components/pixel/sprites";
+import { WindowTab } from "@/components/pixel/window";
 
 const INSTAGRAM = "https://www.instagram.com/the_card_doc";
 
@@ -73,9 +74,7 @@ export function FaqSearch({ sections }: { sections: FaqSection[] }) {
     <div>
       {/* Search: the records desk */}
       <div className="px-window-ink relative p-3 pt-5 md:p-4 md:pt-6">
-        <span aria-hidden className="absolute -top-4 left-4 z-[1] inline-flex h-7 items-center gap-1.5 bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame">
-          <span className="text-coral-deep">▶</span>RECORDS
-        </span>
+        <WindowTab aria-hidden cursor>RECORDS</WindowTab>
         <div className="relative">
         <label htmlFor={inputId} className="sr-only">Search the FAQ</label>
         <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-ink-soft" strokeWidth={2} />

@@ -4,7 +4,8 @@ import { DocPortrait } from "@/components/pixel/doc-portrait";
 /**
  * Page header in the clinic style: a wall sign (eyebrow tab and pixel
  * headline) over the doc's dialog box, which carries the lead. `sprite` is a
- * slot for a pixel sprite that stands beside the headline; `portrait={false}`
+ * slot for a pixel sprite that stands beside the headline (on phones, at half
+ * size beside the eyebrow, so use even scales); `portrait={false}`
  * drops the doc from the dialog.
  */
 export function PageHero({
@@ -27,10 +28,15 @@ export function PageHero({
   return (
     <div className={className}>
       {eyebrow && (
-        <p className="hero-in mb-5 inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame md:text-[13px]">
-          <span aria-hidden className="text-coral-deep">▶</span>
-          {eyebrow}
-        </p>
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <p className="hero-in inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame md:text-[13px]">
+            <span aria-hidden className="text-coral-deep">▶</span>
+            {eyebrow}
+          </p>
+          {/* Phones: the sprite sits beside the eyebrow at half size (zoom
+              keeps whole pixels for 2x/4x art and shrinks its layout box). */}
+          {sprite && <div aria-hidden className="shrink-0 [zoom:0.5] md:hidden">{sprite}</div>}
+        </div>
       )}
       <div className="flex items-end justify-between gap-6">
         <h1 className="max-w-5xl font-heading font-bold uppercase leading-[0.95] tracking-[0.01em] text-ink text-[clamp(2.25rem,9.5vw,3.5rem)] md:text-6xl lg:text-[4.75rem] [text-shadow:3px_3px_0_var(--wall)]">

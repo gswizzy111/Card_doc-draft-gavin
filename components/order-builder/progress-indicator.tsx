@@ -37,7 +37,7 @@ export function ProgressIndicator({ currentStep }: { currentStep: number }) {
                 {state === "done" ? <Check className="h-4 w-4" strokeWidth={3} /> : step.n}
               </span>
               <span
-                className={`max-w-[8ch] text-center font-pixel text-xs uppercase leading-tight tracking-normal ${
+                className={`max-w-[8ch] text-center sm:max-w-none font-pixel text-xs uppercase leading-tight tracking-normal ${
                   state === "current" ? "text-ink" : "text-ink-soft"
                 }`}
               >
