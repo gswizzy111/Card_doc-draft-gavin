@@ -1013,6 +1013,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
    pixel empty (no clip-path, so focus rings and overflow still work). The
    outline sits one --px outside the box, like a sprite's outline. */
 
+@layer components {
 /* Ink outline with stepped corners. */
 .px-frame {
   box-shadow:
@@ -1255,6 +1256,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
   background: var(--panel);
   opacity: 0;
   animation: px-heal-flash 420ms steps(4, end) both;
+}
 }
 
 /* ── Legacy comic classes, redrawn as pixel equivalents ──────────────────── */

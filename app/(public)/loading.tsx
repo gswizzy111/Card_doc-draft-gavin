@@ -9,13 +9,21 @@ export default function Loading() {
         <span className="sr-only">Loading</span>
         <div className="route-progress" aria-hidden />
         <div className="max-w-6xl mx-auto px-4 md:px-10 py-12 md:py-20" aria-hidden>
-          <div className="skeleton h-3 w-24 rounded-full mb-5" />
-          <div className="skeleton h-12 md:h-16 w-[80%] md:w-[55%] rounded-md mb-3" />
-          <div className="skeleton h-12 md:h-16 w-[60%] md:w-[40%] rounded-md mb-8" />
-          <div className="skeleton h-4 w-[70%] md:w-[38%] rounded-full mb-12" />
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="skeleton h-8 w-28 mb-6" />
+          <div className="skeleton h-12 md:h-16 w-[80%] md:w-[55%] mb-3" />
+          <div className="skeleton h-12 md:h-16 w-[60%] md:w-[40%] mb-8" />
+          <div className="px-window flex max-w-2xl items-center gap-4 p-5 mb-12">
+            <div className="skeleton size-12 shrink-0" />
+            <div className="flex-1 space-y-3">
+              <div className="skeleton h-4 w-[90%]" />
+              <div className="skeleton h-4 w-[60%]" />
+            </div>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="skeleton h-72 rounded-lg" />
+              <div key={i} className="px-window-ink h-72 p-4">
+                <div className="skeleton h-full" />
+              </div>
             ))}
           </div>
         </div>
