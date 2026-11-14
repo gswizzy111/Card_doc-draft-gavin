@@ -10,9 +10,10 @@ type Item = { id: string; url: string; alt?: string };
 const TRAVEL = [-90, 60, -140, 40];
 
 function Column({ items, progress, travel, offset }: { items: Item[]; progress: MotionValue<number>; travel: number; offset: boolean }) {
-  const y = useTransform(progress, [0, 1], [-travel / 2, travel / 2]);
+  // Whole 3px steps, so the screenshots move on the UI's pixel grid.
+  const y = useTransform(progress, (v) => Math.round((-travel / 2 + travel * v) / 3) * 3);
   return (
-    <motion.div style={{ y }} className={`flex flex-col gap-3 md:gap-4 ${offset ? "pt-16 md:pt-24" : ""}`}>
+    <motion.div style={{ y }} className={`flex flex-col gap-5 md:gap-6 ${offset ? "pt-16 md:pt-24" : ""}`}>
       {items.map((t) => (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -20,7 +21,7 @@ function Column({ items, progress, travel, offset }: { items: Item[]; progress: 
           src={t.url}
           alt={t.alt ?? "Customer review"}
           loading="lazy"
-          className="w-full h-auto rounded-xl ring-1 ring-white/10 shadow-[0_24px_48px_-24px_oklch(0_0_0/0.7)]"
+          className="w-full h-auto bg-panel p-[3px] px-frame-shadow"
         />
       ))}
     </motion.div>
@@ -61,7 +62,7 @@ export function ParallaxWall({ items }: { items: Item[] }) {
       ref={ref}
       className="relative overflow-hidden py-10 [mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_92%,transparent)]"
     >
-      <div className="grid gap-3 md:gap-4" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+      <div className="grid gap-5 md:gap-6" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
         {columns.map((col, i) => (
           <Column
             key={`${i}-${reduce}`}

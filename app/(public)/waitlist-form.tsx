@@ -34,55 +34,35 @@ export function WaitlistForm() {
 
   if (status === "success") {
     return (
-      <p style={{ color: "#86efac", fontSize: "1rem", marginTop: "2rem", letterSpacing: "0.05em" }}>
-        <Check className="inline h-4 w-4 mr-1 -mt-0.5" strokeWidth={2.5} />You&apos;re on the list — we&apos;ll email you when we&apos;re back.
+      <p className="mt-8 inline-flex items-center gap-2 bg-mint px-4 py-3 text-base font-semibold text-ink px-frame">
+        <Check className="h-4 w-4 shrink-0" strokeWidth={3} />You&apos;re on the list — we&apos;ll email you when we&apos;re back.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginTop: "2.5rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem" }}>
-      <p style={{ color: "#9ca3af", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.25rem" }}>
+    <form onSubmit={handleSubmit} className="mt-10 flex flex-col items-center gap-3">
+      <p className="mb-1 font-pixel text-xs uppercase tracking-[0.06em] text-stage-muted">
         Get notified when we&apos;re back
       </p>
-      <div style={{ display: "flex", gap: "0.5rem", width: "100%", maxWidth: "420px" }}>
+      <div className="flex w-full max-w-[420px] gap-3">
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
-          style={{
-            flex: 1,
-            background: "rgba(255,255,255,0.07)",
-            border: "1px solid rgba(255,255,255,0.2)",
-            borderRadius: "8px",
-            padding: "0.65rem 1rem",
-            color: "#fff",
-            fontSize: "0.95rem",
-            outline: "none",
-          }}
+          className="h-12 min-w-0 flex-1 border-2 border-stage-muted bg-night-raise px-4 text-base text-stage-fg outline-none placeholder:text-stage-muted focus-visible:border-butter focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-butter/35"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          style={{
-            background: "var(--rx)",
-            color: "#fff",
-            border: "none",
-            borderRadius: "8px",
-            padding: "0.65rem 1.25rem",
-            fontWeight: 700,
-            fontSize: "0.9rem",
-            cursor: "pointer",
-            opacity: status === "loading" ? 0.6 : 1,
-            whiteSpace: "nowrap",
-          }}
+          className="px-btn h-12 shrink-0 px-5 text-base disabled:opacity-60"
         >
           {status === "loading" ? "..." : "Notify Me"}
         </button>
       </div>
-      {error && <p style={{ color: "#f87171", fontSize: "0.8rem" }}>{error}</p>}
+      {error && <p className="text-sm font-semibold text-rx-bright">{error}</p>}
     </form>
   );
 }

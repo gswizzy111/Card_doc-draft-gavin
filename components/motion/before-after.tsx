@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
-import { ChevronsLeftRight } from "lucide-react";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
 import { usePrefersReducedMotion } from "@/components/motion/use-reduced-motion";
 
@@ -128,7 +127,7 @@ export function BeforeAfter({ before, after, beforeAlt, afterAlt, sizes, priorit
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={endDrag}
-      className="ba-intro group/ba relative touch-pan-y select-none overflow-hidden rounded-md cursor-grab data-[dragging]:cursor-grabbing"
+      className="ba-intro group/ba relative touch-pan-y select-none overflow-hidden cursor-grab data-[dragging]:cursor-grabbing"
     >
       {/* Damaged */}
       <Image src={before} alt={beforeAlt} sizes={sizes} priority={priority} draggable={false} className="block w-full h-auto" />
@@ -151,9 +150,12 @@ export function BeforeAfter({ before, after, beforeAlt, afterAlt, sizes, priorit
         aria-valuenow={valueNow}
         aria-valuetext={`${valueNow}% restored`}
         onKeyDown={onKeyDown}
-        className="ba-handle absolute top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-rx ring-1 ring-ink/20 transition-transform duration-150 ease-[var(--ease-out)] focus-visible:ring-2 focus-visible:ring-rx group-data-[dragging]/ba:scale-110"
+        className="ba-handle absolute top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 place-items-center bg-butter text-ink px-frame group-data-[dragging]/ba:bg-mint"
       >
-        <ChevronsLeftRight className="h-5 w-5" strokeWidth={1.75} />
+        {/* Two pixel arrows, ◀ ▶, drawn on a 1px grid. */}
+        <svg aria-hidden viewBox="0 0 11 7" width={22} height={14} shapeRendering="crispEdges" className="block">
+          <path fill="currentColor" d="M3 0h1v7h-1zM2 1h1v5h-1zM1 2h1v3h-1zM0 3h1v1h-1zM7 0h1v7h-1zM8 1h1v5h-1zM9 2h1v3h-1zM10 3h1v1h-1z" />
+        </svg>
       </div>
     </motion.div>
   );

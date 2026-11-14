@@ -22,6 +22,7 @@ import {
   HpBar,
   MenuCursor,
   PixelIcon,
+  SparkleSprite,
   StatusChip,
   Window,
   pixelButton,
@@ -204,7 +205,7 @@ const spriteSize = (w: number) => ({ width: `calc(${w}px * var(--s))`, height: "
  */
 function FrontDesk() {
   return (
-    <div className="relative h-[calc(140px*var(--s))] overflow-hidden [--s:2] md:[--s:3] lg:[--s:2] xl:[--s:3]">
+    <div className="relative h-[calc(140px*var(--s))] w-full overflow-hidden [--s:2] md:[--s:3] lg:w-[calc(240px*var(--s))]">
       <div className="absolute top-0 left-1/2 w-[calc(240px*var(--s))] -translate-x-1/2">
         <ClinicScene priority label="The Card Doc clinic: a front desk with a healing station, a waiting room and a tiled floor" />
         <span aria-hidden className="absolute" style={at(140, 68)}>
@@ -233,9 +234,9 @@ export default async function HomePage() {
       <section className="relative overflow-hidden border-b-[3px] border-ink">
         <TrustPills cardsRestored={cardsRestored} className="hero-in relative z-20 mx-auto max-w-7xl px-4 pt-4 md:px-10 md:pt-6" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-x-10 px-4 pt-4 pb-14 md:px-10 md:pt-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:pb-20">
+        <div className="relative mx-auto grid max-w-7xl gap-x-10 px-4 pt-4 pb-14 md:px-10 md:pt-8 lg:pb-20 xl:grid-cols-[minmax(0,1fr)_auto] xl:grid-rows-[auto_auto] xl:gap-y-8">
           {/* The clinic screen */}
-          <div className="hero-in -mx-4 md:mx-auto lg:order-2 lg:mx-0" style={{ ["--d" as string]: 80 }}>
+          <div className="hero-in -mx-4 md:mx-0 lg:mx-auto lg:w-fit xl:col-start-2 xl:row-start-1 xl:self-end" style={{ ["--d" as string]: 80 }}>
             <Window tone="ink" title="Front desk" className="mx-0 p-0 max-md:shadow-none md:p-0">
               <div className="p-[6px] md:p-2">
                 <FrontDesk />
@@ -244,13 +245,13 @@ export default async function HomePage() {
           </div>
 
           {/* The Doc greets the visitor */}
-          <div className="relative z-10 -mt-8 md:mt-0 lg:order-1 lg:pr-4">
+          <div className="relative z-10 -mt-8 md:-mt-10 lg:mx-auto lg:w-full lg:max-w-[736px] xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:mt-0 xl:self-center">
             <Window variant="dialog" className="hero-in px-5 pt-6 pb-9 md:px-8 md:pt-8 md:pb-10" style={{ ["--d" as string]: 180 }}>
               <div className="flex items-center gap-3">
                 <DocPortrait size="sm" nameplate="The Doc" alt="" />
                 <StatusChip status="check-in" />
               </div>
-              <h1 className="mt-5 font-heading uppercase leading-[0.9] text-[clamp(2.6rem,12vw,4.6rem)] lg:text-[clamp(3.2rem,4.6vw,4.6rem)]">
+              <h1 className="mt-4 font-heading uppercase leading-[0.9] text-[clamp(2.5rem,11vw,4.6rem)] md:mt-5 xl:text-[clamp(3rem,4.2vw,4.25rem)]">
                 <span className="block text-ink">{HERO.headline[0]}</span>
                 <span className="block text-coral-deep">{HERO.headline[1]}</span>
               </h1>
@@ -258,7 +259,7 @@ export default async function HomePage() {
                 {TAGLINE}
               </p>
               <div className="mt-7 flex flex-col gap-4 sm:flex-row">
-                <Link href="/tier-selection" className={pixelButton({ size: "lg", className: "nudge-arrow" })}>
+                <Link href="/tier-selection" className={pixelButton({ size: "lg" })}>
                   Restoration Pricing
                 </Link>
                 <Link href="/prep" className={pixelButton({ tone: "panel", size: "lg" })}>
@@ -266,8 +267,10 @@ export default async function HomePage() {
                 </Link>
               </div>
             </Window>
+          </div>
 
-            <Window tone="ink" title="We never" className="hero-in mt-8 p-0 md:p-0" style={{ ["--d" as string]: 300 }}>
+          <div className="lg:mx-auto lg:w-full lg:max-w-[736px] xl:col-start-2 xl:row-start-2 xl:mx-0 xl:max-w-none xl:self-start">
+            <Window tone="ink" title="We never" className="hero-in mt-8 p-0 md:p-0 xl:mt-4" style={{ ["--d" as string]: 300 }}>
               <ul className="grid pt-3 sm:grid-cols-3 sm:pt-2">
                 {PROCESS.never.map((item, i) => (
                   <li
@@ -314,13 +317,14 @@ export default async function HomePage() {
             <CardSlot className="w-full max-w-[16rem]" />
 
             <div className="flex flex-col items-center gap-4 pb-2">
-              <div className="relative grid size-32 place-items-center bg-butter px-frame-shadow sm:size-36 lg:size-36">
-                <HealSparkles count={3} />
-                <span className="relative z-[1] px-3 text-center font-heading text-xl uppercase leading-[1.02] text-ink sm:text-2xl">
+              <div className="relative grid size-32 place-items-center bg-butter px-frame-shadow sm:size-36">
+                <span className="px-3 text-center font-heading text-2xl uppercase leading-[1.02] text-ink sm:text-[1.7rem]">
                   Free<br />Photo<br />Review
                 </span>
+                <span aria-hidden className="absolute -top-5 -right-5"><SparkleSprite scale={2} /></span>
+                <span aria-hidden className="absolute -bottom-4 -left-5"><SparkleSprite scale={2} delay={0.4} /></span>
               </div>
-              <CardSprite variant="healed" scale={3} />
+              <CardSprite variant="healed" scale={3} className="mt-2" />
             </div>
           </div>
         </div>
@@ -373,12 +377,12 @@ export default async function HomePage() {
               <PhotoWindow label={mantle?.card ?? "Mickey Mantle"} detail={mantle?.detail}>
                 <div className="mb-3 grid grid-cols-2 gap-3">
                   <div className="flex flex-col gap-2">
-                    <StatusChip status="treatment" className="self-start">ADMITTED</StatusChip>
-                    <HpBar level={0.18} />
+                    <StatusChip status="discharged" className="self-start" />
+                    <HpBar level={1} animate />
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <StatusChip status="discharged" />
-                    <HpBar level={1} animate className="w-full" />
+                    <StatusChip status="treatment">ADMITTED</StatusChip>
+                    <HpBar level={0.18} className="w-full" />
                   </div>
                 </div>
                 <BeforeAfter
@@ -593,7 +597,6 @@ export default async function HomePage() {
 
       {/* ── Closing: night at the clinic ───────────────────────────────── */}
       <section aria-labelledby="close-heading" className="stage stage-light relative overflow-hidden border-t-[3px] border-ink">
-        <HealSparkles count={6} className="opacity-90" />
         <div className="relative z-[1] mx-auto max-w-5xl px-4 pt-20 pb-12 text-center md:px-10 md:pt-28">
           <h2 id="close-heading" data-reveal className="font-heading uppercase leading-[0.92] text-[clamp(2.3rem,7vw,4.75rem)] [text-shadow:4px_4px_0_var(--night-raise)]">
             <span className="block text-stage-fg">Your Collection Means Something.</span>
@@ -610,7 +613,10 @@ export default async function HomePage() {
             </a>
           </div>
         </div>
-        <div aria-hidden className="relative z-[1] flex items-end justify-center gap-6 md:gap-10">
+        <div aria-hidden className="relative z-[1] mx-auto flex max-w-xs items-end justify-center gap-6 pt-16 md:gap-10">
+          <div className="absolute inset-x-0 top-0 h-14">
+            <HealSparkles count={5} />
+          </div>
           <DocSprite scale={3} />
           <CardSprite variant="healed" scale={3} />
         </div>

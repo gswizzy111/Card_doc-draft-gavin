@@ -1,6 +1,7 @@
 "use client";
 
-import { Camera, Check, Hammer, Mailbox, Package, Trophy, X } from "lucide-react";
+import { Check, Hammer, Mailbox, Package, X } from "lucide-react";
+import { CardSprite, PixelIcon } from "@/components/pixel/sprites";
 import { SigningSection, emptySigning, signingReady, slabSigned, submittedSigning, type SigningState, type SlabCard } from "@/components/checkout/signing-section";
 import { SlabAuthorizationDialog } from "@/components/checkout/slab-authorization-dialog";
 import { Need, Req, revealMissing } from "@/components/checkout/required";
@@ -343,49 +344,59 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
     }
   }
 
-  const input = "w-full h-10 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors bg-white";
-  const labelCls = "block text-xs font-semibold text-muted-foreground mb-1.5";
+  const input = "h-11 w-full border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
+  const labelCls = "mb-1.5 block font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft";
   const selectCls = `${input} cursor-pointer`;
 
   const miss = (v: string | undefined | null) => showMissing && !v?.trim();
 
   return (
-    <div className="max-w-xl mx-auto px-6 py-12 md:py-16">
+    <div className="mx-auto max-w-2xl px-4 py-10 md:py-16">
       <SlabAuthorizationDialog card={slabDialogCard} state={signing} onChange={setSigning} onClose={closeSlabDialog} />
       <div className="mb-8">
-        <Link href="/prep" className="text-xs text-primary font-semibold hover:underline">← Back to Prep Pricing</Link>
-        <h1 className="font-heading text-3xl font-extrabold text-foreground mt-3 mb-1">Prep Order</h1>
-        <p className="text-sm text-muted-foreground">
+        <Link href="/prep" className="-ml-1 inline-flex min-h-11 items-center px-1 text-sm font-semibold text-coral-deep underline-offset-4 hover:underline">← Back to Prep Pricing</Link>
+        <div className="mt-3 flex items-end justify-between gap-4">
+          <div>
+            <p aria-hidden className="mb-3 inline-flex h-7 items-center gap-2 bg-butter px-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
+              <span className="text-coral-deep">▶</span>CHECK-IN
+            </p>
+            <h1 className="font-heading text-5xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl">Prep Order</h1>
+          </div>
+          <CardSprite variant="sleeve" scale={3} className="mb-1 shrink-0" />
+        </div>
+        <p className="mt-5 bg-panel px-4 py-3 text-sm text-ink-soft px-frame">
           Cards under $1,500: {fmt(standardPriceCents)}/card &nbsp;·&nbsp; Cards $1,500+: 2% of declared value
         </p>
       </div>
 
       {/* Not-included disclaimer */}
-      <div className="bg-red-50 border border-red-200 rounded-lg px-5 py-4 mb-2">
-        <p className="text-xs font-bold text-red-800 uppercase tracking-wide mb-2">Prep does not include:</p>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+      <div className="mb-2 bg-rx-soft px-5 py-4 px-frame">
+        <p className="mb-3 font-pixel text-xs uppercase tracking-[0.04em] text-coral-deep">Prep does not include:</p>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
           {["Crease work", "Edge & corner work", "Dent removal", "Any restorative work"].map((item) => (
-            <div key={item} className="flex items-center gap-1.5 text-xs text-red-700">
-              <X className="h-3 w-3 shrink-0 text-red-600" strokeWidth={2.5} />
+            <div key={item} className="flex items-center gap-2 text-sm text-ink">
+              <span aria-hidden className="grid size-4 shrink-0 place-items-center bg-panel text-coral-deep px-frame">
+                <X className="h-3 w-3" strokeWidth={3} />
+              </span>
               <span>{item}</span>
             </div>
           ))}
         </div>
-        <p className="text-xs text-red-600 mt-2">
-          Need restoration? <Link href="/tier-selection" className="font-semibold underline hover:text-red-800">See our Restoration tiers →</Link>
+        <p className="mt-3 text-sm text-ink">
+          Need restoration? <Link href="/tier-selection" className="font-semibold text-coral-deep underline underline-offset-2 hover:text-ink">See our Restoration tiers →</Link>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-6">
+      <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-8">
 
         {/* Customer */}
-        <div className="bg-white rounded-lg border border-border p-6 flex flex-col gap-4">
-          <h2 className="font-heading font-extrabold text-base text-foreground">Your Info</h2>
+        <div className="px-window-ink p-5 md:p-6 flex flex-col gap-4">
+          <h2 className="font-heading text-[1.75rem] uppercase leading-none tracking-[0.02em] text-ink">Your Info</h2>
           <Need missing={miss(name)}>
             <label className={labelCls}>Full Name<Req /></label>
             <input className={input} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="John Smith" />
           </Need>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
             <Need missing={miss(email)}>
               <label className={labelCls}>Email<Req /></label>
               <input className={input} type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="john@example.com" />
@@ -398,22 +409,22 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
         </div>
 
         {/* Cards */}
-        <div className="bg-white rounded-lg border border-border p-6 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
+        <div className="px-window-ink p-5 md:p-6 flex flex-col gap-3">
+          <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="font-heading font-extrabold text-base text-foreground">Cards<Req /></h2>
-              <p className="text-xs text-muted-foreground mt-0.5">Enter value for cards $1,500+</p>
+              <h2 className="font-heading text-[1.75rem] uppercase leading-none tracking-[0.02em] text-ink">Cards<Req /></h2>
+              <p className="mt-1.5 text-xs text-ink-soft">Enter value for cards $1,500+</p>
             </div>
-            <button type="button" onClick={addCard} className="text-sm font-semibold text-primary hover:text-primary/80">
+            <button type="button" onClick={addCard} className="px-btn px-btn-mint h-11 shrink-0 px-4 text-base">
               + Add Card
             </button>
           </div>
 
           {cards.map((card, i) => (
-            <div key={card.id} className="border border-border rounded-lg p-3 flex flex-col gap-2">
+            <div key={card.id} className="flex flex-col gap-2.5 border-2 border-dashed border-ink/35 bg-[color-mix(in_srgb,var(--muted)_45%,var(--panel))] p-3 sm:p-4">
               <Need missing={showMissing && !card.name.trim() && (i === 0 || !!card.declaredValueDollars)} note="Enter the card name." className="">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground w-5 shrink-0">{i + 1}.</span>
+                <span className="grid h-7 w-7 shrink-0 place-items-center bg-butter font-pixel text-xs text-ink px-frame">{i + 1}.</span>
                 <input
                   className={`${input} flex-1`}
                   value={card.name}
@@ -421,16 +432,16 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
                   placeholder="Card name (e.g. Charizard Base Set Holo)"
                 />
                 {cards.length > 1 && (
-                  <button type="button" onClick={() => removeCard(card.id)} className="text-red-400 hover:text-red-600 text-xl leading-none shrink-0">×</button>
+                  <button type="button" onClick={() => removeCard(card.id)} aria-label="Remove card" className="grid size-11 shrink-0 place-items-center text-2xl leading-none text-red-700 hover:bg-red-50 focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-frame-deep">×</button>
                 )}
               </div>
               </Need>
-              <Need missing={showMissing && !!card.name.trim() && cardValueCents(card) <= 0} note="Enter a declared value." className="pl-7">
+              <Need missing={showMissing && !!card.name.trim() && cardValueCents(card) <= 0} note="Enter a declared value." className="pl-9">
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
                   <input
-                    className="w-full h-8 border border-border rounded-lg pl-6 pr-3 text-xs focus:outline-none focus:border-primary transition-colors bg-white"
+                    className="h-11 w-full border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] pl-7"
                     type="number" min="0" step="1"
                     value={card.declaredValueDollars}
                     onChange={(e) => updateCardValue(card.id, e.target.value)}
@@ -438,22 +449,22 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
                   />
                 </div>
                 {card.name.trim() && (
-                  <span className={`text-xs font-semibold shrink-0 w-24 text-right ${cardValueCents(card) >= HIGH_VALUE_THRESHOLD_CENTS ? "text-amber-600" : "text-primary"}`}>
+                  <span className={`shrink-0 w-24 text-right font-pixel text-xs ${cardValueCents(card) >= HIGH_VALUE_THRESHOLD_CENTS ? "text-amber-800" : "text-coral-deep"}`}>
                     {cardPriceLabel(card)}/card
                   </span>
                 )}
               </div>
               </Need>
-              <div className="pl-7 flex flex-col gap-2">
-                <p className="text-xs text-muted-foreground">{VALUE_HELP}</p>
+              <div className="pl-9 flex flex-col gap-2">
+                <p className="text-xs text-ink-soft">{VALUE_HELP}</p>
               </div>
-              <div className="pl-7">
+              <div className="pl-9">
                 <CardIdentityFields idPrefix={`prep-${card.id}`} value={card} onChange={(patch) => updateCard(card.id, patch)} />
               </div>
-              <label className="ml-7 flex items-start gap-3 bg-white border border-border rounded-md px-3 py-2.5 cursor-pointer">
+              <label className="ml-9 flex cursor-pointer items-start gap-3 border-2 border-ink bg-panel px-3 py-3 hover:bg-[color-mix(in_srgb,var(--butter)_25%,var(--panel))]">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 mt-0.5 accent-primary shrink-0"
+                  className="mt-0.5 size-5 shrink-0 accent-[var(--mint-deep)]"
                   checked={card.slab}
                   onChange={(e) => {
                     updateCard(card.id, { slab: e.target.checked });
@@ -462,27 +473,27 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
                   }}
                 />
                 <span className="text-sm">
-                  <span className="font-semibold text-foreground">Open this card&apos;s slab? +{fmt(slabCrackPriceCents)}</span>
-                  <span className="block text-xs text-muted-foreground mt-0.5">For a card in a PSA, BGS or other graded slab. You&apos;ll sign a separate authorization for it.</span>
+                  <span className="font-semibold text-ink">Open this card&apos;s slab? +{fmt(slabCrackPriceCents)}</span>
+                  <span className="block text-xs text-ink-soft mt-0.5">For a card in a PSA, BGS or other graded slab. You&apos;ll sign a separate authorization for it.</span>
                 </span>
               </label>
-              <div className="pl-7">
-                <p className="text-xs text-muted-foreground mb-1.5">Photos <span className="text-muted-foreground/60">(optional)</span></p>
+              <div className="pl-9">
+                <p className="mb-1.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">Photos <span className="normal-case">(optional)</span></p>
                 <PhotoUploader photoUrls={card.photoUrls} onChange={(urls) => updateCardPhotos(card.id, urls)} />
               </div>
             </div>
           ))}
 
           {filledCards.length > 0 && (
-            <div className="flex items-center justify-between pt-3 border-t border-border mt-1">
-              <span className="text-sm text-muted-foreground">{filledCards.length} card{filledCards.length !== 1 ? "s" : ""}</span>
-              <span className="text-lg font-extrabold text-foreground">{fmt(prepSubtotal)}</span>
+            <div className="mt-1 flex items-center justify-between border-t-[3px] border-ink pt-3">
+              <span className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">{filledCards.length} card{filledCards.length !== 1 ? "s" : ""}</span>
+              <span className="font-heading text-3xl leading-none text-ink tabular-nums">{fmt(prepSubtotal)}</span>
             </div>
           )}
           {/* Bulk discount (10+ cards), with the restoration review step's wording */}
           {bulkDiscountCents > 0 && (
-            <div className="bg-rx-soft border border-rx/30 rounded-lg p-4 flex items-center gap-3">
-              <Trophy className="h-6 w-6 shrink-0 text-rx" strokeWidth={1.75} />
+            <div className="flex items-center gap-3 bg-rx-soft p-4 px-frame">
+              <PixelIcon name="star" size={32} className="shrink-0" />
               <div>
                 <p className="font-bold text-ink text-sm">{bulkPercent}% bulk discount applied!</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -494,61 +505,61 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
         </div>
 
         {/* Add-ons */}
-        <div className="bg-white rounded-lg border border-border p-6 flex flex-col gap-4">
-          <h2 className="font-heading font-extrabold text-base text-foreground">Add-Ons</h2>
+        <div className="px-window-ink p-5 md:p-6 flex flex-col gap-4">
+          <h2 className="font-heading text-[1.75rem] uppercase leading-none tracking-[0.02em] text-ink">Add-Ons</h2>
 
           <button
             type="button"
             onClick={() => setAddPreGrade((v) => !v)}
-            className={`w-full flex items-center gap-3 p-4 rounded-lg border text-left transition-colors ${addPreGrade ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"}`}
+            className={`flex w-full items-center gap-3 border-2 p-4 text-left focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep ${addPreGrade ? "border-ink bg-[color-mix(in_srgb,var(--mint)_35%,var(--panel))] shadow-[inset_0_-4px_0_var(--mint)]" : "border-ink/30 bg-panel hover:border-ink"}`}
           >
-            <div className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 transition-colors ${addPreGrade ? "border-primary bg-primary" : "border-border"}`}>
-              {addPreGrade && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+            <div className={`flex size-6 shrink-0 items-center justify-center border-2 border-ink ${addPreGrade ? "bg-mint" : "bg-panel"}`}>
+              {addPreGrade && <Check className="h-4 w-4 text-ink" strokeWidth={3} />}
             </div>
             <div className="flex-1">
-              <div className="flex items-baseline gap-2">
-                <span className="text-sm font-bold text-foreground">Pre-Grade Assessment</span>
-                <span className="text-xs font-bold text-primary">+{fmt(preGradePriceCents)}/card</span>
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <span className="font-heading text-lg uppercase leading-none tracking-[0.02em] text-ink">Pre-Grade Assessment</span>
+                <span className="font-pixel text-xs text-coral-deep">+{fmt(preGradePriceCents)}/card</span>
               </div>
-              <p className="text-xs text-muted-foreground mt-0.5">We estimate each card&apos;s grade before you submit — so you know what to expect.</p>
+              <p className="text-xs text-ink-soft mt-1">We estimate each card&apos;s grade before you submit — so you know what to expect.</p>
             </div>
             {addPreGrade && filledCards.length > 0 && (
-              <span className="text-sm font-extrabold text-primary shrink-0">{fmt(preGradeSubtotal)}</span>
+              <span className="shrink-0 font-heading text-xl leading-none text-ink tabular-nums">{fmt(preGradeSubtotal)}</span>
             )}
           </button>
 
           {slabCrackCount > 0 && (
-            <div className="flex items-center gap-3 border border-border rounded-lg p-4">
-              <Hammer className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.75} />
-              <span className="text-sm text-foreground">Slab removal: {slabCrackCount} × {fmt(slabCrackPriceCents)} = <span className="font-semibold">{fmt(slabCrackSubtotal)}</span></span>
+            <div className="flex items-center gap-3 border-2 border-ink bg-panel p-4">
+              <Hammer className="h-5 w-5 shrink-0 text-coral-deep" strokeWidth={1.75} />
+              <span className="text-sm text-ink">Slab removal: {slabCrackCount} × {fmt(slabCrackPriceCents)} = <span className="font-semibold">{fmt(slabCrackSubtotal)}</span></span>
             </div>
           )}
         </div>
 
         {/* Shipping */}
-        <div className="bg-white rounded-lg border border-border p-6 flex flex-col gap-4">
-          <h2 className="font-heading font-extrabold text-base text-foreground">Shipping Your Cards To Us<Req /></h2>
+        <div className="px-window-ink p-5 md:p-6 flex flex-col gap-4">
+          <h2 className="font-heading text-[1.75rem] uppercase leading-none tracking-[0.02em] text-ink">Shipping Your Cards To Us<Req /></h2>
           <div className="grid grid-cols-2 gap-2">
             <button type="button" onClick={() => { if (shippingMethod !== "buy_label") resetAddress(); setShippingMethod("buy_label"); }}
-              className={`h-12 rounded-lg border flex flex-col items-center justify-center gap-0.5 text-xs font-semibold transition-colors ${shippingMethod === "buy_label" ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}>
+              className={`flex h-14 flex-col items-center justify-center gap-1 border-2 font-heading text-base uppercase tracking-[0.03em] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep ${shippingMethod === "buy_label" ? "border-ink bg-butter text-ink shadow-[inset_0_-4px_0_#d4b552]" : "border-ink/30 bg-panel text-ink-soft hover:border-ink"}`}>
               <Package className="h-4 w-4" strokeWidth={1.75} />Prepaid Label
             </button>
             <button type="button" onClick={() => { if (shippingMethod !== "self_ship") resetAddress(); setShippingMethod("self_ship"); if (insuranceElection === "purchased") setInsuranceElection(null); }}
-              className={`h-12 rounded-lg border flex flex-col items-center justify-center gap-0.5 text-xs font-semibold transition-colors ${shippingMethod === "self_ship" ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}>
+              className={`flex h-14 flex-col items-center justify-center gap-1 border-2 font-heading text-base uppercase tracking-[0.03em] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep ${shippingMethod === "self_ship" ? "border-ink bg-butter text-ink shadow-[inset_0_-4px_0_#d4b552]" : "border-ink/30 bg-panel text-ink-soft hover:border-ink"}`}>
               <Mailbox className="h-4 w-4" strokeWidth={1.75} />Ship Myself
             </button>
           </div>
 
           {shippingMethod === "self_ship" && (
-            <p className="text-xs text-muted-foreground">After checkout you&apos;ll receive our mailing address. Ship using any tracked, insured method and include your order number inside the package.</p>
+            <p className="text-xs text-ink-soft">After checkout you&apos;ll receive our mailing address. Ship using any tracked, insured method and include your order number inside the package.</p>
           )}
 
           <div className="flex flex-col gap-4">
-            <div className="border-t border-border pt-4 flex flex-col gap-3">
+            <div className="flex flex-col gap-3 border-t-2 border-dashed border-ink/25 pt-4">
 
               <div>
                 <p className={labelCls}>Country</p>
-                <p className="h-10 flex items-center px-3 text-sm rounded-lg border border-border bg-muted/40 text-muted-foreground">
+                <p className="flex h-11 items-center border-2 border-ink/30 bg-muted px-3 text-sm text-ink-soft">
                   United States
                 </p>
               </div>
@@ -564,7 +575,7 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
                 />
               </Need>
               <div>
-                <label className={labelCls}>Apt / Suite / Unit <span className="font-normal">(optional)</span></label>
+                <label className={labelCls}>Apt / Suite / Unit <span className="normal-case">(optional)</span></label>
                 <input className={input} autoComplete="address-line2" value={street2} onChange={(e) => setStreet2(e.target.value)} placeholder="Apt 4B" />
               </div>
 
@@ -591,49 +602,49 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
             {addressComplete && (
               <Need missing={showMissing && !selectedRate} note="Check shipping rates and choose an option." className="flex flex-col gap-3">
                 {shippingMethod === "self_ship" ? (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-xs text-blue-800 leading-relaxed">
+                  <div className="border-2 border-frame bg-[color-mix(in_srgb,var(--powder)_35%,var(--panel))] px-4 py-3 text-xs leading-relaxed text-ink">
                     <strong>Return shipping is paid now.</strong> You send your cards to us your own way; we ship them back to this address with a tracked label.
                   </div>
                 ) : (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-xs text-blue-800 leading-relaxed">
+                  <div className="border-2 border-frame bg-[color-mix(in_srgb,var(--powder)_35%,var(--panel))] px-4 py-3 text-xs leading-relaxed text-ink">
                     <strong>Shipping price covers both ways.</strong> You&apos;re paying for your label to send cards to us <em>and</em> the return shipment back to you — two labels, billed up front.
                   </div>
                 )}
 
                 {(rates.length === 0 || addressChangedSinceFetch) && !ratesLoading && (
                   <button type="button" onClick={fetchRates}
-                    className="h-10 w-full border border-primary text-primary text-sm font-bold rounded-lg hover:bg-primary/5 transition-colors">
+                    className="px-btn px-btn-powder h-12 w-full text-base">
                     {addressChangedSinceFetch ? "Refresh Shipping Rates" : "Check Shipping Rates"}
                   </button>
                 )}
 
                 {ratesLoading && (
-                  <div className="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground">
-                    <div className="w-4 h-4 border border-primary border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center justify-center gap-2 py-4 text-sm text-ink-soft">
+                    <span aria-hidden className="size-3 bg-coral-deep px-blink" />
                     Fetching rates…
                   </div>
                 )}
 
                 {ratesError && (
-                  <div className="text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{ratesError}</div>
+                  <div className="border-2 border-red-700 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">{ratesError}</div>
                 )}
 
                 {rates.length > 0 && !addressChangedSinceFetch && (
                   <div className="flex flex-col gap-2">
-                    <p className="text-xs font-semibold text-muted-foreground">{shippingMethod === "self_ship" ? "Select a return shipping option:" : "Select a shipping option:"}</p>
+                    <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">{shippingMethod === "self_ship" ? "Select a return shipping option:" : "Select a shipping option:"}</p>
                     {rates.map((rate) => (
                       <button key={rate.id} type="button" onClick={() => setSelectedRate(rate)}
-                        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border text-left transition-colors ${selectedRate?.id === rate.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"}`}>
+                        className={`flex min-h-14 w-full items-center justify-between gap-3 border-2 px-4 py-3 text-left focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep ${selectedRate?.id === rate.id ? "border-ink bg-[color-mix(in_srgb,var(--butter)_45%,var(--panel))]" : "border-ink/30 bg-panel hover:border-ink"}`}>
                         <div className="flex items-center gap-3">
-                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${selectedRate?.id === rate.id ? "border-primary" : "border-border"}`}>
-                            {selectedRate?.id === rate.id && <div className="w-2 h-2 rounded-full bg-primary" />}
+                          <div className="flex size-5 shrink-0 items-center justify-center border-2 border-ink bg-panel">
+                            {selectedRate?.id === rate.id && <div className="size-2.5 bg-coral-deep" />}
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-foreground">{rate.service}</p>
-                            <p className="text-xs text-muted-foreground">{etaLabel(rate)}</p>
+                            <p className="text-sm font-bold text-ink">{rate.service}</p>
+                            <p className="text-xs text-ink-soft">{etaLabel(rate)}</p>
                           </div>
                         </div>
-                        <span className="text-sm font-extrabold text-foreground">{fmt(rate.amount_cents * shippingTrips)}</span>
+                        <span className="shrink-0 font-heading text-xl leading-none text-ink tabular-nums">{fmt(rate.amount_cents * shippingTrips)}</span>
                       </button>
                     ))}
                   </div>
@@ -645,7 +656,7 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
         </div>
 
         {/* Shipping insurance: a required choice, buy or decline (Terms 15.2, 15.4) */}
-        <div className="bg-white rounded-lg border border-border p-6">
+        <div className="px-window-ink p-5 md:p-6">
           <InsuranceElectionBox
             election={insuranceElection}
             onElection={(e) => {
@@ -667,7 +678,7 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
                   value={insuranceValueDollars} onChange={(e) => setInsuranceValueDollars(e.target.value)}
                   placeholder="Total value of cards in this shipment (USD)" />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-ink-soft mt-1.5">
                 Covers the trip to us. Price: {insuranceDeclaredValueCents > 0 ? fmt(estimatedInsuranceCents) : "~1.5% of the amount"}, included in your total.
               </p>
             </div>
@@ -675,20 +686,22 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
         </div>
 
         {/* Feature suggestion */}
-        <div className="bg-rx-soft border border-blue-200 rounded-lg p-5 flex flex-col gap-3">
+        <div className="px-window-ink flex flex-col gap-4 bg-rx-soft p-5 md:p-6">
           <div className="flex items-start gap-3">
-            <Camera className="h-5 w-5 mt-0.5 shrink-0 text-rx" strokeWidth={1.75} />
+            <span aria-hidden className="grid size-12 shrink-0 place-items-center bg-panel px-frame">
+              <PixelIcon name="camera" size={32} />
+            </span>
             <div>
-              <p className="text-sm font-extrabold text-slate-800 leading-tight">Want to be featured?</p>
-              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+              <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">Want to be featured?</p>
+              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
                 Drop your Instagram or Facebook handle. If you allow photos and tagging below, we may share your before &amp; after results and tag you.
               </p>
             </div>
           </div>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">@</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft text-sm font-semibold">@</span>
             <input
-              className="w-full h-10 border border-blue-200 rounded-lg pl-7 pr-3 text-sm focus:outline-none focus:border-primary transition-colors bg-white"
+              className="h-11 w-full border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] pl-7"
               value={socialHandle}
               onChange={(e) => setSocialHandle(e.target.value.replace(/^@/, ""))}
               placeholder="yourhandle  (optional)"
@@ -697,19 +710,19 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
         </div>
 
         {/* Notes */}
-        <div className="bg-white rounded-lg border border-border p-6 flex flex-col gap-2">
-          <label className="font-heading font-extrabold text-base text-foreground">
-            Notes <span className="text-muted-foreground font-normal text-sm">(optional)</span>
+        <div className="px-window-ink p-5 md:p-6 flex flex-col gap-2">
+          <label className="font-heading text-[1.75rem] uppercase leading-none tracking-[0.02em] text-ink">
+            Notes <span className="font-sans text-sm normal-case tracking-normal text-ink-soft">(optional)</span>
           </label>
           <textarea
-            className="w-full border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors bg-white resize-none"
+            className="w-full resize-none border-2 border-ink bg-panel px-3 py-2.5 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
             value={notes} onChange={(e) => setNotes(e.target.value)} rows={3}
             placeholder="Special instructions, condition notes, etc." />
         </div>
 
         {/* Order Summary */}
-        <div className="bg-slate-50 rounded-lg border border-border p-5">
-          <h2 className="font-heading font-extrabold text-sm text-foreground mb-3">Order Summary</h2>
+        <div className="px-window p-5 md:p-6">
+          <h2 className="font-heading text-[1.75rem] uppercase leading-none tracking-[0.02em] text-ink mb-4">Order Summary</h2>
           <div className="flex flex-col gap-1.5 text-sm">
             {filledCards.length > 0 && (
               <div className="flex justify-between">
@@ -753,11 +766,11 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
                 <span className="font-semibold">{fmt(estimatedInsuranceCents)}</span>
               </div>
             )}
-            <div className="flex justify-between pt-2 border-t border-border mt-1">
-              <span className="font-extrabold text-foreground">
+            <div className="mt-2 flex items-baseline justify-between border-t-[3px] border-ink pt-3">
+              <span className="font-heading text-xl uppercase leading-none tracking-[0.02em] text-ink">
                 {!selectedRate ? "Subtotal" : "Total"}
               </span>
-              <span className="font-extrabold text-foreground text-lg">{totalEstimate > 0 ? fmt(totalEstimate) : "—"}</span>
+              <span className="font-heading text-3xl leading-none text-ink tabular-nums">{totalEstimate > 0 ? fmt(totalEstimate) : "—"}</span>
             </div>
             <p className="text-xs text-muted-foreground">
               {!selectedRate
@@ -767,7 +780,7 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-border p-6">
+        <div className="px-window-ink p-5 md:p-6">
           <SigningSection
             state={signing}
             onChange={setSigning}
@@ -776,11 +789,11 @@ export function PrepOrderForm({ standardPriceCents, preGradePriceCents, slabCrac
         </div>
 
         {error && (
-          <div className="text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">{error}</div>
+          <div className="border-2 border-red-700 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 px-frame">{error}</div>
         )}
 
         <button type="submit" disabled={submitting}
-          className="h-12 bg-primary text-primary-foreground rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors disabled:opacity-50">
+          className="px-btn h-14 w-full whitespace-normal px-4 text-lg disabled:opacity-60">
           {submitting ? "Redirecting to checkout…" : SIGN_BUTTON_LABEL}
         </button>
       </form>

@@ -43,7 +43,7 @@ export function SnapDeck({
   return (
     <div>
       {/* Phone chips */}
-      <div className="md:hidden -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="tablist" aria-label="Tiers">
+      <div className="md:hidden -mx-4 mb-4 flex gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="tablist" aria-label="Tiers">
         {labels.map((l, i) => (
           <button
             key={l}
@@ -51,8 +51,8 @@ export function SnapDeck({
             role="tab"
             aria-selected={i === active}
             onClick={() => go(i)}
-            className={`press shrink-0 rounded-full border px-4 h-9 text-sm font-semibold transition-colors duration-200 ${
-              i === active ? "border-ink bg-ink text-paper" : "border-rule bg-white text-muted-foreground"
+            className={`press my-[3px] shrink-0 px-4 h-11 font-heading text-base uppercase px-frame transition-colors duration-100 [transition-timing-function:steps(1,end)] ${
+              i === active ? "bg-butter text-ink" : "bg-panel text-ink-soft"
             }`}
           >
             {l}
@@ -72,11 +72,11 @@ export function SnapDeck({
       </div>
 
       {/* Phone position */}
-      <div className="md:hidden mt-1 flex items-center justify-center gap-1.5" aria-hidden>
+      <div className="md:hidden mt-2 flex items-center justify-center gap-2" aria-hidden>
         {items.map((_, i) => (
           <span
             key={i}
-            className={`h-1.5 rounded-full transition-all duration-300 ${i === active ? "w-6 bg-rx" : "w-1.5 bg-rule"}`}
+            className={`h-2 transition-[width,background-color] duration-150 [transition-timing-function:steps(2,end)] ${i === active ? "w-6 bg-coral-deep" : "w-2 bg-ink/25"}`}
           />
         ))}
       </div>

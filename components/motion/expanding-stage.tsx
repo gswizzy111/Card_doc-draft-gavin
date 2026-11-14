@@ -7,8 +7,9 @@ import { useForwardOnly } from "@/components/motion/use-scroll-once";
 import { cn } from "@/lib/utils";
 
 /**
- * A dark stage that arrives as an inset, rounded panel and opens to full
- * bleed as it scrolls up the viewport, like a light box being switched on.
+ * A night stage that arrives as an inset panel and opens to full bleed in
+ * eight whole frames as it scrolls up the viewport, like a window sliding
+ * open. Square corners: the clinic has no rounded edges.
  * Once open it stays open (scrolling back up doesn't shrink it again).
  * The inset size comes from `--stage-inset` (set per breakpoint) so phones
  * never clip into their 16px gutter. Reduced motion: full bleed, static.
@@ -18,9 +19,8 @@ export function ExpandingStage({ children, className }: { children: React.ReactN
   const reduce = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 12%"] });
   const opened = useForwardOnly(scrollYProgress);
-  const p = useTransform(opened, [0, 1], [1, 0]);
-  const radius = useTransform(opened, [0, 1], [28, 0]);
-  const clipPath = useMotionTemplate`inset(0 calc(${p} * var(--stage-inset)) round ${radius}px)`;
+  const p = useTransform(opened, (v) => 1 - Math.round(Math.min(1, Math.max(0, v)) * 8) / 8);
+  const clipPath = useMotionTemplate`inset(0 calc(${p} * var(--stage-inset)))`;
 
   return (
     <motion.div

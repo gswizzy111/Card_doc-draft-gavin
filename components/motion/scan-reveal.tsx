@@ -18,13 +18,14 @@ export function ScanReveal({ src, alt, sizes }: { src: StaticImageData; alt: str
   const reduce = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "center 45%"] });
   const p = useSpring(useForwardOnly(scrollYProgress), { bounce: 0, duration: 0.35 });
-  const percent = useTransform(p, [0, 1], [0, 100]);
+  // 24 whole frames across the photo: a scan line, not a glide.
+  const percent = useTransform(p, (v) => Math.round(Math.min(1, Math.max(0, v)) * 24) / 24 * 100);
   const clipPath = useMotionTemplate`inset(-10% calc(100% - ${percent}%) -10% -10%)`;
   const beamX = useMotionTemplate`${percent}%`;
   const beamOpacity = useTransform(p, [0, 0.04, 0.94, 1], [0, 1, 1, 0]);
 
   const image = (
-    <Image src={src} alt={alt} sizes={sizes} className="w-full h-auto drop-shadow-[0_30px_40px_oklch(0_0_0/0.45)]" />
+    <Image src={src} alt={alt} sizes={sizes} className="w-full h-auto" />
   );
 
   if (reduce) return (
@@ -45,8 +46,8 @@ export function ScanReveal({ src, alt, sizes }: { src: StaticImageData; alt: str
       </motion.div>
       {/* Beam */}
       <motion.div aria-hidden className="pointer-events-none absolute -inset-y-[6%] inset-x-0" style={{ x: beamX }}>
-        <motion.div className="absolute inset-y-0 left-0 w-px bg-rx-bright" style={{ opacity: beamOpacity }}>
-          <div className="absolute inset-y-0 -left-6 w-12 bg-[radial-gradient(closest-side,oklch(0.75_0.155_52/0.45),transparent)]" />
+        <motion.div className="absolute inset-y-0 -left-[3px] w-[6px] bg-mint shadow-[0_0_0_3px_var(--ink)]" style={{ opacity: beamOpacity }}>
+          <div className="absolute inset-y-0 left-[9px] w-[6px] bg-mint/35" />
         </motion.div>
       </motion.div>
     </div>

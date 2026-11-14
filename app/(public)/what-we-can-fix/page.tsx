@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { canonical } from "@/lib/seo";
 import { ArrowDown, Check, X } from "lucide-react";
 import { PageHero } from "@/components/marketing/page-hero";
+import { CardSprite, DocSprite, pixelButton } from "@/components/pixel";
 
 export const metadata: Metadata = {
   alternates: canonical("/what-we-can-fix"),
@@ -73,30 +74,40 @@ function ItemText({ item }: { item: Item }) {
   return (
     <span className={item.strong ? "font-semibold" : undefined}>
       {main}
-      {rest.length > 0 && <span className="text-muted-foreground"> — {rest.join(" — ")}</span>}
+      {rest.length > 0 && <span className="text-ink-soft"> — {rest.join(" — ")}</span>}
     </span>
   );
 }
 
+// One side of the symptoms chart: treatable (mint, the healed card) or not (coral, the hurt card).
 function FixList({ kind, items }: { kind: "can" | "cannot"; items: Item[] }) {
   const can = kind === "can";
   const Icon = can ? Check : X;
   return (
-    <div className="relative bg-white border border-ink/70 rounded-xl shadow-[0_40px_70px_-50px_oklch(0.25_0.006_70/0.6)]">
+    <div className="px-window-ink">
       <div
-        className={`flex items-center justify-between gap-4 px-6 md:px-7 py-5 border-b border-ink/70 border-t-[6px] rounded-t-xl ${
-          can ? "border-t-rx" : "border-t-ink"
+        className={`flex items-center justify-between gap-4 border-b-[3px] border-ink px-5 py-4 md:px-6 ${
+          can ? "bg-mint" : "bg-rx-soft"
         }`}
       >
-        <h3 className="font-heading text-xl md:text-2xl font-extrabold tracking-[-0.01em] text-ink">
-          {can ? "Things We CAN Work on" : "Things we CANNOT fix"}
-        </h3>
-        <Icon className={`h-6 w-6 shrink-0 ${can ? "text-rx" : "text-red-600"}`} strokeWidth={2} />
+        <div>
+          <h3 className="font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink md:text-[1.75rem]">
+            {can ? "Things We CAN Work on" : "Things we CANNOT fix"}
+          </h3>
+        </div>
+        <span aria-hidden className="grid size-16 shrink-0 place-items-center bg-panel px-frame">
+          <CardSprite variant={can ? "healed" : "hurt"} scale={2} />
+        </span>
       </div>
-      <ul className="divide-y divide-rule">
+      <ul className="divide-y-2 divide-dashed divide-ink/15">
         {items.map((item) => (
-          <li key={item.text} className="flex items-start gap-3 px-6 md:px-7 py-3.5 text-[15px] leading-relaxed text-ink">
-            <Icon className={`h-4 w-4 mt-[0.3rem] shrink-0 ${can ? "text-rx" : "text-red-600"}`} strokeWidth={2.25} />
+          <li key={item.text} className="flex items-start gap-3 px-5 py-3.5 text-[15px] leading-relaxed text-ink md:px-6">
+            <span
+              aria-hidden
+              className={`mt-[0.2rem] grid size-5 shrink-0 place-items-center px-frame ${can ? "bg-mint text-ink" : "bg-rx-soft text-coral-deep"}`}
+            >
+              <Icon className="h-3.5 w-3.5" strokeWidth={3} />
+            </span>
             <ItemText item={item} />
           </li>
         ))}
@@ -114,68 +125,80 @@ export default function WhatWeCanFixPage() {
           eyebrow="What We Can Fix"
           title="What we can (and can't) fix"
           lines={["What we can", "(and can't) fix"]}
+          sprite={
+            <div className="flex items-end gap-3 pb-1">
+              <CardSprite variant="hurt" scale={4} />
+              <span className="mb-11 font-pixel text-sm text-coral-deep px-nudge">▶</span>
+              <CardSprite variant="healed" scale={4} />
+            </div>
+          }
           lead={<>Restoration has real limits. Here&apos;s an honest breakdown.</>}
         />
-        <nav aria-label="Card types" className="hero-in mt-8 flex flex-wrap gap-2.5" style={{ ["--d" as string]: 380 }}>
+        <nav aria-label="Card types" className="hero-in mt-9 flex flex-wrap gap-4" style={{ ["--d" as string]: 380 }}>
           {CATEGORIES.map((c) => (
             <a
               key={c.id}
               href={`#${c.id}`}
-              className="press group inline-flex h-11 items-center gap-2 rounded-md border border-rule bg-white/70 px-4 text-[15px] font-semibold text-ink hover:border-ink/40 hover:bg-white transition-colors duration-150"
+              className={pixelButton({ tone: "panel", size: "md", className: "group normal-case" })}
             >
               {c.title}
-              <ArrowDown className="h-4 w-4 text-rx transition-transform duration-200 group-hover:translate-y-0.5" strokeWidth={2} />
+              <ArrowDown className="h-4 w-4 text-coral-deep" strokeWidth={2.5} />
             </a>
           ))}
         </nav>
       </div>
 
-      {/* One section per card type */}
+      {/* One section per card type: a chart on the wall */}
       <div className="max-w-6xl mx-auto px-4 md:px-10 pb-20 md:pb-28 flex flex-col gap-16 md:gap-24">
         {CATEGORIES.map((c, i) => (
-          <section key={c.id} id={c.id} aria-labelledby={`${c.id}-title`}>
-            <div data-reveal className="mb-7 md:mb-9 border-t border-ink/80 pt-5 md:pt-6">
-              <p className="rx-label text-rx mb-3 tabular-nums">{String(i + 1).padStart(2, "0")}</p>
+          <section key={c.id} id={c.id} aria-labelledby={`${c.id}-title`} className="scroll-mt-28">
+            <div data-reveal className="mb-8 flex items-start gap-4 md:mb-10 md:gap-5">
+              <span aria-hidden className="grid h-14 min-w-14 shrink-0 place-items-center bg-butter px-2 font-pixel text-base text-ink tabular-nums px-frame-shadow">
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <h2
                 id={`${c.id}-title`}
-                className="font-heading text-4xl md:text-6xl font-extrabold tracking-[-0.02em] leading-[0.95] text-ink"
+                className="min-w-0 pt-1 font-heading text-5xl uppercase leading-[0.95] tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl"
               >
                 {c.title}
                 {c.subtitle && (
-                  <span className="block mt-3 font-sans text-base md:text-lg font-medium tracking-normal leading-snug text-muted-foreground">
+                  <span className="mt-3 block w-fit bg-panel px-3 py-1.5 font-sans text-base font-medium normal-case tracking-normal leading-snug text-ink-soft [text-shadow:none] px-frame md:text-lg">
                     {c.subtitle}
                   </span>
                 )}
               </h2>
             </div>
-            <div data-reveal="stagger" className="grid gap-5 md:grid-cols-2 md:items-start">
+            <div data-reveal="stagger" className="grid gap-7 md:grid-cols-2 md:items-start md:gap-8">
               <FixList kind="can" items={c.can} />
               <FixList kind="cannot" items={c.cannot} />
             </div>
           </section>
         ))}
 
-        {/* Closing call to action */}
+        {/* Closing call to action: the night desk */}
         <section
           data-reveal
-          className="stage stage-light overflow-hidden rounded-2xl p-8 md:p-12 md:flex md:items-center md:justify-between md:gap-10"
+          className="stage stage-light px-frame-shadow p-7 md:p-12 md:flex md:items-center md:justify-between md:gap-10"
         >
-          <div className="mb-8 md:mb-0">
-            <h2 className="font-heading text-3xl md:text-4xl font-extrabold tracking-[-0.015em] leading-[1] text-stage-fg mb-3">
-              Not sure if your card qualifies?
-            </h2>
-            <p className="text-stage-muted max-w-xl">
-              DM us a photo on Instagram at{" "}
-              <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="underline text-stage-fg hover:text-rx-bright">
-                @the_card_doc
-              </a>{" "}
-              before placing an order.
-            </p>
+          <div className="mb-8 flex items-end gap-5 md:mb-0">
+            <DocSprite scale={3} className="hidden shrink-0 sm:block" />
+            <div>
+              <h2 className="mb-3 font-heading text-4xl uppercase leading-[0.95] tracking-[0.02em] text-stage-fg md:text-5xl">
+                Not sure if your card qualifies?
+              </h2>
+              <p className="text-stage-muted max-w-xl">
+                DM us a photo on Instagram at{" "}
+                <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="font-semibold text-stage-fg underline decoration-2 underline-offset-4 hover:text-rx-bright">
+                  @the_card_doc
+                </a>{" "}
+                before placing an order.
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+          <div className="flex shrink-0 flex-col gap-4 sm:flex-row">
             <Link
               href="/tier-selection"
-              className="btn-depth btn-sheen inline-flex h-12 items-center justify-center px-7 bg-rx text-primary-foreground font-semibold rounded-md hover:bg-rx/90 transition-colors"
+              className={pixelButton({ size: "md" })}
             >
               Book Restoration
             </Link>
@@ -183,7 +206,7 @@ export default function WhatWeCanFixPage() {
               href="https://www.instagram.com/the_card_doc"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-12 items-center justify-center px-7 border border-white/25 text-stage-fg font-semibold rounded-md hover:border-white/60 hover:bg-white/5 transition-colors whitespace-nowrap"
+              className={pixelButton({ tone: "panel", size: "md" })}
             >
               DM us on Instagram
             </a>
