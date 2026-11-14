@@ -26,10 +26,14 @@ export function hidesBookingButton(pathname: string) {
   return HIDE_ON.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
+// Pixel-honest motion: the button climbs in four whole frames, not a glide.
+const frames = (n: number) => (t: number) => Math.min(1, Math.ceil(t * n) / n);
+
 /**
- * Phone booking dock: a frosted bar on the bottom edge. It slides up once the
- * visitor scrolls past the first screen, tucks away when the footer arrives
- * (so it never covers the end of the page) and pads for the home indicator.
+ * Phone call button: a small night-window button with the Doc's portrait and
+ * a blinking call light, bottom right. It climbs in once the visitor scrolls
+ * past the first screen, tucks away when the footer arrives (so it never
+ * covers the end of the page) and pads for the home indicator.
  */
 export function RestorationBubble() {
   const pathname = usePathname();
@@ -64,21 +68,26 @@ export function RestorationBubble() {
       {show && (
         <motion.div
           key="dock"
-          initial={reduce ? { opacity: 0 } : { y: "110%" }}
+          initial={reduce ? { opacity: 0 } : { y: "140%" }}
           animate={reduce ? { opacity: 1 } : { y: 0 }}
-          exit={reduce ? { opacity: 0 } : { y: "110%" }}
-          transition={reduce ? { duration: 0.2 } : { type: "spring", bounce: 0, duration: 0.45 }}
-          className="vt-dock md:hidden fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
+          exit={reduce ? { opacity: 0 } : { y: "140%" }}
+          transition={reduce ? { duration: 0.2, ease: frames(2) } : { duration: 0.24, ease: frames(4) }}
+          className="vt-dock md:hidden fixed right-3 bottom-0 z-50 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
         >
           <Link
             href="/restoration"
-            className="press flex items-center gap-3 rounded-2xl border-[2.5px] border-ink bg-ink p-2 pr-2.5 text-paper shadow-[4px_4px_0_var(--rx)]"
+            className="press group flex items-center gap-2.5 bg-night py-1.5 pr-1.5 pl-1.5 text-stage-fg px-frame-shadow"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/card-doctor.jpg" alt="" className="h-11 w-11 shrink-0 rounded-full border-2 border-white object-cover object-[50%_18%]" />
-            <span className="min-w-0 flex-1 font-heading text-[15px] font-black uppercase leading-tight tracking-[-0.005em]">Book a Restoration</span>
-            <span className="flex h-11 shrink-0 items-center rounded-xl border-2 border-white bg-rx px-3 font-heading text-[12px] font-extrabold tabular-nums text-white">
-              From $75 / card
+            <span aria-hidden className="relative shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/card-doctor.jpg" alt="" className="block size-11 bg-panel object-cover object-[50%_18%] p-[2px] shadow-[inset_0_0_0_2px_var(--frame)]" />
+              <span className="absolute -top-1 -right-1 size-3 bg-mint px-frame px-blink" />
+            </span>
+            <span className="flex flex-col items-start gap-1 pr-1">
+              <span className="font-heading text-[17px] uppercase leading-none">Book a Restoration</span>
+              <span className="inline-flex h-6 items-center bg-butter px-1.5 font-pixel text-xs leading-none text-ink tabular-nums">
+                From $75 / card
+              </span>
             </span>
           </Link>
         </motion.div>

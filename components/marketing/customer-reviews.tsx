@@ -1,6 +1,7 @@
 import { CountUp } from "@/components/motion/count-up";
 import { ScrollLitText } from "@/components/motion/scroll-lit-text";
 import { CASE_STUDY, FEATURED_REVIEW, REVIEWS } from "@/lib/reviews";
+import { PixelIcon, StatusChip } from "@/components/pixel";
 
 // Phones show the first few quotes so the page stays short.
 const PHONE_LIMIT = 6;
@@ -8,11 +9,11 @@ const PHONE_LIMIT = 6;
 const COMPACT_PICKS = ["Charmander", "Sold on TCGplayer", "7 cards to grading"];
 
 /**
- * Customer reviews on the home ink stage: the convention quote at headline
- * size, lighting up word by word as it scrolls in with its closing phrase in
- * full white, beside the Charizard case (the one raised panel, figures
- * counting up), then the rest of the messages as a masonry of hairline cards
- * whose edge lights under the pointer. Every quote is the customer's own
+ * Customer reviews on a night stage: the headline quote at headline size,
+ * lighting up word by word as it scrolls in with its closing phrase in full
+ * panel white, beside the Charizard case (a raised night window, figures
+ * counting up), then the rest of the messages as night dialog windows whose
+ * edge lights coral under the pointer. Every quote is the customer's own
  * words (lib/reviews.ts).
  */
 export function CustomerReviews({ compact = false }: { compact?: boolean }) {
@@ -26,7 +27,7 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
     <div className="max-w-6xl mx-auto">
       <div className="grid gap-12 lg:gap-16 lg:grid-cols-12 lg:items-center">
         <figure className="lg:col-span-7">
-          <blockquote className="font-heading text-[1.85rem] sm:text-[2.35rem] lg:text-[2.75rem] leading-[1.1] tracking-[-0.015em] text-stage-fg [text-wrap:pretty]">
+          <blockquote className="font-heading text-[2rem] sm:text-[2.5rem] lg:text-[3rem] leading-[1.05] text-stage-fg [text-wrap:pretty]">
             <p className="-indent-[0.42em]">
               <ScrollLitText
                 segments={[
@@ -36,29 +37,36 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
               />
             </p>
           </blockquote>
-          <figcaption data-reveal className="mt-7 flex items-center gap-3 text-sm text-stage-muted">
-            <span aria-hidden className="h-px w-8 bg-white/30" />
-            <span className="font-semibold text-stage-fg">{FEATURED_REVIEW.from}</span>
+          <figcaption data-reveal className="mt-7 flex items-center gap-3">
+            <span aria-hidden className="grid size-10 place-items-center bg-butter px-frame">
+              <PixelIcon name="user" size={32} />
+            </span>
+            <span className="font-pixel text-xs uppercase text-stage-fg">{FEATURED_REVIEW.from}</span>
           </figcaption>
         </figure>
 
         <figure
           data-reveal
           style={{ transitionDelay: "120ms" }}
-          className="lg:col-span-5 rounded-xl bg-stage-raise ring-1 ring-white/10 p-6 md:p-8 shadow-[0_40px_70px_-50px_oklch(0_0_0/0.8)]"
+          className="px-window-night lg:col-span-5 p-6 md:p-8"
         >
-          <h3 className="font-heading text-[1.75rem] leading-[1.1] tracking-[-0.01em] text-stage-fg">
+          <div aria-hidden className="mb-4 flex flex-wrap items-center gap-2">
+            <StatusChip status="treatment">ADMITTED</StatusChip>
+            <span className="font-pixel text-xs text-rx-bright">▶</span>
+            <StatusChip status="discharged" />
+          </div>
+          <h3 className="font-heading text-[2rem] uppercase leading-none text-stage-fg">
             The {CASE_STUDY.paid} {CASE_STUDY.card}
           </h3>
           <p className="mt-2 text-[15px] leading-relaxed text-stage-muted">
             Bought “damaged” with an edge lift. Sent it in. Got back a {CASE_STUDY.grade}.
           </p>
-          <dl className="mt-7 border-t border-white/12">
+          <dl className="mt-7 border-t-[3px] border-dashed border-stage-muted/30">
             {steps.map((s) => (
-              <div key={s.label} className="flex items-baseline justify-between gap-4 border-b border-white/12 py-4">
+              <div key={s.label} className="flex items-baseline justify-between gap-4 border-b-[3px] border-dashed border-stage-muted/30 py-4">
                 <dt className="rx-label text-stage-muted">{s.label}</dt>
                 <dd
-                  className={`font-heading text-4xl md:text-5xl leading-none tracking-[-0.02em] [font-feature-settings:'lnum'_1,'tnum'_1] ${s.muted ? "text-stage-muted" : "text-stage-fg"}`}
+                  className={`font-heading text-[2.75rem] md:text-[3.25rem] leading-none [font-feature-settings:'lnum'_1,'tnum'_1] ${s.muted ? "text-stage-muted line-through decoration-coral decoration-[3px]" : "text-stage-fg"}`}
                 >
                   <CountUp value={s.value} />
                 </dd>
@@ -70,8 +78,8 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
 
       <ul
         className={compact
-          ? "mt-14 md:mt-20 grid gap-4 md:gap-5 md:grid-cols-3"
-          : "mt-16 md:mt-24 columns-1 sm:columns-2 lg:columns-3 gap-4 md:gap-5"}
+          ? "mt-14 md:mt-20 grid gap-6 md:gap-7 md:grid-cols-3"
+          : "mt-16 md:mt-24 columns-1 sm:columns-2 lg:columns-3 gap-6 md:gap-7"}
       >
         {/* In the masonry each card is an inline-block: Chromium drops the
             lit edge's mask on block children of a multi-column list, which
@@ -81,14 +89,19 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
             key={r.quote}
             data-reveal
             style={{ transitionDelay: `${(i % 3) * 80}ms` }}
-            className={`lit-border relative rounded-xl ring-1 ring-white/12 p-6 transition-colors duration-300 hover:bg-white/[0.025] ${compact ? "" : "mb-4 md:mb-5 inline-block w-full align-top break-inside-avoid"} ${!compact && i >= PHONE_LIMIT ? "max-sm:hidden" : ""}`}
+            className={`px-window-night lit-border relative p-6 ${compact ? "" : "mb-6 md:mb-7 inline-block w-full align-top break-inside-avoid"} ${!compact && i >= PHONE_LIMIT ? "max-sm:hidden" : ""}`}
           >
             <figure className="flex h-full flex-col">
-              {r.card && <p className="rx-label text-stage-muted">{r.card}</p>}
+              {r.card && (
+                <p className="inline-flex h-7 items-center self-start bg-butter px-2.5 font-pixel text-xs uppercase leading-none text-ink">{r.card}</p>
+              )}
               <blockquote className="mt-3 text-base md:text-[17px] leading-relaxed text-stage-fg">
                 <p>“{r.quote}”</p>
               </blockquote>
-              <figcaption className="mt-auto pt-4 text-[13px] text-stage-muted">{r.from}</figcaption>
+              <figcaption className="mt-auto flex items-center gap-2 pt-4 font-pixel text-xs uppercase text-stage-muted">
+                <PixelIcon name="user" size={16} />
+                {r.from}
+              </figcaption>
             </figure>
           </li>
         ))}
