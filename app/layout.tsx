@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Schibsted_Grotesk } from "next/font/google";
+import { Atkinson_Hyperlegible_Next, Pixelify_Sans, Silkscreen } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { MetaPixelRouteTracker } from "@/components/meta-pixel-route-tracker";
@@ -8,17 +8,26 @@ import { siteUrl } from "@/lib/site-url";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ORGANIZATION } from "@/lib/seo";
 
-const poppins = Poppins({
+// Display, headings, buttons, nav and prices: a chunky free pixel face.
+const pixelify = Pixelify_Sans({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-// Body, UI, labels and figures: a newspaper grotesque with tabular numerals.
-const schibsted = Schibsted_Grotesk({
+// Body, forms, FAQs and legal text: a crisp, highly readable sans.
+const atkinson = Atkinson_Hyperlegible_Next({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+// Tiny labels only (chips, HUD text, the ▶ cursor): a small-size pixel face.
+const silkscreen = Silkscreen({
+  variable: "--font-pixel",
+  subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -27,8 +36,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   interactiveWidget: "resizes-content",
-  // Matches the paper header at the top of every page.
-  themeColor: "#f7efe1",
+  // Matches the panel-white clinic header at the top of every page.
+  themeColor: "#fffbef",
 };
 
 export const metadata: Metadata = {
@@ -62,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${schibsted.variable} h-full antialiased`}>
+    <html lang="en" className={`${pixelify.variable} ${atkinson.variable} ${silkscreen.variable} h-full antialiased`}>
       <head>
         <meta name="facebook-domain-verification" content="ihjnpqbitwq29e5kx3x0dujilxh1n9" />
         {/* Runs before anything else on the page and loads Google Analytics
