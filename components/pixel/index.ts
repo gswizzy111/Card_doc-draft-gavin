@@ -8,3 +8,14 @@ export { MenuCursor } from "./menu-cursor";
 export { HealSparkles } from "./heal-sparkles";
 export { Typewriter } from "./typewriter";
 export { pixelButton, type PixelTone } from "./pixel-button";
+export {
+  ClinicScene,
+  DocSprite,
+  CardSprite,
+  PixelIcon,
+  SparkleSprite,
+  PIXEL_ICON_NAMES,
+  SPRITE_SIZES,
+  type CardVariant,
+  type PixelIconName,
+} from "./sprites";

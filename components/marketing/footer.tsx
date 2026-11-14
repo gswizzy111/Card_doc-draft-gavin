@@ -2,16 +2,18 @@ import Link from "next/link";
 import { CurrentYear } from "@/components/marketing/current-year";
 import { DocPortrait } from "@/components/pixel/doc-portrait";
 import { MenuCursor } from "@/components/pixel/menu-cursor";
+import { DocSprite } from "@/components/pixel/sprites";
 
 /**
  * The clinic after hours: a night band with the front desk's sign-off.
- * `sprite` is a slot for a pixel sprite that stands on the desk.
+ * `sprite` stands beside the name (md and up); it defaults to the doc's
+ * sprite. Pass `sprite={null}` to leave it empty.
  */
-export function Footer({ sprite }: { sprite?: React.ReactNode } = {}) {
+export function Footer({ sprite = <DocSprite scale={2} /> }: { sprite?: React.ReactNode } = {}) {
   return (
     <footer className="stage stage-light mt-auto overflow-hidden border-t-[3px] border-ink">
       {/* Wainscot trim: the wall meets the night */}
-      <div aria-hidden className="h-3 bg-trim shadow-[inset_0_-3px_0_color-mix(in_srgb,var(--ink)_30%,transparent)]" />
+      <div aria-hidden className="wall-trim" />
 
       <div className="max-w-7xl mx-auto px-4 md:px-10 pt-14 md:pt-20 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-10 md:gap-12">
@@ -20,7 +22,7 @@ export function Footer({ sprite }: { sprite?: React.ReactNode } = {}) {
             <div className="flex items-center gap-4">
               <DocPortrait size="sm" alt="The Card Doc" />
               <span className="font-heading font-bold text-3xl tracking-[0.02em] text-stage-fg">The Card Doc</span>
-              {sprite && <span aria-hidden className="ml-auto hidden md:inline-flex">{sprite}</span>}
+              {sprite && <span aria-hidden className="ml-2 hidden self-end md:inline-flex">{sprite}</span>}
             </div>
             <div className="px-window-night px-dialog max-w-md p-5 pr-9">
               <p className="text-[15px] text-stage-fg leading-relaxed">
@@ -42,7 +44,7 @@ export function Footer({ sprite }: { sprite?: React.ReactNode } = {}) {
               rel="noopener noreferrer"
               className="menu-cursor-item draw-underline self-start inline-flex items-center gap-2 font-heading text-xl md:text-2xl font-semibold tracking-[0.02em] text-stage-fg hover:text-rx-bright transition-colors duration-75"
             >
-              <MenuCursor />
+              <MenuCursor className="absolute -left-5" />
               DM us on @the_card_doc
             </a>
             <p className="text-sm text-stage-muted">We reply within 1 business day.</p>

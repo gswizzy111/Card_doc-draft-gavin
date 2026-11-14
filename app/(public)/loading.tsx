@@ -1,4 +1,5 @@
 import { ViewTransition } from "react";
+import { DocSprite } from "@/components/pixel/sprites";
 
 export default function Loading() {
   return (
@@ -13,7 +14,7 @@ export default function Loading() {
           <div className="skeleton h-12 md:h-16 w-[80%] md:w-[55%] mb-3" />
           <div className="skeleton h-12 md:h-16 w-[60%] md:w-[40%] mb-8" />
           <div className="px-window flex max-w-2xl items-center gap-4 p-5 mb-12">
-            <div className="skeleton size-12 shrink-0" />
+            <DocSprite scale={2} className="shrink-0" />
             <div className="flex-1 space-y-3">
               <div className="skeleton h-4 w-[90%]" />
               <div className="skeleton h-4 w-[60%]" />

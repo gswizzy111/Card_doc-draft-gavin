@@ -364,7 +364,7 @@
 }
 
 :root {
-  /* --font-heading (Pixelify Sans), --font-sans (Atkinson Hyperlegible Next)
+  /* --font-heading (Jersey 10), --font-sans (Atkinson Hyperlegible Next)
      and --font-pixel (Silkscreen) are set by next/font in app/layout.tsx. */
 
   /* Clinic palette. Contrast ratios are WCAG 2 against the named surface. */
@@ -373,6 +373,8 @@
   --tile-alt: #efe3bb;     /* every other floor tile */
   --wall: #f2cba0;         /* wall peach: section bands */
   --trim: #e3a77a;         /* wainscot stripe */
+  --floor-tile: url("/pixel/tile-floor.svg"); /* art tile, draw at 32 or 48px */
+  --wall-trim: url("/pixel/wall-trim.svg");   /* art trim strip, draw at 32x24 */
   --coral: #e07a6e;        /* counter coral: decorative fills, sprites */
   --coral-fill: #e8887b;   /* button coral: ink text on it 4.9:1 */
   --coral-deep: #a9473f;   /* text-safe coral: 4.8:1 floor, 5.6:1 panel */
@@ -409,8 +411,10 @@
   --card-foreground: var(--ink);
   --popover: var(--panel);
   --popover-foreground: var(--ink);
-  --primary: var(--coral-fill);
-  --primary-foreground: var(--ink);
+  /* Pages pair bg-rx / bg-primary with text-primary-foreground, so the pair
+     is coral deep + panel (5.6:1). The pixel button uses --coral-fill + ink. */
+  --primary: var(--coral-deep);
+  --primary-foreground: var(--panel);
   --secondary: var(--mint);
   --secondary-foreground: var(--ink);
   --muted: #efe5c2;
@@ -425,8 +429,8 @@
   --radius: 0px;
   --sidebar: var(--panel);
   --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--coral-fill);
-  --sidebar-primary-foreground: var(--ink);
+  --sidebar-primary: var(--coral-deep);
+  --sidebar-primary-foreground: var(--panel);
   --sidebar-accent: var(--butter);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--rule);
@@ -927,11 +931,8 @@ button, [role="button"], summary, nav a, .btn-depth {
     caret-color: var(--coral-deep);
     /* The clinic floor: soft cream tiles with grout lines. */
     background-color: var(--floor);
-    background-image:
-      linear-gradient(var(--tile) 2px, transparent 2px),
-      linear-gradient(90deg, var(--tile) 2px, transparent 2px),
-      conic-gradient(var(--tile-alt) 25%, transparent 0 50%, var(--tile-alt) 0 75%, transparent 0);
-    background-size: 48px 48px, 48px 48px, 96px 96px;
+    background-image: var(--floor-tile);
+    background-size: 48px 48px;
   }
   ::selection {
     background: var(--butter);
@@ -939,6 +940,7 @@ button, [role="button"], summary, nav a, .btn-depth {
   }
   h1, h2, h3, h4 {
     font-family: var(--font-heading);
+  font-size-adjust: ex-height 0.53;
     font-weight: 600;
     text-wrap: balance;
   }
@@ -971,10 +973,13 @@ button, [role="button"], summary, nav a, .btn-depth {
   }
 }
 
-/* Pixel faces never take negative tracking: the glyphs sit on a grid. */
+/* Pixel faces never take negative tracking: the glyphs sit on a grid.
+   Jersey 10 runs small for its size; font-size-adjust matches its x-height
+   to the body face so existing text-* sizes keep their weight on the page. */
 .font-heading,
 h1, h2, h3, h4 {
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  font-size-adjust: ex-height 0.53;
 }
 .font-pixel {
   font-family: var(--font-pixel);
@@ -1116,6 +1121,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
   background-color: var(--btn-bg);
   color: var(--btn-fg);
   font-family: var(--font-heading);
+  font-size-adjust: ex-height 0.53;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -1157,32 +1163,39 @@ html [data-sonner-toaster] [data-sonner-toast] {
 .stage .px-btn-ink, .px-btn-ink.on-night { --btn-line: var(--panel); }
 
 /* Tile floor and wall band. */
+/* The floor tile is the art file /pixel/tile-floor.svg (16x16, the same tile
+   as the clinic scene): a bevelled cream tile with a grout dot. Always drawn
+   at a whole multiple: 3x (48px) for the page, 2x (32px) for the small one. */
 .tile-floor {
   background-color: var(--floor);
-  background-image:
-    linear-gradient(var(--tile) 2px, transparent 2px),
-    linear-gradient(90deg, var(--tile) 2px, transparent 2px),
-    conic-gradient(var(--tile-alt) 25%, transparent 0 50%, var(--tile-alt) 0 75%, transparent 0);
-  background-size: 48px 48px, 48px 48px, 96px 96px;
+  background-image: var(--floor-tile);
+  background-size: 48px 48px;
 }
 /* Small-tile variant (closer to a handheld floor). */
 .tile-floor-sm {
   background-color: var(--floor);
-  background-image:
-    linear-gradient(var(--tile) 2px, transparent 2px),
-    linear-gradient(90deg, var(--tile) 2px, transparent 2px);
-  background-size: 24px 24px, 24px 24px;
+  background-image: var(--floor-tile);
+  background-size: 32px 32px;
 }
 /* Wall band: peach wall with a wainscot trim stripe and a skirting line. */
 .wall-band {
   position: relative;
   background-color: var(--wall);
+  /* Ink skirting line, the wainscot trim art (/pixel/wall-trim.svg at 2x),
+     and faint wallpaper seams above it. */
   background-image:
     linear-gradient(to top, var(--ink) 0 var(--px), transparent var(--px)),
-    linear-gradient(to top, transparent 0 var(--px), var(--trim) var(--px) calc(var(--px) + 12px), transparent calc(var(--px) + 12px)),
-    linear-gradient(to top, transparent 0 calc(var(--px) + 15px), color-mix(in srgb, var(--trim) 55%, transparent) calc(var(--px) + 15px) calc(var(--px) + 18px), transparent calc(var(--px) + 18px)),
+    var(--wall-trim),
     repeating-linear-gradient(90deg, transparent 0 46px, color-mix(in srgb, var(--trim) 30%, transparent) 46px 48px);
-  padding-bottom: calc(var(--px) + 18px);
+  background-size: auto, 32px 24px, auto;
+  background-position: 0 0, 0 calc(100% - var(--px)), 0 0;
+  background-repeat: no-repeat, repeat-x, repeat;
+  padding-bottom: calc(var(--px) + 24px);
+}
+/* The trim strip alone (footer top, nav underline). 24px tall. */
+.wall-trim {
+  height: 24px;
+  background: var(--wall) var(--wall-trim) 0 0 / 32px 24px repeat-x;
 }
 /* A night band: dusk with the star tile, for contrast sections. */
 .night-band {
@@ -1248,6 +1261,13 @@ html [data-sonner-toaster] [data-sonner-toast] {
   animation: px-sparkle-rise 1.6s steps(8, end) infinite;
   animation-delay: var(--delay, 0s);
 }
+/* Sprite variant: the wrapper only rises; the sprite inside draws itself. */
+.heal-sparkle.heal-sparkle-sprite {
+  width: auto;
+  height: auto;
+  background: none;
+  line-height: 0;
+}
 /* One-shot heal flash overlay (add the class, it clears itself). */
 .heal-flash {
   position: absolute;
@@ -1297,6 +1317,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
   background: var(--btn-bg);
   color: var(--btn-fg);
   font-family: var(--font-heading);
+  font-size-adjust: ex-height 0.53;
   font-weight: 600;
   font-size: 1.0625rem;
   letter-spacing: 0.04em;
@@ -1488,6 +1509,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
 
 .ticker-word {
   font-family: var(--font-heading);
+  font-size-adjust: ex-height 0.53;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
@@ -1531,11 +1553,8 @@ html [data-sonner-toaster] [data-sonner-toast] {
   position: relative;
   isolation: isolate;
   background-color: var(--floor);
-  background-image:
-    linear-gradient(var(--tile) 2px, transparent 2px),
-    linear-gradient(90deg, var(--tile) 2px, transparent 2px),
-    conic-gradient(var(--tile-alt) 25%, transparent 0 50%, var(--tile-alt) 0 75%, transparent 0);
-  background-size: 48px 48px, 48px 48px, 96px 96px;
+  background-image: var(--floor-tile);
+  background-size: 48px 48px;
 }
 
 /* Card slot: a card waiting in a treatment bay. It hops up on hover. */

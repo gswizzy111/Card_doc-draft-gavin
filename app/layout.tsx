@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Atkinson_Hyperlegible_Next, Pixelify_Sans, Silkscreen } from "next/font/google";
+import { Atkinson_Hyperlegible_Next, Jersey_10, Silkscreen } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { MetaPixelRouteTracker } from "@/components/meta-pixel-route-tracker";
@@ -8,11 +8,13 @@ import { siteUrl } from "@/lib/site-url";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ORGANIZATION } from "@/lib/seo";
 
-// Display, headings, buttons, nav and prices: a chunky free pixel face.
-const pixelify = Pixelify_Sans({
+// Display, headings, buttons, nav and prices: a chunky, condensed pixel face
+// that stays legible small (its C never reads as an O). One weight; sized up
+// with font-size-adjust in globals.css.
+const jersey = Jersey_10({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "400",
   display: "swap",
 });
 
@@ -71,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${pixelify.variable} ${atkinson.variable} ${silkscreen.variable} h-full antialiased`}>
+    <html lang="en" className={`${jersey.variable} ${atkinson.variable} ${silkscreen.variable} h-full antialiased`}>
       <head>
         <meta name="facebook-domain-verification" content="ihjnpqbitwq29e5kx3x0dujilxh1n9" />
         {/* Runs before anything else on the page and loads Google Analytics

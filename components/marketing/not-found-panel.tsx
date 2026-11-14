@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { DocPortrait } from "@/components/pixel/doc-portrait";
+import { CardSprite } from "@/components/pixel/sprites";
 
 /**
- * The 404 message: Next's default words in a clinic dialog box. `sprite` is
- * a slot for a pixel sprite (a lost card, say) beside the number.
+ * The 404 message: Next's default words in a clinic dialog box. `sprite`
+ * stands beside the number; it defaults to a hurt card. `sprite={null}`
+ * leaves it empty.
  */
-export function NotFoundPanel({ sprite }: { sprite?: React.ReactNode } = {}) {
+export function NotFoundPanel({ sprite = <CardSprite variant="hurt" scale={4} /> }: { sprite?: React.ReactNode } = {}) {
   return (
     <div className="max-w-xl w-full mx-auto px-4 md:px-10 py-20 md:py-28">
       <div className="flex items-end gap-6">
