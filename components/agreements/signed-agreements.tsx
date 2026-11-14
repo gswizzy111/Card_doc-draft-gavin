@@ -29,7 +29,7 @@ function forWhat(a: SignedAgreement) {
 export function SignedAgreements({ agreements, showIp = false }: { agreements: SignedAgreement[]; showIp?: boolean }) {
   if (!agreements.length) return null;
   return (
-    <ul className="flex flex-col divide-y divide-border">
+    <ul className="flex flex-col divide-y-2 divide-dashed divide-border">
       {agreements.map((a) => (
         <li key={a.id} className="py-3 first:pt-0 last:pb-0">
           <p className="text-sm font-semibold text-foreground">{TITLES[a.kind]}</p>
@@ -40,8 +40,8 @@ export function SignedAgreements({ agreements, showIp = false }: { agreements: S
             {showIp && a.ip ? ` · ${a.ip}` : ""} · version {a.version}
           </p>
           <details className="mt-1.5">
-            <summary className="cursor-pointer text-xs font-semibold text-primary">Show what was signed</summary>
-            <p className="mt-2 whitespace-pre-line rounded-md bg-secondary/50 p-3 text-xs text-muted-foreground leading-relaxed">{a.agreement_text}</p>
+            <summary className="cursor-pointer py-1 text-xs font-semibold text-coral-deep">Show what was signed</summary>
+            <p className="mt-2 whitespace-pre-line bg-muted p-3 text-xs text-ink-soft leading-relaxed shadow-[inset_0_0_0_2px_var(--rule)]">{a.agreement_text}</p>
           </details>
         </li>
       ))}

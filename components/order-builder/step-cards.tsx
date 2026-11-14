@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { PhotoUploader } from "./photo-uploader";
+import { CardSprite } from "@/components/pixel/sprites";
 import { CardIdentityFields, emptyIdentity, type CardIdentity } from "@/components/checkout/card-identity-fields";
 import { Need, Req } from "@/components/checkout/required";
 import { VALUE_HELP } from "@/lib/legal/current-terms";
@@ -17,12 +18,12 @@ const DEFAULT_TIERS = getAllTiers();
 
 // One selection style for every tier (clinic theme)
 const TIER_STYLES: Record<string, { selected: string; normal: string }> = {
-  regular: { selected: "border-rx bg-rx-soft text-ink ring-1 ring-rx", normal: "border-rule text-muted-foreground hover:border-ink/40 hover:bg-paper" },
-  expedited: { selected: "border-rx bg-rx-soft text-ink ring-1 ring-rx", normal: "border-rule text-muted-foreground hover:border-ink/40 hover:bg-paper" },
-  premium: { selected: "border-rx bg-rx-soft text-ink ring-1 ring-rx", normal: "border-rule text-muted-foreground hover:border-ink/40 hover:bg-paper" },
-  ultra_premium: { selected: "border-rx bg-rx-soft text-ink ring-1 ring-rx", normal: "border-rule text-muted-foreground hover:border-ink/40 hover:bg-paper" },
-  elite: { selected: "border-rx bg-rx-soft text-ink ring-1 ring-rx", normal: "border-rule text-muted-foreground hover:border-ink/40 hover:bg-paper" },
-  fast_pass: { selected: "border-rx bg-rx-soft text-ink ring-1 ring-rx", normal: "border-rule text-muted-foreground hover:border-ink/40 hover:bg-paper" },
+  regular: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  expedited: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  premium: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  ultra_premium: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  elite: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
+  fast_pass: { selected: "bg-rx-soft text-ink shadow-[inset_0_0_0_2px_var(--coral-deep)]", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
 };
 
 function parseCents(str: string): number {
@@ -114,15 +115,15 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="font-heading text-3xl font-extrabold tracking-[-0.01em] text-ink mb-1">
+        <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">
           Tell us about your cards.
         </h2>
-        <p className="text-muted-foreground">
+        <p className="text-ink-soft">
           Add each card you&apos;re sending. You can assign different services to different cards.
         </p>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-10">
         {cards.map((card, i) => {
           const estimatedValueCents = parseCents(card.estimated_value ?? "");
           const activeTierId = card.tier ?? defaultTier;
@@ -130,14 +131,18 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
           const missing = new Set(showMissing ? cardProblems(card, defaultTier, tiers) : []);
 
           return (
-            <div key={card.id} className="border border-border rounded-lg p-5 flex flex-col gap-4 bg-card">
+            <div key={card.id} className="px-window flex flex-col gap-5 p-4 pt-5 sm:p-6">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-foreground">Card {i + 1}</h3>
+                <h3 className="flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink">
+                  <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-rx-soft px-frame"><CardSprite variant="hurt" scale={1} animate={false} /></span>
+                  Card {i + 1}
+                </h3>
                 {cards.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeCard(card.id)}
-                    className="text-muted-foreground hover:text-destructive transition-colors"
+                    aria-label={`Remove card ${i + 1}`}
+                    className="grid size-11 place-items-center text-ink-soft hover:bg-rx-soft hover:text-destructive focus-visible:outline-3 focus-visible:outline-frame-deep"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -183,7 +188,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                   />
                   <p className="text-xs text-muted-foreground">{VALUE_HELP}</p>
                   {activeTier && activeTier.max_card_value_cents !== null && estimatedValueCents > activeTier.max_card_value_cents && (
-                    <p className="text-xs text-red-600 font-semibold">
+                    <p className="text-xs text-destructive font-semibold">
                       <AlertTriangle className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.25} />This value exceeds the {activeTier.name} tier&apos;s max of ${(activeTier.max_card_value_cents / 100).toLocaleString()}. Please select a higher tier below.
                     </p>
                   )}
@@ -204,7 +209,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
               {/* Per-card tier selector */}
               <Need missing={missing.has("tier")} note={activeTier ? "Pick a tier that allows this card's value." : "Pick a service level."} className="flex flex-col gap-2">
                 <Label>Service Level<Req /></Label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   {tiers.map((t) => {
                     const selected = (card.tier ?? defaultTier) === t.id;
                     const available = tierAvailable(t, estimatedValueCents);
@@ -216,18 +221,18 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                         disabled={!available}
                         onClick={() => available && updateCard(card.id, { tier: t.id as RestorationTierId })}
                         title={!available && t.max_card_value_cents ? `Requires cards under $${(t.max_card_value_cents / 100).toLocaleString()}` : undefined}
-                        className={`text-left px-3 py-2 rounded-lg border text-sm transition-all ${
+                        className={`min-h-14 px-3 py-2.5 text-left text-sm px-frame focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-frame-deep ${
                           !available
-                            ? "border-border bg-gray-50 text-gray-300 opacity-40 cursor-not-allowed"
+                            ? "cursor-not-allowed bg-muted text-ink-soft opacity-50"
                             : selected
                             ? styles.selected
                             : styles.normal
                         }`}
                       >
-                        <span className="block font-semibold">
+                        <span className="block font-heading text-lg uppercase leading-tight tracking-[0.02em]">
                           {selected && <Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />}{t.name}
                           {!available && t.max_card_value_cents && (
-                            <span className="ml-1 text-xs font-normal">(max ${(t.max_card_value_cents / 100).toLocaleString()})</span>
+                            <span className="ml-1 font-sans text-xs normal-case tracking-normal">(max ${(t.max_card_value_cents / 100).toLocaleString()})</span>
                           )}
                         </span>
                         <span className="text-xs">
@@ -255,10 +260,11 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                           key={s.id}
                           type="button"
                           onClick={() => toggleService(card.id, s.id)}
-                          className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                          aria-pressed={active}
+                          className={`inline-flex min-h-10 items-center px-3 font-pixel text-xs uppercase tracking-[0.04em] px-frame ${
                             active
-                              ? "bg-accent text-accent-foreground border-accent"
-                              : "border-border text-muted-foreground hover:border-muted-foreground"
+                              ? "bg-mint text-ink"
+                              : "bg-panel text-ink-soft hover:bg-butter/40"
                           }`}
                         >
                           {s.name}
@@ -276,7 +282,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                     Photos<Req />
                   </Label>
                   {card.photo_urls.length > 0 && (
-                    <span className="text-xs text-rx font-semibold"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />{card.photo_urls.length} photo{card.photo_urls.length !== 1 ? "s" : ""} added</span>
+                    <span className="text-xs font-semibold text-mint-deep"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />{card.photo_urls.length} photo{card.photo_urls.length !== 1 ? "s" : ""} added</span>
                   )}
                 </div>
                 <PhotoUploader
@@ -284,12 +290,12 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                   onChange={(urls) => updateCard(card.id, { photo_urls: urls })}
                 />
                 {card.photo_urls.length === 0 && !missing.has("photos") && (
-                  <p className="text-xs text-red-700 font-medium">Upload at least one photo to continue.</p>
+                  <p className="text-xs text-destructive font-medium">Upload at least one photo to continue.</p>
                 )}
               </Need>
 
               {/* Slab cracking */}
-              <div className="flex items-start gap-3 bg-white border border-rule rounded-md px-4 py-3 hover:border-ink/40 transition-colors">
+              <div className="flex items-start gap-3 bg-panel px-4 py-3.5 px-frame has-[:checked]:bg-butter/35">
                 <input
                   type="checkbox"
                   id={`slab-${card.id}`}
@@ -299,28 +305,28 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                     // Its authorization pops up right away
                     if (e.target.checked) onOpenSlab?.(card.id);
                   }}
-                  className="w-4 h-4 mt-0.5 accent-[var(--rx)] flex-shrink-0"
+                  className="mt-0.5 size-5 shrink-0 accent-[var(--rx)]"
                 />
                 <label htmlFor={`slab-${card.id}`} className="text-sm cursor-pointer">
                   <span className="font-semibold text-ink">Need your slab cracked? +$7</span>
-                  <span className="block text-muted-foreground text-xs mt-0.5">
+                  <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft">
                     Check this if your card is currently in a PSA, BGS, or other graded slab and needs to be removed before restoration.
                   </span>
                 </label>
               </div>
 
               {/* Pregrade */}
-              <div className="flex items-start gap-3 bg-white border border-rule rounded-md px-4 py-3 hover:border-ink/40 transition-colors">
+              <div className="flex items-start gap-3 bg-panel px-4 py-3.5 px-frame has-[:checked]:bg-butter/35">
                 <input
                   type="checkbox"
                   id={`pregrade-${card.id}`}
                   checked={card.needs_pregrade ?? false}
                   onChange={(e) => updateCard(card.id, { needs_pregrade: e.target.checked })}
-                  className="w-4 h-4 mt-0.5 accent-[var(--rx)] flex-shrink-0"
+                  className="mt-0.5 size-5 shrink-0 accent-[var(--rx)]"
                 />
                 <label htmlFor={`pregrade-${card.id}`} className="text-sm cursor-pointer">
                   <span className="font-semibold text-ink">Add Pregrade? +$25</span>
-                  <span className="block text-muted-foreground text-xs mt-0.5">
+                  <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft">
                     We&apos;ll pregrade your card before submitting so you know what grade to expect — helping you decide whether to send it off.
                   </span>
                 </label>
@@ -333,6 +339,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
       <Button
         type="button"
         variant="outline"
+        size="lg"
         onClick={addCard}
         className="self-start gap-2"
       >

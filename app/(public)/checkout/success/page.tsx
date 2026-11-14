@@ -1,4 +1,3 @@
-import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { PurchasePixel } from "@/components/purchase-pixel";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { stripe } from "@/lib/stripe";
 import { CHECKOUT_SESSION_COOKIE, CHECKOUT_SESSION_ID } from "@/lib/tracking-guard";
+import { CardSprite, DocSprite, HealSparkles, PixelIcon, StatusChip, pixelButton } from "@/components/pixel";
 
 export default async function CheckoutSuccessPage({
   searchParams,
@@ -77,64 +77,75 @@ export default async function CheckoutSuccessPage({
   }
 
   return (
-    <section className="flex-1 flex items-center justify-center min-h-[70vh] px-6">
+    <section className="page-glow flex-1 flex items-center justify-center min-h-[70vh] px-4 py-14 md:py-20">
       <PurchasePixel sessionId={session_id} amountCents={amountTotal} currency={currency} orderId={order?.id} />
-      <div className="max-w-sm w-full text-center flex flex-col items-center gap-6">
-        <CheckCircle className="h-16 w-16 text-primary" />
-        <div>
-          <h1 className="font-heading font-extrabold text-4xl text-foreground mb-2">Order Confirmed!</h1>
-          {order?.order_number ? (
-            <p className="text-muted-foreground text-sm">
-              Order <span className="font-bold text-foreground">#{order.order_number}</span>
-            </p>
-          ) : (
-            <p className="text-muted-foreground text-sm">Your payment was received successfully.</p>
-          )}
+      {/* Admitted: the order's chart is open at the front desk */}
+      <div className="px-window w-full max-w-md p-0 md:p-0 text-center">
+        <div aria-hidden className="relative flex h-40 items-end justify-center gap-5 overflow-hidden border-b-[3px] border-frame bg-mint/45 pb-5">
+          <HealSparkles count={6} />
+          <span className="relative"><DocSprite scale={3} /></span>
+          <span className="relative"><CardSprite variant="healed" scale={3} /></span>
         </div>
-        <p className="text-muted-foreground">
-          Thank you! We&apos;ll send confirmation to your email with next steps.
-        </p>
-
-        {order?.inbound_method === "buy_label" && (
-          <div className="w-full bg-blue-50 border border-blue-200 rounded-lg p-4 text-left">
-            <p className="font-bold text-blue-900 text-sm mb-1">Your prepaid shipping label</p>
-            {order.shipping_label_url ? (
-              <>
-                <p className="text-blue-800 text-sm mb-3">
-                  Print this label, attach it to your package, and drop it off at the carrier.
-                </p>
-                {/* A button, not a link: analytics runs on this page (components/open-file-button.tsx) */}
-                <OpenFileButton
-                  url={order.shipping_label_url}
-                  className="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
-                >
-                  Download Label (PDF)
-                </OpenFileButton>
-              </>
-            ) : (
-              <p className="text-blue-800 text-sm">
-                Your label is being generated — check your order tracking page in a moment.
+        <div className="flex flex-col items-center gap-6 p-6 md:p-8">
+          <StatusChip status="check-in">ADMITTED</StatusChip>
+          <div>
+            <h1 className="font-heading uppercase text-[2.5rem] md:text-5xl leading-[0.95] tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] mb-3">Order Confirmed!</h1>
+            {order?.order_number ? (
+              <p className="text-ink-soft text-sm">
+                Order <span className="inline-flex items-center bg-butter px-2 py-0.5 font-pixel text-xs text-ink px-frame">#{order.order_number}</span>
               </p>
+            ) : (
+              <p className="text-ink-soft text-sm">Your payment was received successfully.</p>
             )}
           </div>
-        )}
+          <p className="text-ink">
+            Thank you! We&apos;ll send confirmation to your email with next steps.
+          </p>
 
-        <div className="flex flex-col gap-3 w-full">
-          {order?.order_number && (
-            <Button
-              render={<Link href={`/orders/${order.order_number}`} />}
-              className="font-bold w-full"
-            >
-              Track Your Order
-            </Button>
+          {order?.inbound_method === "buy_label" && (
+            <div className="w-full bg-[color-mix(in_srgb,var(--powder)_35%,var(--panel))] p-4 text-left px-frame">
+              <p className="flex items-center gap-2 font-semibold text-ink text-sm mb-1.5">
+                <PixelIcon name="box" size={16} />
+                Your prepaid shipping label
+              </p>
+              {order.shipping_label_url ? (
+                <>
+                  <p className="text-ink-soft text-sm mb-4">
+                    Print this label, attach it to your package, and drop it off at the carrier.
+                  </p>
+                  {/* A button, not a link: analytics runs on this page (components/open-file-button.tsx) */}
+                  <OpenFileButton
+                    url={order.shipping_label_url}
+                    className={pixelButton({ tone: "powder", size: "sm", className: "cursor-pointer" })}
+                  >
+                    Download Label (PDF)
+                  </OpenFileButton>
+                </>
+              ) : (
+                <p className="text-ink-soft text-sm">
+                  Your label is being generated — check your order tracking page in a moment.
+                </p>
+              )}
+            </div>
           )}
-          <Button
-            variant="outline"
-            render={<Link href="/" />}
-            className="font-bold w-full border"
-          >
-            Back to Home
-          </Button>
+
+          <div className="flex flex-col gap-4 w-full">
+            {order?.order_number && (
+              <Button
+                render={<Link href={`/orders/${order.order_number}`} />}
+                className="h-12 text-base w-full"
+              >
+                Track Your Order
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              render={<Link href="/" />}
+              className="h-12 text-base w-full"
+            >
+              Back to Home
+            </Button>
+          </div>
         </div>
       </div>
     </section>

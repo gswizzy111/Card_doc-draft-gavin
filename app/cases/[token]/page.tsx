@@ -27,7 +27,7 @@ export default async function CustomerComplaintPage({ params }: { params: Promis
           <p className="text-sm text-gray-500 mt-1">Customer Support</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="bg-panel border border-gray-200 overflow-hidden">
           <div className="px-6 py-5 border-b border-gray-100 bg-gray-50">
             <p className="rx-label text-rx mb-1">Support Case</p>
             <h1 className="font-black text-xl text-gray-900">{c.title}</h1>

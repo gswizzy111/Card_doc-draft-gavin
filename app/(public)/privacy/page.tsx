@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PixelIcon } from "@/components/pixel";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — The Card Doc",
@@ -15,20 +16,29 @@ export default function PrivacyPage() {
   const CONTACT_EMAIL = "thecarddoc1@gmail.com";
 
   return (
-    <div className="min-h-screen bg-white py-16">
-      <div className="max-w-4xl mx-auto px-6 md:px-10">
-        <h1 className="font-heading text-4xl font-bold text-foreground mb-2">
-          Privacy Policy
-        </h1>
-        <p className="text-sm text-muted-foreground mb-2">
-          Effective Date: {EFFECTIVE_DATE}
+    <div className="min-h-screen page-glow pt-12 pb-20 md:pt-20">
+      <div className="max-w-4xl mx-auto px-4 md:px-10">
+        <p aria-hidden className="mb-5 inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame md:text-[13px]">
+          <span className="text-coral-deep">▶</span>Legal
         </p>
-        <p className="text-sm text-muted-foreground mb-8">
+        <div className="flex items-end justify-between gap-6">
+          <h1 className="font-heading uppercase leading-[0.95] tracking-[0.01em] text-ink text-[clamp(2.5rem,11vw,4.75rem)] [text-shadow:3px_3px_0_var(--wall)]">
+            Privacy Policy
+          </h1>
+          <span aria-hidden className="hidden shrink-0 md:block"><PixelIcon name="shield" size={96} /></span>
+        </div>
+        <div className="px-window px-dialog mt-7 mb-10 max-w-2xl p-4 pr-9 md:p-5 md:pr-10">
+        <p className="text-sm text-ink mb-2">
+          <span className="font-semibold">Effective Date: {EFFECTIVE_DATE}</span>
+        </p>
+        <p className="text-sm text-ink-soft">
           Published by <strong>The Card Doc LLC</strong>, a New Jersey limited liability company
           doing business as &ldquo;The Card Doc&rdquo;
         </p>
+        <span aria-hidden className="px-dialog-next">▼</span>
+        </div>
 
-        <div className="prose prose-sm max-w-none space-y-6 text-foreground [&_p+p]:mt-3 [&_p+ul]:mt-3 [&_ul+p]:mt-3">
+        <div className="px-window p-5 sm:p-8 md:p-10 lg:p-12 font-sans text-[15px] md:text-base leading-relaxed text-ink space-y-6 [&_p+p]:mt-3 [&_p+ul]:mt-3 [&_ul+p]:mt-3 [&_section>h2]:mt-10 [&_section>h2]:border-t-2 [&_section>h2]:border-dashed [&_section>h2]:border-ink/25 [&_section>h2]:pt-7 [&_section:first-child>h2]:mt-0 [&_section:first-child>h2]:border-0 [&_section:first-child>h2]:pt-0 [&_h2]:font-normal [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:leading-[1.05] [&_h2]:tracking-[0.02em] [&_h2]:text-ink [&_h3]:font-heading [&_h3]:font-normal [&_h3]:text-xl [&_h3]:md:text-2xl [&_h3]:tracking-[0.02em] [&_h3]:text-ink [&_ul]:text-[15px] [&_ol]:text-[15px] [&_ul]:list-[square] [&_li]:marker:text-coral-deep [&_strong]:text-ink [&_a]:font-semibold [&_a]:text-coral-deep [&_a:hover]:text-ink [&_p]:max-w-[70ch] [&_li]:max-w-[68ch]">
 
           {/* ─── Overview ──────────────────────────────────────────────────────── */}
           <section>
@@ -676,11 +686,12 @@ export default function PrivacyPage() {
             </ul>
           </section>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-12">
-            <p className="text-sm font-semibold text-foreground mb-2">
+          <div className="mt-12 bg-[color-mix(in_srgb,var(--powder)_35%,var(--panel))] p-5 md:p-6 px-frame">
+            <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink mb-3 flex items-center gap-2">
+              <PixelIcon name="shield" size={16} />
               QUICK REFERENCE — DATA DELETION
             </p>
-            <p className="text-sm text-foreground">
+            <p className="text-sm text-ink">
               To request deletion of your data, email{" "}
               <a
                 href={`mailto:${CONTACT_EMAIL}?subject=Data%20Deletion%20Request`}
@@ -695,7 +706,7 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          <p className="text-xs text-muted-foreground text-center mt-12">
+          <p className="text-xs text-ink-soft text-center mt-12">
             &copy; {new Date().getFullYear()} The Card Doc LLC. All rights reserved.
           </p>
         </div>

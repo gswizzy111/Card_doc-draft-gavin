@@ -2,6 +2,7 @@
 
 import { useCart } from "@/lib/cart-context";
 import { useState } from "react";
+import { pixelButton } from "@/components/pixel/pixel-button";
 
 interface Props {
   product: {
@@ -26,11 +27,11 @@ export function AddToCartButton({ product }: Props) {
   return (
     <button
       onClick={handleAdd}
-      className={`h-8 rounded-md text-xs font-semibold px-3.5 transition-colors ${
-        added
-          ? "bg-rx-soft text-rx"
-          : "bg-ink text-paper hover:bg-rx"
-      }`}
+      className={pixelButton({
+        tone: added ? "mint" : "coral",
+        size: "sm",
+        className: "h-11 w-full sm:w-auto sm:min-w-20",
+      })}
     >
       {added ? "Added!" : "Add"}
     </button>

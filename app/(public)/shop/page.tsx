@@ -7,6 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCurrency } from "@/lib/utils";
 import { AddToCartButton } from "./add-to-cart-button";
 import { isSoldOut } from "@/lib/site-config";
+import { CardSprite, DocSprite, MenuCursor, PixelIcon, WallBand, Window, type PixelIconName } from "@/components/pixel";
 
 export const dynamic = "force-dynamic";
 
@@ -30,41 +31,56 @@ type Product = {
 function ProductCard({ product }: { product: Product }) {
   const isKit = product.name.toLowerCase().includes("official");
   return (
-    <div className="bg-card flex flex-col group relative">
+    <article className="group comic-lift px-window-ink flex flex-col">
       {isKit && (
-        <span className="absolute top-3 left-3 z-10 bg-rx text-primary-foreground font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-0.5 rounded-full">
+        <span className="absolute -top-3.5 left-3 z-10 inline-flex h-7 items-center gap-1.5 bg-coral-fill px-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
+          <span aria-hidden>★</span>
           Most Popular
         </span>
       )}
-      <a href={`/shop/${product.slug}`} className="block">
-        <div className="aspect-square bg-secondary overflow-hidden relative">
+      <a
+        href={`/shop/${product.slug}`}
+        className="block p-2.5 pb-0 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep sm:p-3 sm:pb-0"
+      >
+        {/* The item, on a little display tray */}
+        <div className="relative aspect-square overflow-hidden bg-muted shadow-[inset_0_0_0_3px_var(--ink)]">
           {product.images?.[0] ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={product.images[0]}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+              className="h-full w-full object-cover p-[3px]"
             />
           ) : (
-            <div className="w-full h-full bg-secondary" />
+            <div aria-hidden className="grid h-full w-full place-items-center px-dither">
+              <PixelIcon name="kit" size={48} />
+            </div>
           )}
           {isSoldOut() && (
-            <div className="absolute inset-0 flex items-center justify-center bg-paper/70">
-              <span className="bg-ink text-paper font-mono uppercase tracking-[0.12em] text-[11px] px-3 py-1 rounded-sm">
+            <div className="absolute inset-[3px] flex items-center justify-center bg-floor/75">
+              <span className="inline-flex h-7 items-center bg-ink px-2.5 font-pixel text-xs uppercase tracking-[0.06em] text-panel">
                 Sold Out
               </span>
             </div>
           )}
         </div>
       </a>
-      <div className="p-4 flex flex-col flex-1 gap-3">
-        <a href={`/shop/${product.slug}`} className="block flex-1">
-          <p className="font-heading font-bold text-ink text-[15px] leading-tight group-hover:text-rx transition-colors">{product.name}</p>
+      <div className="flex flex-1 flex-col gap-3 p-3 pt-3.5 sm:p-4">
+        <a
+          href={`/shop/${product.slug}`}
+          className="menu-cursor-item block flex-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep"
+        >
+          <MenuCursor className="absolute -left-3.5 top-1 max-sm:hidden" />
+          <p className="font-heading text-lg uppercase leading-[1.05] tracking-[0.02em] text-ink sm:text-xl">{product.name}</p>
         </a>
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-ink text-sm tabular-nums">{formatCurrency(product.price_cents)}</span>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          {/* Pixel price tag */}
+          <span className="inline-flex h-8 items-center gap-2 self-start bg-butter pr-2.5 pl-2 font-heading text-xl leading-none text-ink tabular-nums px-frame sm:self-auto">
+            <span aria-hidden className="size-1.5 bg-ink" />
+            {formatCurrency(product.price_cents)}
+          </span>
           {isSoldOut() || product.inventory_count === 0 ? (
-            <span className="text-xs text-muted-foreground font-semibold">Sold Out</span>
+            <span className="inline-flex h-7 items-center self-start bg-muted px-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft px-frame sm:self-auto">Sold Out</span>
           ) : (
             <AddToCartButton
               product={{
@@ -78,13 +94,13 @@ function ProductCard({ product }: { product: Product }) {
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 
 const SECTION_GRID: Record<number, string> = {
-  1: "grid-cols-1 md:grid-cols-1",
-  2: "grid-cols-2 md:grid-cols-2",
+  1: "grid-cols-1 max-w-sm",
+  2: "grid-cols-2 max-w-3xl",
   3: "grid-cols-2 md:grid-cols-3",
   4: "grid-cols-2 md:grid-cols-4",
   5: "grid-cols-2 md:grid-cols-3",
@@ -99,25 +115,38 @@ function getSectionGridClass(count: number): string {
   return SECTION_GRID[count] ?? "grid-cols-2 md:grid-cols-4";
 }
 
+const SECTION_ICON: Record<string, PixelIconName> = { Kits: "kit", Tools: "brush", Supplies: "box" };
+
 function ProductSection({ title, products, review }: { title: string; products: Product[]; review?: Review }) {
   if (products.length === 0) return null;
   return (
-    <div>
-      <div className="mb-6">
-        <h2 className="font-heading text-2xl md:text-3xl font-extrabold tracking-[-0.01em] text-ink">{title}</h2>
+    <section>
+      {/* Shelf sign */}
+      <div className="mb-8 flex items-center gap-3 md:mb-10">
+        <span aria-hidden className="grid size-12 shrink-0 place-items-center bg-panel px-frame">
+          <PixelIcon name={SECTION_ICON[title] ?? "kit"} size={32} />
+        </span>
+        <h2 className="font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink md:text-5xl">{title}</h2>
+        <span aria-hidden className="ml-1 h-[3px] flex-1 bg-[repeating-linear-gradient(90deg,var(--ink)_0_6px,transparent_6px_12px)] opacity-35" />
       </div>
-      <div data-reveal="stagger" className={`grid ${getSectionGridClass(products.length)} bg-rule border border-rule rounded-lg overflow-hidden`} style={{ gap: "1px" }}>
+      <div data-reveal="stagger" className={`grid ${getSectionGridClass(products.length)} gap-x-4 gap-y-8 sm:gap-x-6 md:gap-8`}>
         {products.map((p) => <ProductCard key={p.id} product={p} />)}
       </div>
       {review && (
-        <figure data-reveal className="mt-6 flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-4">
-          <blockquote className="font-heading text-xl md:text-2xl tracking-[-0.01em] text-ink">
-            <p>“{review.quote}”</p>
-          </blockquote>
-          <figcaption className="text-[13px] text-muted-foreground">{review.from}</figcaption>
+        <figure data-reveal className="mt-10 flex max-w-2xl items-end gap-3 md:gap-4">
+          <span aria-hidden className="mb-1 shrink-0">
+            <CardSprite variant="healed" scale={2} />
+          </span>
+          <div className="px-window px-dialog flex-1 p-4 pr-9 md:p-5 md:pr-10">
+            <blockquote className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink md:text-3xl">
+              <p>“{review.quote}”</p>
+            </blockquote>
+            <figcaption className="mt-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">{review.from}</figcaption>
+            <span aria-hidden className="px-dialog-next">▼</span>
+          </div>
         </figure>
       )}
-    </div>
+    </section>
   );
 }
 
@@ -137,7 +166,7 @@ export default async function ShopPage() {
   const supplies = products.filter((p) => p.category === "Supplies" || p.category === "Cleaning" || p.category === "Storage");
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-10 py-12 md:py-16 pb-28 md:pb-16">
+    <div className="pb-28 md:pb-20">
       <JsonLd
         data={[
           breadcrumbs([{ name: "Shop Kits", path: "/shop" }]),
@@ -153,22 +182,66 @@ export default async function ShopPage() {
           },
         ]}
       />
-      {/* Header */}
-      <PageHero className="mb-12 md:mb-16" eyebrow="The Card Doc" title="Shop" />
-
-      {products.length === 0 && (
-        <div className="border border-rule rounded-xl bg-paper py-24 text-center">
-          <p className="font-heading text-xl text-muted-foreground">Products coming soon.</p>
+      {/* The clinic pharmacy: wall, then the counter, then the shelves */}
+      <WallBand
+        as="header"
+        className="pt-10 md:pt-14"
+        innerClassName="pb-10 md:pb-14"
+        sprite={
+          <div className="flex items-end gap-10 pb-1">
+            {/* A wall shelf of supplies */}
+            <div className="mb-20 hidden lg:block">
+              <div className="flex items-end gap-3 px-2">
+                <PixelIcon name="box" size={32} />
+                <PixelIcon name="kit" size={48} />
+                <PixelIcon name="bandage" size={32} />
+              </div>
+              <div className="h-3.5 border-[3px] border-ink bg-trim" />
+            </div>
+            <DocSprite scale={4} />
+          </div>
+        }
+      >
+        <div className="flex items-end justify-between gap-4">
+          <PageHero eyebrow="The Card Doc" title="Shop" />
+          <div aria-hidden className="shrink-0 md:hidden">
+            <DocSprite scale={2} />
+          </div>
         </div>
-      )}
+      </WallBand>
+      <div aria-hidden className="h-4 border-b-[3px] border-ink bg-coral-fill shadow-[inset_0_3px_0_#f3ab9f,inset_0_-4px_0_#c4665a]" />
 
-      {products.length > 0 && (
-        <div className="flex flex-col gap-16">
-          <ProductSection title="Kits" products={kits} review={KIT_REVIEW} />
-          <ProductSection title="Tools" products={tools} />
-          <ProductSection title="Supplies" products={supplies} />
-        </div>
-      )}
+      <div className="mx-auto max-w-7xl px-4 pt-14 md:px-10 md:pt-20">
+        {products.length === 0 && (
+          <div className="mx-auto flex max-w-2xl flex-col items-center gap-10">
+            {/* Empty shelf, waiting for stock */}
+            <div aria-hidden className="w-full max-w-md">
+              <div className="grid grid-cols-3 gap-4 px-3">
+                {(["kit", "brush", "box"] as const).map((icon) => (
+                  <span key={icon} className="grid aspect-square place-items-center border-[3px] border-dashed border-ink/30 bg-panel/50">
+                    <span className="opacity-30 grayscale"><PixelIcon name={icon} size={32} /></span>
+                  </span>
+                ))}
+              </div>
+              <div className="mt-1 h-5 border-[3px] border-ink bg-trim shadow-[5px_5px_0_var(--px-shadow)]" />
+            </div>
+            <div className="flex w-full items-end gap-3 md:gap-4">
+              <span aria-hidden className="mb-1 shrink-0"><DocSprite scale={3} /></span>
+              <Window variant="dialog" className="flex-1 py-6 pr-10 md:py-7">
+                <p className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink md:text-3xl">Products coming soon.</p>
+              </Window>
+            </div>
+          </div>
+        )}
+
+        {products.length > 0 && (
+          <div className="flex flex-col gap-20 md:gap-24">
+            <ProductSection title="Kits" products={kits} review={KIT_REVIEW} />
+            <ProductSection title="Tools" products={tools} />
+            <ProductSection title="Supplies" products={supplies} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

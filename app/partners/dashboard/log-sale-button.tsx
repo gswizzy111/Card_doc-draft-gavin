@@ -56,7 +56,7 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
       <button
         onClick={() => setOpen(true)}
         disabled={!anyAvailable}
-        className="w-full h-14 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40 text-sm"
+        className="w-full h-14 bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-40 text-sm"
       >
         Log a Sale
       </button>
@@ -64,8 +64,8 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
   }
 
   return (
-    <div className="col-span-2 bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col gap-3">
-      <p className="text-sm font-bold text-blue-900">Log a Sale</p>
+    <div className="col-span-2 bg-powder/30 border border-frame/50 p-4 flex flex-col gap-3">
+      <p className="text-sm font-bold text-ink">Log a Sale</p>
 
       {/* Product selector */}
       <div className="flex gap-2">
@@ -76,10 +76,10 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
               key={p.type}
               onClick={() => { setProductType(p.type); setQuantity(1); }}
               disabled={rem <= 0}
-              className={`flex-1 py-2 rounded-lg border text-xs font-bold transition-colors disabled:opacity-40 ${
+              className={`flex-1 py-2 border text-xs font-bold transition-colors disabled:opacity-40 ${
                 productType === p.type
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-white border-blue-200 text-blue-800 hover:border-primary"
+                  : "bg-panel border-frame/50 text-ink hover:border-primary"
               }`}
             >
               {p.label}
@@ -91,16 +91,16 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
 
       {/* Quantity */}
       <div className="flex items-center gap-3">
-        <label className="text-sm text-blue-800 shrink-0">Qty sold</label>
+        <label className="text-sm text-ink shrink-0">Qty sold</label>
         <input
           type="number"
           min={1}
           max={remaining}
           value={quantity}
           onChange={(e) => setQuantity(Math.max(1, Math.min(remaining, parseInt(e.target.value) || 1)))}
-          className="w-20 border border-blue-200 rounded-lg px-3 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white"
+          className="w-20 border border-frame/50 px-3 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
         />
-        <span className="text-xs text-blue-700">of {remaining} remaining</span>
+        <span className="text-xs text-frame-deep">of {remaining} remaining</span>
       </div>
 
       <input
@@ -108,16 +108,16 @@ export function LogSaleButton({ remainingKits, remainingPolish, remainingSpray }
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notes (optional)"
-        className="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white"
+        className="w-full border border-frame/50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
       />
 
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
 
       <div className="flex gap-2">
         <button
           onClick={submit}
           disabled={saving || remaining <= 0}
-          className="text-sm font-bold px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 disabled:opacity-50"
+          className="text-sm font-bold px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50"
         >
           {saving ? "Saving..." : "Confirm Sale"}
         </button>

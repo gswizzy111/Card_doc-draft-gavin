@@ -72,7 +72,7 @@ export default async function AccountPage() {
         <section>
           <h2 className="font-heading font-black text-xl text-foreground mb-4">Restoration Orders</h2>
           {restorationOrders.length === 0 ? (
-            <div className="bg-white rounded-xl border border-border p-8 text-center text-muted-foreground text-sm">
+            <div className="px-window-ink p-8 text-center text-muted-foreground text-sm">
               No restoration orders found.{" "}
               <Link href="/order" className="text-primary font-semibold hover:underline">Place your first order →</Link>
             </div>
@@ -90,7 +90,7 @@ export default async function AccountPage() {
                   <Link
                     key={order.id}
                     href={`/account/orders/${order.id}`}
-                    className="bg-white rounded-xl border border-border p-5 hover:border-primary/40 hover:shadow-sm transition-all flex items-center justify-between gap-4"
+                    className="px-window-ink p-5 hover:border-primary/40 hover: transition-all flex items-center justify-between gap-4"
                   >
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -99,7 +99,7 @@ export default async function AccountPage() {
                           {statusInfo.label}
                         </span>
                         {order.status === "awaiting_cards" && (
-                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-butter/40 text-amber-600 border border-butter">
                             Edit cards ✏️
                           </span>
                         )}
@@ -132,7 +132,7 @@ export default async function AccountPage() {
                   <Link
                     key={order.id}
                     href={`/account/kit-orders/${order.id}`}
-                    className="bg-white rounded-xl border border-border p-5 hover:border-primary/40 hover:shadow-sm transition-all flex items-center justify-between gap-4"
+                    className="px-window-ink p-5 hover:border-primary/40 hover: transition-all flex items-center justify-between gap-4"
                   >
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2 flex-wrap">

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
+import { PixelIcon } from "@/components/pixel/sprites";
 
 type SubResult = {
   found: boolean;
@@ -106,14 +107,27 @@ export function ManageSubscription({ token }: { token: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/30 flex items-center justify-center px-4 py-16">
-      <div className="bg-white rounded-lg border border-border p-8 max-w-md w-full">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-primary block mb-6">← Back to home</Link>
+    <div className="min-h-screen page-glow flex items-center justify-center px-4 py-14 md:py-20">
+      <div className="w-full max-w-lg">
+        <Link href="/" className="mb-6 inline-flex min-h-11 items-center gap-2 bg-panel px-3 text-sm font-semibold text-ink px-frame hover:bg-butter transition-colors duration-100">← Back to home</Link>
 
-        <h1 className="font-heading font-extrabold text-2xl text-foreground mb-1">Manage Your Subscription</h1>
-        <p className="text-sm text-muted-foreground mb-6">Enter the email you used to subscribe. We&apos;ll email you a link to manage it.</p>
+      {/* The pharmacy counter */}
+      <div className="px-window p-0 md:p-0">
+        <div aria-hidden className="flex h-10 items-center justify-between gap-3 border-b-[3px] border-frame bg-mint px-5">
+          <span className="flex items-center gap-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink">
+            <PixelIcon name="kit" size={16} />
+            PHARMACY
+          </span>
+          <span className="flex gap-1.5">
+            <span className="size-2 bg-ink" />
+            <span className="size-2 bg-ink/40" />
+          </span>
+        </div>
+        <div className="p-5 md:p-8">
+        <h1 className="font-heading uppercase text-[2.25rem] md:text-5xl leading-[0.95] tracking-[0.01em] text-ink mb-3">Manage Your Subscription</h1>
+        <p className="text-[15px] text-ink-soft mb-6">Enter the email you used to subscribe. We&apos;ll email you a link to manage it.</p>
 
-        <form onSubmit={handleLookup} className="flex gap-2 mb-6">
+        <form onSubmit={handleLookup} className="flex gap-3 mb-6">
           <label htmlFor="manage-email" className="sr-only">Email</label>
           <input
             id="manage-email"
@@ -123,84 +137,87 @@ export function ManageSubscription({ token }: { token: string }) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             required
-            className="flex-1 min-w-0 px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            className="h-12 flex-1 min-w-0 rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
           />
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
+            className="px-btn h-12 shrink-0 px-4 text-base disabled:opacity-60"
           >
             {loading ? "…" : "Send link"}
           </button>
         </form>
 
         {sentTo && (
-          <div role="status" className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 leading-relaxed">
+          <div role="status" className="mb-5 bg-[color-mix(in_srgb,var(--mint)_40%,var(--panel))] px-4 py-3 text-sm text-ink leading-relaxed px-frame">
             If there&apos;s a subscription for <span className="font-semibold [overflow-wrap:anywhere]">{sentTo}</span>, we just emailed it a link to manage it. The link expires in 1 hour. Not there in a minute? Check your Spam, Junk and Promotions folders.
           </div>
         )}
 
         {lookupError && (
-          <p role="alert" className="text-sm text-red-600 mb-4">{lookupError}</p>
+          <p role="alert" className="mb-5 bg-rx-soft px-3 py-2 text-sm font-semibold text-destructive px-frame">{lookupError}</p>
         )}
 
         {checking && token && (
-          <p className="text-sm text-muted-foreground">Loading…</p>
+          <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft px-blink">Loading…</p>
         )}
 
         {result?.found && (
-          <div className="border border-border rounded-lg p-5 space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="bg-panel p-5 space-y-4 px-frame shadow-[inset_0_6px_0_var(--mint)]">
+            <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="font-bold text-foreground">Monthly Kit Club</p>
+                <p className="font-heading uppercase text-2xl tracking-[0.02em] text-ink">Monthly Kit Club</p>
                 {typeof result.price_cents === "number" && (
-                  <p className="text-xs text-muted-foreground mt-0.5">{formatCurrency(result.price_cents)} / month</p>
+                  <p className="text-sm text-ink-soft mt-0.5 [font-feature-settings:'lnum'_1]">{formatCurrency(result.price_cents)} / month</p>
                 )}
               </div>
-              <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+              <span className={`inline-flex h-7 shrink-0 items-center gap-2 px-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame ${
                 result.status === "active"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-gray-100 text-gray-600"
+                  ? "bg-mint"
+                  : "bg-muted"
               }`}>
+                <span aria-hidden className={`size-2 ${result.status === "active" ? "bg-mint-deep" : "bg-ink-soft"}`} />
                 {result.status === "active" ? "Active" : "Cancelled"}
               </span>
             </div>
 
             {result.created_at && (
-              <p className="text-sm text-muted-foreground">
-                Subscribed on <span className="font-medium text-foreground">{formatDate(result.created_at)}</span>
+              <p className="text-sm text-ink-soft">
+                Subscribed on <span className="font-semibold text-ink">{formatDate(result.created_at)}</span>
               </p>
             )}
 
             {result.cancelled_at && (
-              <p className="text-sm text-muted-foreground">
-                Cancelled on <span className="font-medium text-foreground">{formatDate(result.cancelled_at)}</span>
+              <p className="text-sm text-ink-soft">
+                Cancelled on <span className="font-semibold text-ink">{formatDate(result.cancelled_at)}</span>
               </p>
             )}
 
             {cancelled && (
-              <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-800 font-medium">
+              <div className="bg-[color-mix(in_srgb,var(--mint)_40%,var(--panel))] px-4 py-3 text-sm text-ink font-semibold px-frame">
                 Your subscription has been cancelled. You won&apos;t be charged again.
               </div>
             )}
 
             {result.status === "active" && !cancelled && (
-              <div className="pt-2 border-t border-border space-y-2">
-                {cancelError && <p className="text-sm text-red-600">{cancelError}</p>}
+              <div className="pt-4 border-t-2 border-dashed border-ink/25 space-y-3">
+                {cancelError && <p className="bg-rx-soft px-3 py-2 text-sm font-semibold text-destructive px-frame">{cancelError}</p>}
                 <button
                   onClick={handleCancel}
                   disabled={cancelling}
-                  className="w-full py-2.5 px-4 rounded-lg border border-red-300 text-red-600 text-sm font-semibold hover:bg-red-50 disabled:opacity-40 transition-colors"
+                  className="px-btn px-btn-danger h-12 w-full text-base disabled:opacity-60"
                 >
                   {cancelling ? "Cancelling…" : "Cancel my subscription"}
                 </button>
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="text-xs text-ink-soft text-center">
                   Cancellation is immediate. No refunds for the current billing period.
                 </p>
               </div>
             )}
           </div>
         )}
+        </div>
+      </div>
       </div>
     </div>
   );

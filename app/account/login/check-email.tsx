@@ -85,7 +85,7 @@ export function CheckEmail({ info, onConfirmed, onStartOver, onBack }: {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-border shadow-sm p-6 sm:p-8">
+    <div className="px-window-ink p-6 sm:p-8">
       <h1 ref={heading} tabIndex={-1} className="font-heading font-black text-2xl text-foreground text-center outline-none">
         {state.sent ? "Check your email" : "We couldn't send your link"}
       </h1>
@@ -112,15 +112,15 @@ export function CheckEmail({ info, onConfirmed, onStartOver, onBack }: {
         </li>
       </ul>
 
-      {note && <p role="status" className="mt-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">{note}</p>}
-      {error && <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+      {note && <p role="status" className="mt-4 border border-mint-deep/50 bg-mint/25 px-4 py-3 text-sm text-mint-deep">{note}</p>}
+      {error && <p role="alert" className="mt-4 border border-destructive/50 bg-rx-soft px-4 py-3 text-sm text-destructive">{error}</p>}
 
       {!wrongPassword && (
         <button
           type="button"
           onClick={sendAgain}
           disabled={busy || wait > 0}
-          className="mt-5 w-full h-11 bg-primary text-primary-foreground font-bold text-sm rounded-lg hover:bg-primary/90 disabled:opacity-60 transition-colors"
+          className="mt-5 w-full h-11 bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 disabled:opacity-60 transition-colors"
         >
           {busy ? "Sending…" : "Send it again"}
           {!busy && wait > 0 && <span className="font-medium"> (in {wait}s)</span>}

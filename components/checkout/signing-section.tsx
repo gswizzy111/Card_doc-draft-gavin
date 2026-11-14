@@ -75,7 +75,7 @@ export function submittedSigning(state: SigningState, slabCards: SlabCard[]): Su
 }
 
 const CHECK = "mt-0.5 h-4 w-4 shrink-0 accent-primary";
-const NAME_INPUT = "w-full h-10 rounded-md border border-input bg-white px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50";
+const NAME_INPUT = "h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
 const MORE = "cursor-pointer text-xs font-semibold text-muted-foreground underline underline-offset-2 hover:text-foreground";
 
 export function SigningSection({
@@ -147,7 +147,7 @@ export function SigningSection({
         </Need>
         <details>
           <summary className={MORE}>Your certification (Section {CERTIFICATION_CLAUSE}) and electronic records</summary>
-          <div className="mt-2 max-h-64 overflow-y-auto rounded-md border border-border bg-white p-3 flex flex-col gap-3" tabIndex={0} aria-label="Certification and consent to electronic records">
+          <div className="mt-2 max-h-64 overflow-y-auto px-frame bg-panel p-3 flex flex-col gap-3" tabIndex={0} aria-label="Certification and consent to electronic records">
             <p className="text-sm text-foreground leading-relaxed">{CERTIFICATION_TEXT}</p>
             <LegalDocument blocks={ESIGN_BLOCKS} variant="compact" />
           </div>

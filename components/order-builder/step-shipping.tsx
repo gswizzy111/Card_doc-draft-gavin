@@ -139,9 +139,9 @@ export function StepShipping({
       <>
         {loadingRates && (
           <>
-            <Skeleton className="h-10 w-full rounded-lg" />
-            <Skeleton className="h-10 w-full rounded-lg" />
-            <Skeleton className="h-10 w-full rounded-lg" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
           </>
         )}
         {ratesError && (
@@ -171,18 +171,18 @@ export function StepShipping({
                 e.stopPropagation();
                 onRateChange({ ...rate, amount_cents: rate.amount_cents * trips });
               }}
-              className={`w-full text-left rounded-lg border px-4 py-3 flex items-center justify-between transition-all ${
+              className={`flex min-h-14 w-full items-center justify-between gap-3 px-4 py-3 text-left px-frame focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-frame-deep ${
                 chosen
-                  ? "border-rx bg-blue-50 shadow-sm"
-                  : "border-border hover:border-rx/50"
+                  ? "bg-rx-soft"
+                  : "bg-panel hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]"
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${chosen ? "border-rx bg-rx" : "border-muted-foreground"}`}>
-                  {chosen && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                <div className={`flex size-4 shrink-0 items-center justify-center border-2 ${chosen ? "border-ink bg-coral-deep" : "border-ink bg-panel"}`}>
+                  {chosen && <div className="size-1.5 bg-panel" />}
                 </div>
                 <div>
-                  <p className={`text-sm font-semibold ${chosen ? "text-rx" : "text-foreground"}`}>
+                  <p className={`text-[15px] font-semibold ${chosen ? "text-coral-deep" : "text-ink"}`}>
                     {rate.carrier} — {rate.service_level}
                   </p>
                   {rate.days && (
@@ -190,7 +190,7 @@ export function StepShipping({
                   )}
                 </div>
               </div>
-              <span className={`font-bold ${chosen ? "text-rx" : "text-foreground"}`}>{formatCurrency(rate.amount_cents * trips)}</span>
+              <span className={`shrink-0 font-heading text-xl tabular-nums ${chosen ? "text-coral-deep" : "text-ink"}`}>{formatCurrency(rate.amount_cents * trips)}</span>
             </button>
           );
         })}
@@ -203,7 +203,7 @@ export function StepShipping({
     return (
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="font-heading text-3xl font-extrabold tracking-[-0.01em] text-ink mb-1">
+          <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">
             Shipping for international orders
           </h2>
           <p className="text-muted-foreground text-sm mt-1">
@@ -212,16 +212,16 @@ export function StepShipping({
         </div>
 
         {/* Inbound — customer ships themselves */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <p className="font-medium text-foreground mb-1">Sending your cards to us</p>
+        <div className="px-window p-5">
+          <p className="mb-1.5 font-heading text-xl uppercase tracking-[0.02em] text-ink">Sending your cards to us</p>
           <p className="text-sm text-muted-foreground">
             Use FedEx, DHL, or your local postal service to ship to our US address. You&apos;ll receive the full address after checkout. Use a tracked, insured method.
           </p>
         </div>
 
         {/* Return shipping — we ship back, they pay now */}
-        <div className="rounded-lg border border-accent bg-accent/5 p-5">
-          <p className="font-medium text-foreground mb-1">Return shipping — we ship your cards back</p>
+        <div className="px-window p-5">
+          <p className="mb-1.5 font-heading text-xl uppercase tracking-[0.02em] text-ink">Return shipping — we ship your cards back</p>
           <p className="text-sm text-muted-foreground mb-4">
             Select a return shipping option below. This is paid now so we can ship your restored cards back to you.
           </p>
@@ -229,9 +229,9 @@ export function StepShipping({
           <Need missing={showMissing && !selectedRate} note="Choose a return shipping option.">
           {loadingRates && (
             <div className="flex flex-col gap-2">
-              <Skeleton className="h-14 w-full rounded-lg" />
-              <Skeleton className="h-14 w-full rounded-lg" />
-              <Skeleton className="h-14 w-full rounded-lg" />
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
             </div>
           )}
           {ratesError && <p className="text-sm text-destructive">{ratesError}</p>}
@@ -240,10 +240,10 @@ export function StepShipping({
               key={rate.object_id}
               type="button"
               onClick={() => onRateChange(rate)}
-              className={`w-full text-left rounded-lg border px-4 py-3 flex items-center justify-between transition-colors mb-2 ${
+              className={`mb-3 flex min-h-14 w-full items-center justify-between gap-3 px-4 py-3 text-left px-frame focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-frame-deep ${
                 selectedRate?.object_id === rate.object_id
-                  ? "border-accent bg-accent/10"
-                  : "border-border hover:border-muted-foreground"
+                  ? "bg-rx-soft"
+                  : "bg-panel hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]"
               }`}
             >
               <div>
@@ -254,7 +254,7 @@ export function StepShipping({
                   <p className="text-xs text-muted-foreground">Est. {rate.days} business days</p>
                 )}
               </div>
-              <span className="font-medium text-foreground">{formatCurrency(rate.amount_cents)}</span>
+              <span className="shrink-0 font-heading text-xl tabular-nums text-ink">{formatCurrency(rate.amount_cents)}</span>
             </button>
           ))}
           </Need>
@@ -267,7 +267,7 @@ export function StepShipping({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="font-heading text-3xl font-extrabold tracking-[-0.01em] text-ink mb-1">
+        <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">
           How will you send your cards to us?<Req />
         </h2>
       </div>
@@ -277,22 +277,22 @@ export function StepShipping({
         <button
           type="button"
           onClick={() => onMethodChange("buy_label")}
-          className={`w-full text-left rounded-lg border p-5 transition-colors ${
+          className={`w-full p-4 text-left focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-frame-deep sm:p-5 ${
             shippingMethod === "buy_label"
-              ? "border-accent bg-accent/5"
-              : "border-border bg-card hover:border-muted-foreground"
+              ? "px-window bg-[color-mix(in_srgb,var(--mint)_22%,var(--panel))]"
+              : "px-window-ink hover:bg-[color-mix(in_srgb,var(--butter)_22%,var(--panel))]"
           }`}
         >
           <div className="flex items-start gap-3">
-            <div className={`mt-1 w-4 h-4 rounded-full border flex-shrink-0 flex items-center justify-center transition-colors ${
-              shippingMethod === "buy_label" ? "border-accent" : "border-muted-foreground"
+            <div className={`mt-1 flex size-5 shrink-0 items-center justify-center border-2 border-ink ${
+              shippingMethod === "buy_label" ? "bg-coral-deep" : "bg-panel"
             }`}>
-              {shippingMethod === "buy_label" && <div className="w-2 h-2 rounded-full bg-accent" />}
+              {shippingMethod === "buy_label" && <div className="size-2 bg-panel" />}
             </div>
             <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <p className="font-medium text-foreground">Buy a prepaid shipping label</p>
-                <span className="text-[10px] uppercase tracking-wider bg-accent text-accent-foreground px-2 py-0.5 rounded-full">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">Buy a prepaid shipping label</p>
+                <span className="inline-flex h-6 items-center bg-mint px-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
                   Recommended
                 </span>
               </div>
@@ -312,26 +312,26 @@ export function StepShipping({
         <button
           type="button"
           onClick={() => onMethodChange("self_ship")}
-          className={`w-full text-left rounded-lg border p-5 transition-colors ${
+          className={`w-full p-4 text-left focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-frame-deep sm:p-5 ${
             shippingMethod === "self_ship"
-              ? "border-accent bg-accent/5"
-              : "border-border bg-card hover:border-muted-foreground"
+              ? "px-window bg-[color-mix(in_srgb,var(--mint)_22%,var(--panel))]"
+              : "px-window-ink hover:bg-[color-mix(in_srgb,var(--butter)_22%,var(--panel))]"
           }`}
         >
           <div className="flex items-start gap-3">
-            <div className={`mt-1 w-4 h-4 rounded-full border flex-shrink-0 flex items-center justify-center transition-colors ${
-              shippingMethod === "self_ship" ? "border-accent" : "border-muted-foreground"
+            <div className={`mt-1 flex size-5 shrink-0 items-center justify-center border-2 border-ink ${
+              shippingMethod === "self_ship" ? "bg-coral-deep" : "bg-panel"
             }`}>
-              {shippingMethod === "self_ship" && <div className="w-2 h-2 rounded-full bg-accent" />}
+              {shippingMethod === "self_ship" && <div className="size-2 bg-panel" />}
             </div>
             <div className="flex-1">
-              <p className="font-medium text-foreground">I&apos;ll ship them myself</p>
+              <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">I&apos;ll ship them myself</p>
               <p className="text-sm text-muted-foreground mt-1">
                 Use your own carrier and packaging. We&apos;ll send you our shipping address after checkout. Be sure to use a tracked, insured method.
               </p>
               {shippingMethod === "self_ship" && (
                 <Need missing={showMissing && !selectedRate} note="Choose a return shipping option." className="mt-4 flex flex-col gap-2">
-                  <p className="text-sm font-medium text-foreground">Return shipping back to you<Req /></p>
+                  <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink">Return shipping back to you<Req /></p>
                   {rateOptions("You pay for the trip back now; we ship your restored cards back with a tracked label.", (days) => `Est. ${days} business days`)}
                 </Need>
               )}

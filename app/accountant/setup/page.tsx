@@ -63,7 +63,7 @@ function SetupForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={`At least ${MIN} characters`}
-            className="w-full h-11 px-4 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="w-full h-11 px-4 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
             required
             autoFocus
           />
@@ -75,15 +75,15 @@ function SetupForm() {
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             placeholder="Repeat your password"
-            className="w-full h-11 px-4 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="w-full h-11 px-4 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
             required
           />
         </div>
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <button
           type="submit"
           disabled={loading || !token}
-          className="h-11 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+          className="h-11 bg-primary text-white font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
         >
           {loading ? "Saving…" : "Set Password & Continue →"}
         </button>
@@ -95,7 +95,7 @@ function SetupForm() {
 export default function AccountantSetupPage() {
   return (
     <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
-      <div className="bg-white rounded-xl border border-border p-8 w-full max-w-sm shadow-sm">
+      <div className="px-window-ink p-8 w-full max-w-sm">
         <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
           <SetupForm />
         </Suspense>

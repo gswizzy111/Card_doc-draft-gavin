@@ -11,7 +11,7 @@ export function AuthCard({ title, children }: { title: string; children: React.R
           </Link>
           <p className="text-muted-foreground text-sm mt-2">Customer portal</p>
         </div>
-        <div className="bg-white rounded-2xl border border-border shadow-sm p-6 sm:p-8">
+        <div className="px-window-ink p-6 sm:p-8">
           <h1 className="font-heading font-black text-2xl text-foreground mb-2">{title}</h1>
           {children}
         </div>

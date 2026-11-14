@@ -37,7 +37,7 @@ export function LogReferralButton() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full h-14 bg-white border border-border text-foreground font-bold rounded-xl hover:border-primary/40 transition-colors text-sm"
+        className="w-full h-14 bg-panel px-frame text-foreground font-bold hover:border-primary/40 transition-colors text-sm"
       >
         Log Referral
       </button>
@@ -45,28 +45,28 @@ export function LogReferralButton() {
   }
 
   return (
-    <div className="col-span-2 bg-secondary/40 border border-border rounded-xl p-4 flex flex-col gap-3">
+    <div className="col-span-2 bg-secondary/40 border border-border p-4 flex flex-col gap-3">
       <p className="text-sm font-bold text-foreground">Log Referral</p>
       <input
         type="text"
         value={clientName}
         onChange={(e) => setClientName(e.target.value)}
         placeholder="Client name"
-        className="w-full border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white"
+        className="w-full px-frame px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
       />
       <input
         type="text"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notes — e.g. restoration, PSA prep (optional)"
-        className="w-full border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white"
+        className="w-full px-frame px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-panel"
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
       <div className="flex gap-2">
         <button
           onClick={submit}
           disabled={saving}
-          className="text-sm font-bold px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 disabled:opacity-50"
+          className="text-sm font-bold px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50"
         >
           {saving ? "Saving..." : "Log Referral"}
         </button>

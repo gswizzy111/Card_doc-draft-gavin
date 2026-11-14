@@ -47,25 +47,25 @@ export function UpdateRequestPanel({
   }
 
   return (
-    <div id="update" className="bg-white rounded-xl border border-border p-5 scroll-mt-24">
+    <div id="update" className="px-window-ink p-5 scroll-mt-24">
       <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-3">Request an Update</h2>
 
       {lastReply && (
-        <div className="mb-4 p-4 bg-secondary/40 rounded-lg">
+        <div className="mb-4 p-4 bg-secondary/40">
           <p className="rx-label text-rx mb-2">Latest update · {formatDate(lastReply.at)}</p>
           <p className="text-sm text-foreground whitespace-pre-wrap">{lastReply.body}</p>
         </div>
       )}
 
       {askedAt ? (
-        <div role="status" className="rounded-lg border border-rx/30 bg-rx-soft px-4 py-3">
+        <div role="status" className="border border-rx/30 bg-rx-soft px-4 py-3">
           <p className="text-sm font-bold text-foreground">Update requested {formatDate(askedAt)}</p>
           <p className="text-xs text-muted-foreground mt-1">
             We&apos;ll email an update to <span className="font-semibold text-foreground [overflow-wrap:anywhere]">{email}</span>. We reply within 1 business day.
           </p>
         </div>
       ) : nextAllowedAt ? (
-        <div role="status" className="rounded-lg border border-border bg-secondary/40 px-4 py-3">
+        <div role="status" className="border border-border bg-secondary/40 px-4 py-3">
           <p className="text-sm font-bold text-foreground">You can request another update on {formatDate(nextAllowedAt)}</p>
           <p className="text-xs text-muted-foreground mt-1">Updates can be requested once a week per order.</p>
         </div>
@@ -78,13 +78,13 @@ export function UpdateRequestPanel({
             type="button"
             onClick={ask}
             disabled={sending}
-            className="w-full h-11 bg-primary text-primary-foreground text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
+            className="w-full h-11 bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors disabled:opacity-60"
           >
             {sending ? "Sending..." : "Request an update"}
           </button>
         </>
       )}
-      {error && <p role="alert" className="text-xs text-red-700 mt-2">{error}</p>}
+      {error && <p role="alert" className="text-xs text-destructive mt-2">{error}</p>}
     </div>
   );
 }

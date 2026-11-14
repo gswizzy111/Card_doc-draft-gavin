@@ -3,7 +3,9 @@
 import { useCart } from "@/lib/cart-context";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { pixelButton } from "@/components/pixel/pixel-button";
+import { Window } from "@/components/pixel/window";
+import { PixelIcon } from "@/components/pixel/sprites";
 import { Trash2, Plus, Minus } from "lucide-react";
 
 const TAX_RATE = 0.06625;
@@ -14,106 +16,122 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-28 text-center">
-        <h1 className="font-heading text-3xl text-foreground mb-3">Your cart is empty</h1>
-        <p className="text-muted-foreground mb-8 text-sm">Browse the shop to add products.</p>
-        <Button render={<Link href="/shop" />} className="font-semibold px-8">Browse Shop</Button>
+      <div className="mx-auto flex max-w-xl flex-col items-center px-4 py-20 text-center md:py-28">
+        {/* An empty item bag */}
+        <div aria-hidden className="relative mb-8 grid size-28 place-items-center bg-panel px-frame-shadow">
+          <span className="absolute inset-2 border-[3px] border-dashed border-ink/25" />
+          <PixelIcon name="cart" size={48} />
+        </div>
+        <Window variant="dialog" className="w-full px-6 py-7 md:px-8">
+          <h1 className="mb-3 font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink">Your cart is empty</h1>
+          <p className="mb-7 text-[15px] text-ink-soft">Browse the shop to add products.</p>
+          <Link href="/shop" className={pixelButton({ size: "md", className: "px-8" })}>Browse Shop</Link>
+        </Window>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 md:px-10 py-14">
-      <h1 className="font-heading text-3xl md:text-4xl text-foreground mb-10">Your Cart</h1>
+    <div className="mx-auto max-w-5xl px-4 py-12 md:px-10 md:py-16">
+      <div className="mb-10 flex items-center gap-4">
+        <span aria-hidden className="grid size-14 shrink-0 place-items-center bg-butter px-frame-shadow">
+          <PixelIcon name="cart" size={32} />
+        </span>
+        <h1 className="font-heading text-[2.75rem] uppercase leading-none tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl">Your Cart</h1>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Items */}
-        <div className="lg:col-span-2 flex flex-col gap-px bg-rule border border-rule rounded-lg overflow-hidden self-start">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+        {/* Items: the bag's slots */}
+        <Window title="▶ ITEMS" className="self-start p-0 md:p-0 lg:col-span-2">
+          <ul className="divide-y-[3px] divide-dashed divide-rule pt-2">
           {items.map((item) => (
-            <div key={item.id} className="bg-card p-5 grid grid-cols-[4rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 sm:flex sm:gap-5">
-              <div className="w-16 h-16 bg-secondary shrink-0 overflow-hidden rounded-md row-span-2 self-start sm:self-auto">
+            <li key={item.id} className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 p-4 sm:flex sm:gap-5 sm:p-5">
+              <div className="row-span-2 size-[4.5rem] shrink-0 self-start overflow-hidden bg-muted p-[3px] px-frame sm:self-auto">
                 {item.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-secondary" />
+                  <div aria-hidden className="grid h-full w-full place-items-center px-dither">
+                    <PixelIcon name="box" size={32} />
+                  </div>
                 )}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-heading font-bold text-foreground text-sm">{item.name}</p>
+              <div className="min-w-0 flex-1">
+                <p className="font-heading text-lg uppercase leading-tight tracking-[0.02em] text-ink">{item.name}</p>
                 {item.size && (
-                  <p className="text-xs text-muted-foreground mt-0.5">Size: {item.size}</p>
+                  <p className="mt-0.5 text-sm text-ink-soft">Size: {item.size}</p>
                 )}
-                <p className="font-mono text-xs text-muted-foreground mt-1">{formatCurrency(item.price_cents)}</p>
+                <p className="mt-1 font-pixel text-xs tabular-nums text-ink-soft">{formatCurrency(item.price_cents)}</p>
               </div>
               {/* Phones: quantity and total share a line under the name; from sm the row is one line */}
               <div className="col-start-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 sm:contents">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center">
                   <button
                     onClick={() => updateQty(item.id, item.quantity - 1)}
                     aria-label={`Decrease quantity of ${item.name}`}
-                    className="w-8 h-8 rounded-md border border-rule flex items-center justify-center hover:border-ink/60 transition-colors"
+                    className={pixelButton({ tone: "panel", size: "sm", className: "size-11 px-0" })}
                   >
-                    <Minus className="h-3 w-3" />
+                    <Minus className="h-4 w-4" strokeWidth={2.25} />
                   </button>
-                  <span className="w-6 text-center text-sm font-bold">{item.quantity}</span>
+                  <span className="grid h-11 w-10 place-items-center font-heading text-xl tabular-nums text-ink">{item.quantity}</span>
                   <button
                     onClick={() => updateQty(item.id, item.quantity + 1)}
                     aria-label={`Increase quantity of ${item.name}`}
-                    className="w-8 h-8 rounded-md border border-rule flex items-center justify-center hover:border-ink/60 transition-colors"
+                    className={pixelButton({ tone: "panel", size: "sm", className: "size-11 px-0" })}
                   >
-                    <Plus className="h-3 w-3" />
+                    <Plus className="h-4 w-4" strokeWidth={2.25} />
                   </button>
                 </div>
-                <div className="ml-auto flex items-center gap-4">
-                  <span className="font-bold text-foreground text-sm w-16 text-right">
+                <div className="ml-auto flex items-center gap-2">
+                  <span className="w-20 text-right font-heading text-xl tabular-nums text-ink">
                     {formatCurrency(item.price_cents * item.quantity)}
                   </span>
                   <button
                     onClick={() => removeItem(item.id)}
                     aria-label={`Remove ${item.name} from cart`}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="grid size-11 place-items-center text-ink-soft hover:bg-rx-soft hover:text-coral-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4" strokeWidth={1.75} />
                   </button>
                 </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+          </ul>
+        </Window>
 
-        {/* Summary */}
+        {/* Summary: the receipt */}
         <div className="lg:col-span-1">
-          <div className="bg-paper border border-ink/70 rounded-lg p-6 sticky top-24">
-            <h2 className="font-heading font-bold text-lg text-foreground mb-5">Order Summary</h2>
-            <div className="flex flex-col gap-2 text-sm mb-5">
-              <div className="flex justify-between text-muted-foreground">
+          <Window title="▶ RECEIPT" className="sticky top-24 pt-7">
+            <h2 className="mb-5 font-heading text-2xl uppercase tracking-[0.02em] text-ink">Order Summary</h2>
+            <div className="mb-6 flex flex-col gap-2.5 text-sm">
+              <div className="flex justify-between gap-3 text-ink-soft">
                 <span>Subtotal</span>
-                <span>{formatCurrency(totalCents)}</span>
+                <span className="tabular-nums">{formatCurrency(totalCents)}</span>
               </div>
-              <div className="flex justify-between text-muted-foreground">
+              <div className="flex justify-between gap-3 text-ink-soft">
                 <span>Sales Tax (6.625%)</span>
-                <span>{formatCurrency(taxCents)}</span>
+                <span className="tabular-nums">{formatCurrency(taxCents)}</span>
               </div>
-              <div className="flex justify-between text-muted-foreground">
+              <div className="flex justify-between gap-3 text-ink-soft">
                 <span>Shipping</span>
-                <span>Calculated at checkout</span>
+                <span className="text-right">Calculated at checkout</span>
               </div>
-              <div className="flex justify-between font-bold text-foreground pt-3 border-t border-border text-base">
+              <div className="mt-1 flex items-baseline justify-between border-t-[3px] border-dashed border-ink/40 pt-3 font-heading text-2xl uppercase text-ink">
                 <span>Total</span>
                 <span className="tabular-nums">{formatCurrency(totalCents + taxCents)}</span>
               </div>
             </div>
-            <Button render={<Link href="/cart/upsell" />} className="w-full font-semibold">
+            <Link href="/cart/upsell" className={pixelButton({ size: "md", className: "w-full" })}>
               Checkout — US Shipping
-            </Button>
-            <Button render={<Link href="/cart/upsell?international=true" />} className="w-full font-semibold mt-2" variant="outline">
+            </Link>
+            <Link href="/cart/upsell?international=true" className={pixelButton({ tone: "panel", size: "md", className: "mt-3 w-full" })}>
               International Shipping
-            </Button>
-            <Link href="/shop" className="block text-center text-sm text-muted-foreground hover:text-foreground mt-3 transition-colors">
+            </Link>
+            <Link href="/shop" className="mt-3 flex min-h-11 items-center justify-center text-sm text-ink-soft underline-offset-4 hover:text-ink hover:underline">
               Continue shopping
             </Link>
-          </div>
+          </Window>
         </div>
       </div>
     </div>

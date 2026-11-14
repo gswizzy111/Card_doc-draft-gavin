@@ -3,10 +3,10 @@ import type { CustomerInfo } from "@/lib/types";
 /** The customer's contact and address, beside the order summary on the review step. */
 export function YourInformation({ customer, onEdit }: { customer: CustomerInfo; onEdit: () => void }) {
   return (
-    <div className="bg-white border border-border rounded-lg p-6 flex flex-col gap-3">
+    <div className="px-window-ink p-6 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h3 className="font-heading font-extrabold text-lg text-foreground">Your Information</h3>
-        <button type="button" onClick={onEdit} className="text-xs text-accent hover:text-accent/80 transition-colors">
+        <h3 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">Your Information</h3>
+        <button type="button" onClick={onEdit} className="-my-2 inline-flex min-h-11 items-center px-2 font-pixel text-xs uppercase tracking-[0.04em] text-coral-deep hover:bg-butter/40 hover:underline">
           Edit
         </button>
       </div>

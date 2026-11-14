@@ -80,7 +80,7 @@ function LoginForm() {
         </div>
 
         {unconfirmed && !confirm && (
-          <div role="status" className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <div role="status" className="mb-4 border border-butter bg-butter/40 px-4 py-3 text-sm text-ink">
             Please confirm your email to open your account. Sign in and we&apos;ll send you a new confirmation link.
           </div>
         )}
@@ -93,7 +93,7 @@ function LoginForm() {
             onBack={() => { setConfirm(null); setTab("login"); setPassword(""); setError(""); }}
           />
         ) : (
-        <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+        <div className="bg-panel px-frame overflow-hidden">
           {/* Tabs */}
           <div className="grid grid-cols-2 border-b border-border">
             {(["login", "signup"] as const).map((t) => (
@@ -125,7 +125,7 @@ function LoginForm() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="Jane Smith"
-                  className="w-full h-10 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                  className="w-full h-10 border border-border px-3 text-sm focus:outline-none focus:border-primary transition-colors"
                 />
               </div>
             )}
@@ -140,7 +140,7 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="you@example.com"
-                className="w-full h-10 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                className="w-full h-10 border border-border px-3 text-sm focus:outline-none focus:border-primary transition-colors"
               />
             </div>
 
@@ -155,12 +155,12 @@ function LoginForm() {
                 required
                 minLength={tab === "signup" ? 8 : 1}
                 placeholder={tab === "signup" ? "At least 8 characters" : ""}
-                className="w-full h-10 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                className="w-full h-10 border border-border px-3 text-sm focus:outline-none focus:border-primary transition-colors"
               />
             </div>
 
             {error && (
-              <div role="alert" className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+              <div role="alert" className="bg-rx-soft border border-destructive/50 px-4 py-3 text-sm text-destructive">
                 {error}
               </div>
             )}
@@ -168,7 +168,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-11 bg-primary text-primary-foreground font-bold text-sm rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors"
+              className="w-full h-11 bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 disabled:opacity-50 transition-colors"
             >
               {loading
                 ? "Please wait…"

@@ -227,12 +227,12 @@ export function StepReview({
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="font-heading text-3xl font-extrabold tracking-[-0.01em] text-ink mb-1">Review your order.</h2>
+        <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">Review your order.</h2>
       </div>
 
       {/* Bulk discount banner (it replaces a smaller code or loyalty discount) */}
       {discountKind === "bulk" && (
-        <div className="bg-rx-soft border border-rx/30 rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-rx-soft border border-rx/30 p-4 flex items-center gap-3">
           <Trophy className="h-6 w-6 shrink-0 text-rx" strokeWidth={1.75} />
           <div>
             <p className="font-bold text-ink text-sm">{discountPercentApplied}% bulk discount applied!</p>
@@ -266,7 +266,7 @@ export function StepReview({
 
       {/* Signature confirmation add-on */}
       {shippingMethod === "buy_label" && (
-        <div className={`border rounded-lg p-4 transition-colors ${addSignatureConfirmation ? "border-blue-400 bg-blue-50" : "border-border"}`}>
+        <div className={`border p-4 transition-colors ${addSignatureConfirmation ? "border-blue-400 bg-powder/30" : "border-border"}`}>
           <label className="flex items-start gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -309,7 +309,7 @@ export function StepReview({
                 onChange={(e) => setInsuranceDollars(e.target.value)}
                 onBlur={handleDeclaredValueBlur}
                 placeholder="e.g. 500"
-                className="w-36 h-9 border border-border rounded-lg px-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                className="w-36 h-9 border border-border px-3 text-sm focus:outline-none focus:border-primary transition-colors"
               />
               {quotingInsurance && <span className="text-xs text-muted-foreground">Getting rate...</span>}
             </div>
@@ -322,7 +322,7 @@ export function StepReview({
                 const { label, sub } = INSURANCE_OPTION_LABELS[type];
                 const price = type === "round_trip" ? insuranceQuote.roundTripChargeCents : insuranceQuote.customerChargeCents;
                 return (
-                  <label key={type} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${insurance.type === type ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"}`}>
+                  <label key={type} className={`flex items-start gap-3 p-3 border cursor-pointer transition-colors ${insurance.type === type ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"}`}>
                     <input
                       type="radio"
                       name="insurance-type"
@@ -348,7 +348,7 @@ export function StepReview({
       )}
 
       {/* Instagram Feature Add-on */}
-      <div className={`border rounded-lg p-5 transition-colors ${instagramFeature ? "border-rx bg-blue-50" : "border-border"}`}>
+      <div className={`border p-5 transition-colors ${instagramFeature ? "border-rx bg-powder/30" : "border-border"}`}>
         <label className="flex items-start gap-4 cursor-pointer select-none">
           <input
             type="checkbox"
@@ -371,7 +371,7 @@ export function StepReview({
       </div>
 
       {/* Tip */}
-      <div className="border border-border rounded-lg p-5">
+      <div className="border border-border p-5">
         <p className="font-medium text-foreground mb-1">Add a tip <span className="text-xs text-muted-foreground font-normal">(optional)</span></p>
         <p className="text-sm text-muted-foreground mb-3">100% goes to the technician working on your cards. Thank you!</p>
         <div className="flex flex-wrap gap-2 mb-3">
@@ -384,10 +384,10 @@ export function StepReview({
                 setCustomTip("");
                 onTipCentsChange(cents);
               }}
-              className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-colors ${
+              className={`px-3 py-1.5 text-sm font-semibold border transition-colors ${
                 tipCents === cents
                   ? "border-rx bg-rx-soft text-ink ring-1 ring-rx"
-                  : "bg-white border-rule text-muted-foreground hover:border-ink/40"
+                  : "bg-panel border-rule text-muted-foreground hover:border-ink/40"
               }`}
             >
               {cents === 0 ? "No tip" : formatCurrency(cents)}
@@ -411,7 +411,7 @@ export function StepReview({
               setCustomTip(v > MAX_TIP_CENTS ? String(MAX_TIP_CENTS / 100) : e.target.value);
               onTipCentsChange(Math.min(Math.max(v, 0), MAX_TIP_CENTS));
             }}
-            className="w-full h-9 border border-border rounded-lg pl-6 pr-3 text-sm focus:outline-none focus:border-primary transition-colors"
+            className="w-full h-9 border border-border pl-6 pr-3 text-sm focus:outline-none focus:border-primary transition-colors"
           />
         </div>
       </div>
@@ -443,13 +443,13 @@ export function StepReview({
               onDiscountChange(0);
             }}
             placeholder="CREATOR123"
-            className="flex-1 h-9 border border-border rounded-lg px-3 text-sm font-mono uppercase focus:outline-none focus:border-primary transition-colors"
+            className="flex-1 h-9 border border-border px-3 text-sm font-mono uppercase focus:outline-none focus:border-primary transition-colors"
           />
           <button
             type="button"
             onClick={validateCode}
             disabled={!affiliateCode.trim()}
-            className="h-9 px-4 bg-secondary text-foreground text-sm font-semibold rounded-lg hover:bg-border transition-colors disabled:opacity-40"
+            className="h-9 px-4 bg-secondary text-foreground text-sm font-semibold hover:bg-border transition-colors disabled:opacity-40"
           >
             Apply
           </button>
@@ -463,7 +463,7 @@ export function StepReview({
         {codeStatus === "valid" && discountPercent === 0 && (
           <p className="text-sm text-rx font-medium"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Code applied — {codeName}</p>
         )}
-        {codeStatus === "invalid" && <p className="text-sm text-red-700">Invalid code.</p>}
+        {codeStatus === "invalid" && <p className="text-sm text-destructive">Invalid code.</p>}
       </div>
 
       {/* Gift card */}
@@ -480,13 +480,13 @@ export function StepReview({
               onGiftCardAmountChange(0);
             }}
             placeholder="GIFT-XXXX-XXXX"
-            className="flex-1 h-9 border border-border rounded-lg px-3 text-sm font-mono uppercase focus:outline-none focus:border-primary transition-colors"
+            className="flex-1 h-9 border border-border px-3 text-sm font-mono uppercase focus:outline-none focus:border-primary transition-colors"
           />
           <button
             type="button"
             onClick={validateGiftCard}
             disabled={!giftCardCode.trim()}
-            className="h-9 px-4 bg-secondary text-foreground text-sm font-semibold rounded-lg hover:bg-border transition-colors disabled:opacity-40"
+            className="h-9 px-4 bg-secondary text-foreground text-sm font-semibold hover:bg-border transition-colors disabled:opacity-40"
           >
             Apply
           </button>
@@ -494,7 +494,7 @@ export function StepReview({
         {gcStatus === "valid" && gcApplied > 0 && (
           <p className="text-sm text-rx font-medium"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Gift card applied — {formatCurrency(gcApplied)} off</p>
         )}
-        {gcStatus === "invalid" && <p className="text-sm text-red-700">Invalid or already used gift card.</p>}
+        {gcStatus === "invalid" && <p className="text-sm text-destructive">Invalid or already used gift card.</p>}
       </div>
 
       {signingSlot}

@@ -56,7 +56,7 @@ export default async function PartnerDashboard() {
         </div>
 
         {/* Profit banner */}
-        <div className="bg-ink rounded-xl p-6 mb-4 flex items-center justify-between">
+        <div className="bg-ink p-6 mb-4 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-primary-foreground/70 mb-1">Total Profit Earned</p>
             <p className="font-heading font-black text-4xl text-primary-foreground">${totalProfit.toFixed(2)}</p>
@@ -75,7 +75,7 @@ export default async function PartnerDashboard() {
             { label: "Polish", allocated: partner.polish_allocated ?? 0, sold: polishSold, remaining: remainingPolish },
             { label: "Spray", allocated: partner.spray_allocated ?? 0, sold: spraySold, remaining: remainingSpray },
           ].map(({ label, allocated, sold, remaining }) => (
-            <div key={label} className="bg-white rounded-xl border border-border p-4">
+            <div key={label} className="bg-panel px-frame p-4">
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">{label}</p>
               <p className="font-heading font-black text-2xl text-foreground">{remaining}<span className="text-sm font-normal text-muted-foreground">/{allocated}</span></p>
               <p className="text-xs text-muted-foreground mt-1">{sold} sold</p>
@@ -90,7 +90,7 @@ export default async function PartnerDashboard() {
         </div>
 
         {/* Sales history */}
-        <div className="bg-white rounded-xl border border-border p-6 mb-4">
+        <div className="px-window-ink p-6 mb-4">
           <h2 className="font-heading font-black text-lg text-foreground mb-4">Sales History</h2>
           {!allSales.length ? (
             <p className="text-sm text-muted-foreground">No sales logged yet.</p>
@@ -110,7 +110,7 @@ export default async function PartnerDashboard() {
         </div>
 
         {/* Referrals history */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="px-window-ink p-6">
           <h2 className="font-heading font-black text-lg text-foreground mb-4">
             Referrals <span className="text-muted-foreground font-normal text-sm">({referrals?.length ?? 0} total)</span>
           </h2>

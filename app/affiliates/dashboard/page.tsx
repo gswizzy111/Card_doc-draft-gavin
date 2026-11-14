@@ -9,7 +9,7 @@ const RECENT = 10;
 
 function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
-    <div className="bg-white rounded-xl border border-border p-5">
+    <div className="px-window-ink p-5">
       <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="font-heading font-black text-2xl sm:text-3xl text-foreground mt-2 tabular-nums">{value}</p>
       {note && <p className="text-xs text-muted-foreground mt-1">{note}</p>}
@@ -59,7 +59,7 @@ export default async function AffiliateDashboard() {
         </div>
 
         {/* Earnings and code */}
-        <div className="bg-ink text-white rounded-xl p-6 sm:p-8 grid gap-6 sm:grid-cols-[1.4fr_1fr] sm:items-center">
+        <div className="bg-ink text-white p-6 sm:p-8 grid gap-6 sm:grid-cols-[1.4fr_1fr] sm:items-center">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-white/70">Commission earned</p>
             <p className="font-heading font-black text-5xl mt-2 tabular-nums">{formatCurrency(s.all.commissionCents)}</p>
@@ -89,7 +89,7 @@ export default async function AffiliateDashboard() {
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* By service */}
-          <div className="bg-white rounded-xl border border-border p-6">
+          <div className="px-window-ink p-6">
             <h2 className="font-heading font-black text-lg text-foreground">By service</h2>
             <p className="text-xs text-muted-foreground mb-2">Sales and revenue, with your commission on the right</p>
             <ServiceRow label="Restorations" t={s.restoration} />
@@ -97,7 +97,7 @@ export default async function AffiliateDashboard() {
           </div>
 
           {/* By month */}
-          <div className="bg-white rounded-xl border border-border p-6">
+          <div className="px-window-ink p-6">
             <h2 className="font-heading font-black text-lg text-foreground mb-3">Last 6 months</h2>
             <table className="w-full text-sm">
               <thead>
@@ -123,7 +123,7 @@ export default async function AffiliateDashboard() {
         </div>
 
         {/* Recent sales */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="px-window-ink p-6">
           <h2 className="font-heading font-black text-lg text-foreground">Recent sales</h2>
           <p className="text-xs text-muted-foreground mb-3">The last {RECENT} orders with your code. Customer names and details aren&apos;t shown.</p>
           {sales.length === 0 ? (

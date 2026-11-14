@@ -122,7 +122,7 @@ export default async function AccountOrderPage({
   return (
     <div className="min-h-screen bg-secondary/30">
       {/* Header */}
-      <header className="bg-white border-b border-border sticky top-0 z-10">
+      <header className="bg-panel border-b border-border sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/account" className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
@@ -155,7 +155,7 @@ export default async function AccountOrderPage({
           {/* Left column — status + tracking */}
           <div className="lg:col-span-1 flex flex-col gap-4">
             {/* Status timeline */}
-            <div className="bg-white rounded-xl border border-border p-5">
+            <div className="px-window-ink p-5">
               <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-4">Status</h2>
               <div className="flex flex-col gap-3">
                 {visibleStatuses.map((s) => {
@@ -168,7 +168,7 @@ export default async function AccountOrderPage({
                         isCurrent ? "bg-primary" : isDone ? "bg-primary/40" : "bg-border"
                       }`}>
                         {isDone && "✓"}
-                        {isCurrent && <span className="w-2 h-2 rounded-full bg-white block" />}
+                        {isCurrent && <span className="w-2 h-2 rounded-full bg-panel block" />}
                       </div>
                       <span className={`text-xs font-medium ${isCurrent ? "text-primary font-bold" : isDone ? "text-muted-foreground" : "text-muted-foreground/40"}`}>
                         {ORDER_STATUSES[s]?.label}
@@ -193,12 +193,12 @@ export default async function AccountOrderPage({
 
             {/* Inbound tracking */}
             {order.inbound_tracking_number && (
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <div className="bg-powder/30 border border-frame/50 p-5">
                 <p className="rx-label text-rx mb-2">Inbound Tracking</p>
                 {inboundStatus && (
                   <p className={`text-xs font-bold px-2 py-0.5 rounded-full inline-block mb-2 ${
-                    inboundStatus === "TRANSIT" ? "bg-blue-200 text-blue-800" :
-                    inboundStatus === "DELIVERED" ? "bg-green-200 text-green-800" :
+                    inboundStatus === "TRANSIT" ? "bg-blue-200 text-ink" :
+                    inboundStatus === "DELIVERED" ? "bg-green-200 text-mint-deep" :
                     "bg-gray-200 text-gray-700"
                   }`}>
                     {inboundStatus === "TRANSIT" ? "In Transit" :
@@ -207,20 +207,20 @@ export default async function AccountOrderPage({
                      inboundStatus}
                   </p>
                 )}
-                {inboundDetails && <p className="text-xs text-blue-800 mb-2">{inboundDetails}</p>}
-                <p className="font-mono text-xs text-blue-600">{order.inbound_tracking_number}</p>
+                {inboundDetails && <p className="text-xs text-ink mb-2">{inboundDetails}</p>}
+                <p className="font-mono text-xs text-frame-deep">{order.inbound_tracking_number}</p>
               </div>
             )}
 
             {/* Prepaid label download */}
             {order.inbound_method === "buy_label" && order.shipping_label_url && (
-              <div className="bg-white rounded-xl border border-border p-5">
+              <div className="px-window-ink p-5">
                 <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-3">Shipping Label</h2>
                 <p className="text-xs text-muted-foreground mb-3">Print and attach to your package.</p>
                 {/* A button, not a link: analytics runs on this page (components/open-file-button.tsx) */}
                 <OpenFileButton
                   url={order.shipping_label_url}
-                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground text-xs font-bold px-4 py-2 hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   Download Label (PDF)
                 </OpenFileButton>
@@ -229,7 +229,7 @@ export default async function AccountOrderPage({
 
             {/* Return tracking */}
             {order.tracking_number && (
-              <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-5">
+              <div className="bg-cyan-50 border border-cyan-200 p-5">
                 <p className="rx-label text-rx mb-1">Return Tracking</p>
                 <p className="font-mono font-black text-base text-cyan-900 tracking-widest mb-3">{order.tracking_number}</p>
                 <a
@@ -238,7 +238,7 @@ export default async function AccountOrderPage({
                     : trackingLink(order.tracking_number)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors inline-block"
+                  className="text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white hover:bg-cyan-700 transition-colors inline-block"
                 >
                   Track Package →
                 </a>
@@ -246,7 +246,7 @@ export default async function AccountOrderPage({
             )}
 
             {/* Order summary */}
-            <div className="bg-white rounded-xl border border-border p-5">
+            <div className="px-window-ink p-5">
               <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-3">Order Summary</h2>
               <div className="flex flex-col gap-2 text-sm">
                 {(services as { id: string; service_name: string; quantity: number; price_cents: number }[]).map((s) => (
@@ -269,10 +269,10 @@ export default async function AccountOrderPage({
           <div className="lg:col-span-2 flex flex-col gap-4">
             {/* Restoration results */}
             {(order.restoration_photos?.length > 0 || order.completion_notes) && (
-              <div className="bg-white rounded-xl border border-border p-5">
+              <div className="px-window-ink p-5">
                 <h2 className="font-heading font-black text-lg text-foreground mb-4">Restoration Results</h2>
                 {order.completion_notes && (
-                  <div className="mb-4 p-4 bg-secondary/40 rounded-lg">
+                  <div className="mb-4 p-4 bg-secondary/40">
                     <p className="rx-label text-rx mb-2">Notes from The Card Doc</p>
                     <p className="text-sm text-foreground whitespace-pre-wrap">{order.completion_notes}</p>
                   </div>
@@ -282,7 +282,7 @@ export default async function AccountOrderPage({
                     {(order.restoration_photos as string[]).map((url: string, i: number) => (
                       <a key={i} href={url} target="_blank" rel="noopener noreferrer">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt="Restored card" className="w-24 h-24 object-cover rounded-xl border border-border hover:opacity-90 transition-opacity" />
+                        <img src={url} alt="Restored card" className="w-24 h-24 object-cover border border-border hover:opacity-90 transition-opacity" />
                       </a>
                     ))}
                   </div>
@@ -291,7 +291,7 @@ export default async function AccountOrderPage({
             )}
 
             {/* Card editor */}
-            <div className="bg-white rounded-xl border border-border p-5">
+            <div className="px-window-ink p-5">
               <h2 className="font-heading font-black text-lg text-foreground mb-4">
                 Your Cards ({cards.length})
               </h2>

@@ -4,6 +4,7 @@ import { useCart } from "@/lib/cart-context";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Zap } from "lucide-react";
+import { pixelButton } from "@/components/pixel/pixel-button";
 
 const SIZES = ["Small", "Medium", "Large", "XL"] as const;
 
@@ -46,35 +47,36 @@ export function AddToCartButtonLarge({ product, requiresSize }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {requiresSize && (
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-semibold text-foreground">Select Size</p>
-          <div className="flex gap-2">
+        <fieldset className="flex flex-col gap-2.5">
+          <legend className="mb-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink">Select Size</legend>
+          <div className="grid grid-cols-4 gap-3">
             {SIZES.map((s) => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
-                className={`flex-1 h-10 border text-sm font-semibold rounded-md transition-all duration-150 active:scale-[0.97] ${
-                  size === s
-                    ? "border-ink bg-ink text-paper"
-                    : "border-rule text-ink hover:border-ink/50"
-                }`}
+                aria-pressed={size === s}
+                className={pixelButton({
+                  tone: size === s ? "ink" : "panel",
+                  size: "sm",
+                  className: "h-11 w-full px-1 text-base normal-case",
+                })}
               >
                 {s}
               </button>
             ))}
           </div>
           {!size && (
-            <p className="text-xs text-muted-foreground">Please select a size before adding to cart.</p>
+            <p className="text-sm text-ink-soft">Please select a size before adding to cart.</p>
           )}
-        </div>
+        </fieldset>
       )}
 
       <button
         onClick={handleBuyNow}
         disabled={requiresSize && !size}
-        className="w-full flex items-center justify-center gap-2 h-13 font-semibold text-[15px] bg-rx text-primary-foreground hover:bg-rx/90 active:scale-[0.98] transition-all duration-150 rounded-md disabled:opacity-40 disabled:cursor-not-allowed"
+        className={pixelButton({ tone: "coral", size: "lg", className: "w-full disabled:cursor-not-allowed disabled:opacity-45" })}
       >
         <Zap className="h-4 w-4 fill-current" />
         Buy It Now
@@ -82,13 +84,13 @@ export function AddToCartButtonLarge({ product, requiresSize }: Props) {
       <button
         onClick={handleAdd}
         disabled={requiresSize && !size}
-        className={`w-full flex items-center justify-center gap-2 h-13 font-semibold text-[15px] border transition-all duration-150 rounded-md active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed ${
-          added
-            ? "bg-rx-soft text-rx border-rx/30"
-            : "bg-white text-ink border-ink/70 hover:border-ink hover:bg-secondary"
-        }`}
+        className={pixelButton({
+          tone: added ? "mint" : "panel",
+          size: "lg",
+          className: "w-full disabled:cursor-not-allowed disabled:opacity-45",
+        })}
       >
-        <ShoppingCart className="h-4 w-4" />
+        <ShoppingCart className="h-4 w-4" strokeWidth={1.75} />
         {added ? "Added to Cart!" : "Add to Cart"}
       </button>
     </div>

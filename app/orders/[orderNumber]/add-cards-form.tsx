@@ -111,7 +111,7 @@ export function AddCardsForm({ orderNumber, customerEmail, tierInfo, cardsOnOrde
   }
 
   return (
-    <div className="bg-gradient-to-br from-rx-soft to-white rounded-xl border border-rx/30 p-6 mb-5">
+    <div className="bg-gradient-to-br from-rx-soft to-white border border-rx/30 p-6 mb-5">
       <p className="rx-label text-rx mb-1">Add to Your Order</p>
       <h2 className="font-heading font-black text-lg text-foreground mb-1">Add More Cards</h2>
       <p className="text-sm text-muted-foreground mb-5">
@@ -129,14 +129,14 @@ export function AddCardsForm({ orderNumber, customerEmail, tierInfo, cardsOnOrde
 
       <div className="flex flex-col gap-4">
         {cards.map((card, i) => (
-          <div key={i} className="bg-white rounded-lg border border-border p-4">
+          <div key={i} className="bg-panel px-frame p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-bold text-foreground">Card {i + 1}</p>
               {cards.length > 1 && (
                 <button
                   onClick={() => removeCard(i)}
                   disabled={loading}
-                  className="text-xs text-red-600 hover:text-red-700 disabled:opacity-50"
+                  className="text-xs text-destructive hover:text-destructive disabled:opacity-50"
                 >
                   Remove
                 </button>
@@ -175,7 +175,7 @@ export function AddCardsForm({ orderNumber, customerEmail, tierInfo, cardsOnOrde
                 <p className="text-xs text-muted-foreground mt-1">{VALUE_HELP}</p>
                 {isElite && <p className="text-xs text-muted-foreground mt-1">Service fee: {formatCurrency(cardPrice(card))}</p>}
                 {overCap(card) && (
-                  <p className="text-xs text-red-600 font-semibold mt-1">
+                  <p className="text-xs text-destructive font-semibold mt-1">
                     This is above the {tierInfo.name} tier&apos;s ${(maxCents! / 100).toLocaleString()}{" "}cap, so it can&apos;t be added to this order. Please place a new order for it with a higher tier.
                   </p>
                 )}
@@ -196,12 +196,12 @@ export function AddCardsForm({ orderNumber, customerEmail, tierInfo, cardsOnOrde
       <button
         onClick={addCard}
         disabled={loading}
-        className="mt-3 w-full py-2.5 border border-dashed border-rx/50 text-rx text-sm font-semibold rounded-lg hover:bg-rx-soft transition-colors disabled:opacity-50"
+        className="mt-3 w-full py-2.5 border border-dashed border-rx/50 text-rx text-sm font-semibold hover:bg-rx-soft transition-colors disabled:opacity-50"
       >
         + Add Another Card
       </button>
 
-      <div className="mt-5 bg-rx-soft rounded-lg p-4">
+      <div className="mt-5 bg-rx-soft p-4">
         <div className="flex justify-between text-sm text-muted-foreground mb-1">
           <span>
             {cards.length} card{cards.length !== 1 ? "s" : ""}
@@ -224,17 +224,17 @@ export function AddCardsForm({ orderNumber, customerEmail, tierInfo, cardsOnOrde
         </div>
       </div>
 
-      <div className="mt-6 bg-white rounded-lg border border-border p-4 md:p-5">
+      <div className="mt-6 bg-panel px-frame p-4 md:p-5">
         <SigningSection state={signing} onChange={setSigning} showMissing={showMissing} />
       </div>
 
-      {error && <p className="text-sm text-red-500 mt-3">{error}</p>}
+      {error && <p className="text-sm text-destructive mt-3">{error}</p>}
 
       <MissingNote show={showMissing && !ready} />
       <button
         onClick={handleSubmit}
         disabled={loading}
-        className="mt-4 w-full py-3 bg-rx text-white font-bold rounded-lg hover:bg-rx/90 transition-colors disabled:opacity-40"
+        className="mt-4 w-full py-3 bg-rx text-white font-bold hover:bg-rx/90 transition-colors disabled:opacity-40"
       >
         {loading ? "Redirecting to checkout…" : SIGN_BUTTON_LABEL}
       </button>

@@ -6,42 +6,47 @@ const STEPS = [
   { n: 4, label: "Review" },
 ];
 
+/**
+ * The check-in track: four stops on a segmented bar that fills in mint as
+ * each step is done. The current stop is coral with a ▼ over it.
+ */
 export function ProgressIndicator({ currentStep }: { currentStep: number }) {
+  const done = Math.max(0, Math.min(STEPS.length - 1, currentStep - 1));
   return (
-    <div className="flex items-center gap-0 w-full">
-      {STEPS.map((step, i) => (
-        <div key={step.n} className="flex items-center flex-1 last:flex-none">
-          <div className="flex flex-col items-center gap-1">
-            <div
-              className={`w-8 h-8 rounded-md flex items-center justify-center font-mono text-xs transition-colors duration-200 ${
-                step.n < currentStep
-                  ? "bg-primary text-primary-foreground"
-                  : step.n === currentStep
-                  ? "bg-ink text-paper"
-                  : "bg-white text-muted-foreground ring-1 ring-rule"
-              }`}
-            >
-              {step.n < currentStep ? <Check className="h-3.5 w-3.5" strokeWidth={3} /> : step.n}
-            </div>
-            <span
-              className={`rx-label !normal-case !tracking-normal !text-xs hidden sm:block ${
-                step.n === currentStep
-                  ? "!text-ink font-semibold"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {step.label}
-            </span>
-          </div>
-          {i < STEPS.length - 1 && (
-            <div
-              className={`h-px flex-1 mx-2 transition-colors ${
-                step.n < currentStep ? "bg-primary" : "bg-border"
-              }`}
-            />
-          )}
-        </div>
-      ))}
+    <div className="relative w-full px-1 pt-1">
+      {/* Track: night rail with a mint fill, drawn between the first and last stop */}
+      <div aria-hidden className="absolute top-[22px] right-[12.5%] left-[12.5%] h-3 bg-night shadow-[0_0_0_2px_var(--ink),inset_0_0_0_2px_var(--panel)]">
+        <span
+          className="block h-full bg-mint bg-[repeating-linear-gradient(90deg,transparent_0_6px,color-mix(in_srgb,var(--ink)_18%,transparent)_6px_8px)] transition-[width] duration-300 ease-[steps(4,end)] motion-reduce:transition-none"
+          style={{ width: `${(done / (STEPS.length - 1)) * 100}%` }}
+        />
+      </div>
+      <ol className="relative grid grid-cols-4">
+        {STEPS.map((step) => {
+          const state = step.n < currentStep ? "done" : step.n === currentStep ? "current" : "next";
+          return (
+            <li key={step.n} className="flex flex-col items-center gap-2" aria-current={state === "current" ? "step" : undefined}>
+              <span
+                className={`relative grid size-10 place-items-center font-pixel text-sm tabular-nums text-ink px-frame ${
+                  state === "done" ? "bg-mint" : state === "current" ? "bg-coral-fill" : "bg-panel"
+                }`}
+              >
+                {state === "current" && (
+                  <span aria-hidden className="absolute -top-5 left-1/2 -translate-x-1/2 font-pixel text-xs leading-none text-coral-deep px-bob">▼</span>
+                )}
+                {state === "done" ? <Check className="h-4 w-4" strokeWidth={3} /> : step.n}
+              </span>
+              <span
+                className={`max-w-[8ch] text-center font-pixel text-xs uppercase leading-tight tracking-normal ${
+                  state === "current" ? "text-ink" : "text-ink-soft"
+                }`}
+              >
+                {step.label}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }

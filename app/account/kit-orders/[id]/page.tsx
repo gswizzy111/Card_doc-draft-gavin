@@ -80,7 +80,7 @@ export default async function KitOrderPage({
 
   return (
     <div className="min-h-screen bg-secondary/30">
-      <header className="bg-white border-b border-border sticky top-0 z-10">
+      <header className="bg-panel border-b border-border sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/account" className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
             ← My Orders
@@ -111,7 +111,7 @@ export default async function KitOrderPage({
 
         {/* Status timeline */}
         {order.status !== "cancelled" && (
-          <div className="bg-white rounded-xl border border-border p-5">
+          <div className="px-window-ink p-5">
             <h2 className="font-heading font-black text-sm uppercase tracking-wide text-muted-foreground mb-4">Status</h2>
             <div className="flex flex-col gap-3">
               {STATUS_TIMELINE.map((s) => {
@@ -124,7 +124,7 @@ export default async function KitOrderPage({
                       isCurrent ? "bg-primary" : isDone ? "bg-primary/40" : "bg-border"
                     }`}>
                       {isDone && "✓"}
-                      {isCurrent && <span className="w-2 h-2 rounded-full bg-white block" />}
+                      {isCurrent && <span className="w-2 h-2 rounded-full bg-panel block" />}
                     </div>
                     <span className={`text-xs font-medium ${isCurrent ? "text-primary font-bold" : isDone ? "text-muted-foreground" : "text-muted-foreground/40"}`}>
                       {STATUS_LABELS[s]}
@@ -150,17 +150,17 @@ export default async function KitOrderPage({
 
         {/* Tracking */}
         {order.tracking_number && trackUrl && (
-          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-5">
+          <div className="bg-cyan-50 border border-cyan-200 p-5">
             <p className="rx-label text-rx mb-1">Shipment Tracking</p>
             {(order as any).carrier && (
-              <span className="text-xs font-bold px-2 py-0.5 rounded bg-cyan-200 text-cyan-800 mb-2 inline-block">{(order as any).carrier}</span>
+              <span className="text-xs font-bold px-2 py-0.5 bg-cyan-200 text-cyan-800 mb-2 inline-block">{(order as any).carrier}</span>
             )}
             <p className="font-mono font-black text-lg text-cyan-900 tracking-widest mb-3 mt-1">{order.tracking_number}</p>
             <a
               href={trackUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white hover:bg-cyan-700 transition-colors"
             >
               Track Package →
             </a>
@@ -168,7 +168,7 @@ export default async function KitOrderPage({
         )}
 
         {/* Order summary */}
-        <div className="bg-white rounded-xl border border-border p-5">
+        <div className="px-window-ink p-5">
           <h2 className="font-heading font-black text-lg text-foreground mb-4">Order Summary</h2>
           <div className="flex flex-col gap-2 text-sm">
             {items.map((item, i) => (
@@ -186,7 +186,7 @@ export default async function KitOrderPage({
 
         {/* Subscription cancel */}
         {isSubscription && hasActiveSub && (
-          <div className="bg-white rounded-xl border border-border p-5">
+          <div className="px-window-ink p-5">
             <h2 className="font-heading font-black text-lg text-foreground mb-2">Manage Subscription</h2>
             <p className="text-sm text-muted-foreground mb-4">
               Need to cancel your Monthly Kit Club subscription? This will stop future billing immediately.

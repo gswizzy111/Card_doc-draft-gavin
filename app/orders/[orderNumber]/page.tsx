@@ -24,7 +24,7 @@ function EmailMismatch() {
       </p>
       <Link
         href="/track"
-        className="inline-block bg-primary text-primary-foreground text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-primary/90 transition-colors"
+        className="inline-block bg-primary text-primary-foreground text-sm font-bold px-5 py-2.5 hover:bg-primary/90 transition-colors"
       >
         Try Again
       </Link>
@@ -126,7 +126,7 @@ async function KitOrderView({ kitNumber, email }: { kitNumber: string; email: st
         <p className="text-muted-foreground text-sm mt-1">Placed {new Date(order.created_at).toLocaleDateString()}</p>
       </div>
 
-      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+      <div className="px-window-ink p-6 mb-5">
         <h2 className="font-heading font-black text-lg text-foreground mb-5">Status</h2>
         {kitCancelled ? (
           <div className="flex flex-col gap-1 text-sm">
@@ -147,7 +147,7 @@ async function KitOrderView({ kitNumber, email }: { kitNumber: string; email: st
                     isCurrent ? "bg-primary" : isDone ? "bg-primary/30" : "bg-border"
                   }`}>
                     {isDone && <span className="text-white text-xs">✓</span>}
-                    {isCurrent && <span className="w-2 h-2 rounded-full bg-white block" />}
+                    {isCurrent && <span className="w-2 h-2 rounded-full bg-panel block" />}
                   </div>
                   <span className={`text-sm font-medium ${isCurrent ? "text-primary font-bold" : isDone ? "text-muted-foreground" : "text-muted-foreground/50"}`}>
                     {KIT_STATUS_LABELS[s]}
@@ -160,21 +160,21 @@ async function KitOrderView({ kitNumber, email }: { kitNumber: string; email: st
       </div>
 
       {order.tracking_number && (
-        <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6 mb-5">
+        <div className="bg-cyan-50 border border-cyan-200 p-6 mb-5">
           <p className="rx-label text-rx mb-1">Shipment Tracking</p>
           <p className="font-mono font-black text-xl text-cyan-900 tracking-widest mb-3 break-all">{order.tracking_number}</p>
           <a
             href={kitTrackUrl ?? undefined}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white hover:bg-cyan-700 transition-colors"
           >
             Track Package →
           </a>
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+      <div className="px-window-ink p-6 mb-5">
         <h2 className="font-heading font-black text-lg text-foreground mb-4">Order Summary</h2>
         <div className="flex flex-col gap-2 text-sm">
           {items.map((item, i) => (
@@ -314,7 +314,7 @@ export default async function OrderDetailPage({
       </div>
 
       {/* Status timeline */}
-      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+      <div className="px-window-ink p-6 mb-5">
         <h2 className="font-heading font-black text-lg text-foreground mb-5">Status</h2>
         <div className="flex flex-col gap-3">
           {visibleStatuses.map((s) => {
@@ -327,7 +327,7 @@ export default async function OrderDetailPage({
                   isCurrent ? "bg-primary" : isDone ? "bg-primary/30" : "bg-border"
                 }`}>
                   {isDone && <span className="text-white text-xs">✓</span>}
-                  {isCurrent && <span className="w-2 h-2 rounded-full bg-white block" />}
+                  {isCurrent && <span className="w-2 h-2 rounded-full bg-panel block" />}
                 </div>
                 <span className={`text-sm font-medium ${isCurrent ? "text-primary font-bold" : isDone ? "text-muted-foreground" : "text-muted-foreground/50"}`}>
                   {ORDER_STATUSES[s]?.label}
@@ -340,9 +340,9 @@ export default async function OrderDetailPage({
 
       {/* Cards-added success banner */}
       {added === "1" && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-5 mb-5">
-          <p className="text-sm font-bold text-green-800">Cards added successfully!</p>
-          <p className="text-sm text-green-800 mt-0.5">
+        <div className="bg-mint/25 border border-mint-deep/50 p-5 mb-5">
+          <p className="text-sm font-bold text-mint-deep">Cards added successfully!</p>
+          <p className="text-sm text-mint-deep mt-0.5">
             Your payment was received. The new cards have been added to your order.
           </p>
         </div>
@@ -350,9 +350,9 @@ export default async function OrderDetailPage({
 
       {/* Upgrade success banner */}
       {showUpgradeReceived && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-5 mb-5">
-          <p className="text-sm font-bold text-green-800">Upgrade received!</p>
-          <p className="text-sm text-green-800 mt-0.5">
+        <div className="bg-mint/25 border border-mint-deep/50 p-5 mb-5">
+          <p className="text-sm font-bold text-mint-deep">Upgrade received!</p>
+          <p className="text-sm text-mint-deep mt-0.5">
             Your payment was received. Your order will show the new service level shortly.
           </p>
         </div>
@@ -382,7 +382,7 @@ export default async function OrderDetailPage({
 
       {/* Live inbound tracking (while we're waiting for the cards) */}
       {inboundTrack && (
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-5">
+        <div className="bg-powder/30 border border-frame/50 p-6 mb-5">
           <p className="rx-label text-rx mb-3">Inbound Shipment Tracking</p>
           <div className="flex items-center gap-2 mb-2">
             <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
@@ -392,22 +392,22 @@ export default async function OrderDetailPage({
             </span>
           </div>
           {inboundTrack.trackingStatus?.statusDetails && (
-            <p className="text-sm text-blue-800 mb-2">{inboundTrack.trackingStatus.statusDetails}</p>
+            <p className="text-sm text-ink mb-2">{inboundTrack.trackingStatus.statusDetails}</p>
           )}
           {inboundTrack.eta && (
-            <p className="text-sm font-semibold text-blue-900">
+            <p className="text-sm font-semibold text-ink">
               Estimated arrival: {new Date(inboundTrack.eta).toLocaleDateString("en-US", {
                 weekday: "long", month: "long", day: "numeric"
               })}
             </p>
           )}
-          <p className="font-mono text-xs text-blue-600 mt-3">{order.inbound_tracking_number}</p>
+          <p className="font-mono text-xs text-frame-deep mt-3">{order.inbound_tracking_number}</p>
         </div>
       )}
 
       {/* Return tracking number */}
       {order.tracking_number && (
-        <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6 mb-5">
+        <div className="bg-cyan-50 border border-cyan-200 p-6 mb-5">
           <p className="rx-label text-rx mb-1">Return Tracking</p>
           <p className="font-mono font-black text-xl text-cyan-900 tracking-widest mb-3 break-all">{order.tracking_number}</p>
           <a
@@ -416,7 +416,7 @@ export default async function OrderDetailPage({
               : trackingLink(order.tracking_number)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            className="inline-block text-xs font-bold px-3 py-1.5 bg-cyan-600 text-white hover:bg-cyan-700 transition-colors"
           >
             Track Package →
           </a>
@@ -425,14 +425,14 @@ export default async function OrderDetailPage({
 
       {/* Prepaid shipping label */}
       {order.inbound_method === "buy_label" && order.shipping_label_url && (
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-5">
-          <h2 className="font-heading font-black text-lg text-blue-900 mb-2">Your Prepaid Shipping Label</h2>
-          <p className="text-sm text-blue-800 mb-4">Print this label, attach it to your package, and drop it off at the carrier.</p>
+        <div className="bg-powder/30 border border-frame/50 p-6 mb-5">
+          <h2 className="font-heading font-black text-lg text-ink mb-2">Your Prepaid Shipping Label</h2>
+          <p className="text-sm text-ink mb-4">Print this label, attach it to your package, and drop it off at the carrier.</p>
           <a
             href={order.shipping_label_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-bold px-4 py-2 hover:bg-blue-700 transition-colors"
           >
             Download Label (PDF)
           </a>
@@ -441,11 +441,11 @@ export default async function OrderDetailPage({
 
       {/* Restoration photos & notes */}
       {(order.restoration_photos?.length > 0 || order.completion_notes) && (
-        <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <div className="px-window-ink p-6 mb-5">
           <h2 className="font-heading font-black text-lg text-foreground mb-4">Restoration Results</h2>
 
           {order.completion_notes && (
-            <div className="mb-4 p-4 bg-secondary/40 rounded-lg">
+            <div className="mb-4 p-4 bg-secondary/40">
               <p className="rx-label text-rx mb-2">Notes from The Card Doc</p>
               <p className="text-sm text-foreground whitespace-pre-wrap">{order.completion_notes}</p>
             </div>
@@ -456,7 +456,7 @@ export default async function OrderDetailPage({
               {(order.restoration_photos as string[]).map((url: string, i: number) => (
                 <a key={i} href={url} target="_blank" rel="noopener noreferrer">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt="Restored card" className="w-28 h-28 object-cover rounded-xl border border-border hover:opacity-90 transition-opacity" />
+                  <img src={url} alt="Restored card" className="w-28 h-28 object-cover border border-border hover:opacity-90 transition-opacity" />
                 </a>
               ))}
             </div>
@@ -465,11 +465,11 @@ export default async function OrderDetailPage({
       )}
 
       {/* Cards */}
-      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+      <div className="px-window-ink p-6 mb-5">
         <h2 className="font-heading font-black text-lg text-foreground mb-4">Your Cards ({cards?.length ?? 0})</h2>
         <div className="flex flex-col gap-3">
           {cards?.map((card, i) => (
-            <div key={card.id} className="text-sm p-3 rounded-lg bg-secondary/40">
+            <div key={card.id} className="text-sm p-3 bg-secondary/40">
               <p className="font-semibold text-foreground">{i + 1}. {card.card_name}</p>
               {card.card_set && <p className="text-muted-foreground">{card.card_set}</p>}
             </div>
@@ -478,7 +478,7 @@ export default async function OrderDetailPage({
       </div>
 
       {(signatures?.length ?? 0) > 0 && (
-        <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <div className="px-window-ink p-6 mb-5">
           <h2 className="font-heading font-black text-lg text-foreground mb-4">Documents You Signed</h2>
           <ul className="flex flex-col gap-2.5 text-sm">
             {(signatures ?? []).map((s) => (
@@ -495,14 +495,14 @@ export default async function OrderDetailPage({
       )}
 
       {signedAgreements.length > 0 && (
-        <div className="bg-white rounded-xl border border-border p-6 mb-5">
+        <div className="px-window-ink p-6 mb-5">
           <h2 className="font-heading font-black text-lg text-foreground mb-4">Agreements You Signed</h2>
           <SignedAgreements agreements={signedAgreements} />
         </div>
       )}
 
       {/* Services & total */}
-      <div className="bg-white rounded-xl border border-border p-6 mb-5">
+      <div className="px-window-ink p-6 mb-5">
         <h2 className="font-heading font-black text-lg text-foreground mb-4">Order Summary</h2>
         <div className="flex flex-col gap-2 text-sm">
           {services?.map((s) => (

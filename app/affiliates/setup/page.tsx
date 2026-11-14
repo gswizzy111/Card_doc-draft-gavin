@@ -55,7 +55,7 @@ function Setup() {
         <label htmlFor="setup-confirm" className={PORTAL_LABEL_CN}>Confirm Password</label>
         <input id="setup-confirm" type="password" autoComplete="new-password" minLength={MIN} required value={confirm} onChange={(e) => setConfirm(e.target.value)} className={PORTAL_INPUT_CN} />
       </div>
-      {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+      {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
       <button type="submit" disabled={saving} className={PORTAL_BUTTON_CN}>{saving ? "Saving..." : "Save and open my dashboard"}</button>
     </form>
   );

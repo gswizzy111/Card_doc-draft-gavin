@@ -16,8 +16,11 @@ import { MissingNote, Need, Req, revealMissing } from "@/components/checkout/req
 import { useAccountPrefill } from "@/lib/use-account-prefill";
 import type { KitRate } from "@/lib/kit-shipping";
 import { giftCardCents } from "@/lib/order-totals";
+import { pixelButton } from "@/components/pixel/pixel-button";
+import { Window } from "@/components/pixel/window";
+import { PixelIcon } from "@/components/pixel/sprites";
 
-const INPUT_CN = "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm";
+const INPUT_CN = "h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
 
 const COUNTRIES = [
   { code: "CA", name: "Canada" },
@@ -53,7 +56,7 @@ const COUNTRIES = [
 // If Shippo can't quote at all, US orders still go through at the old flat
 // rate (no rate ID, so the label is bought by hand as before)
 const FLAT_US_SHIPPING: KitRate = { id: "", provider: "", service: "Standard Shipping", days: null, postageCents: 599, priceCents: 599 };
-const SELECT_CN = "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none";
+const SELECT_CN = "flex h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
 
 function rateName(r: KitRate) {
   return [r.provider, r.service].filter(Boolean).join(" ");
@@ -292,29 +295,37 @@ function CheckoutInner() {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-xl mx-auto px-6 py-24 text-center">
-        <p className="text-muted-foreground mb-4">Your cart is empty.</p>
-        <Button render={<Link href="/shop" />}>Browse Shop</Button>
+      <div className="mx-auto max-w-xl px-4 py-24">
+        <Window variant="dialog" className="flex flex-col items-center gap-5 px-6 py-8 text-center">
+          <PixelIcon name="cart" size={48} />
+          <p className="text-[15px] text-ink">Your cart is empty.</p>
+          <Link href="/shop" className={pixelButton({ size: "md" })}>Browse Shop</Link>
+        </Window>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 md:px-8 py-12">
-      <div className="flex items-center gap-3 mb-8">
-        <h1 className="font-heading font-extrabold text-3xl text-foreground">Checkout</h1>
+    <div className="mx-auto max-w-5xl px-4 py-12 md:px-8 md:py-16">
+      <p aria-hidden className="mb-5 inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
+        <span className="text-coral-deep">▶</span>CHECK-OUT
+      </p>
+      <div className="mb-10 flex flex-wrap items-center gap-4">
+        <h1 className="font-heading text-[2.75rem] uppercase leading-none tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl">Checkout</h1>
         {isInternational && (
-          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">International</span>
+          <span className="inline-flex h-7 items-center gap-2 bg-powder px-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
+            <span aria-hidden className="size-2 bg-frame-deep" />International
+          </span>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-5 lg:gap-10">
         {/* Form */}
-        <div className="lg:col-span-3 flex flex-col gap-6">
+        <div className="flex flex-col gap-10 lg:col-span-3">
 
           {/* Contact */}
-          <div className="bg-white border border-border rounded-lg p-6">
-            <h2 className="font-heading font-extrabold text-lg text-foreground mb-4">Contact</h2>
+          <div className="px-window p-5 sm:p-6">
+            <h2 className="mb-5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="user" size={16} /></span>Contact</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Need missing={miss(form.name)} className="sm:col-span-2 flex flex-col gap-1.5">
                 <Label>Full Name<Req /></Label>
@@ -332,8 +343,8 @@ function CheckoutInner() {
           </div>
 
           {/* Shipping Address */}
-          <div className="bg-white border border-border rounded-lg p-6">
-            <h2 className="font-heading font-extrabold text-lg text-foreground mb-4">Shipping Address</h2>
+          <div className="px-window p-5 sm:p-6">
+            <h2 className="mb-5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="box" size={16} /></span>Shipping Address</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {isInternational && (
                 <Need missing={miss(form.country)} className="sm:col-span-2 flex flex-col gap-1.5">
@@ -396,40 +407,40 @@ function CheckoutInner() {
             </div>
 
             {addressStarted && addressIssue && (
-              <p role="alert" className="text-xs font-semibold text-red-600 mt-3">{addressIssue}</p>
+              <p role="alert" className="mt-3 text-sm font-semibold text-destructive">{addressIssue}</p>
             )}
 
             {/* Shipping options: live prices for this address, by speed */}
-            <Need missing={showMissing && isAddressValid() && !(rateStatus === "done" && chosenRate)} note="See shipping options and choose one." className="mt-5 pt-5 border-t border-border">
-              <h3 className="text-sm font-bold text-foreground mb-3">Shipping speed<Req /></h3>
+            <Need missing={showMissing && isAddressValid() && !(rateStatus === "done" && chosenRate)} note="See shipping options and choose one." className="mt-6 border-t-[3px] border-dashed border-rule pt-5">
+              <h3 className="mb-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink">Shipping speed<Req /></h3>
               {rateStatus !== "done" && (
                 <button
                   type="button"
                   onClick={() => (isAddressValid() ? calculateShipping() : showWhatsMissing())}
                   disabled={rateStatus === "loading"}
-                  className="w-full h-10 bg-secondary text-foreground text-sm font-bold rounded-lg hover:bg-secondary/70 disabled:opacity-40 transition-colors"
+                  className={pixelButton({ tone: "mint", size: "md", className: "w-full disabled:opacity-45" })}
                 >
                   {rateStatus === "loading" ? "Getting prices..." : "See shipping options"}
                 </button>
               )}
               {rateStatus === "idle" && !isAddressValid() && (
-                <p className="text-xs text-muted-foreground mt-2">Fill in your contact details and address to see prices.</p>
+                <p className="mt-2 text-sm text-ink-soft">Fill in your contact details and address to see prices.</p>
               )}
               {rateStatus === "error" && (
-                <p role="alert" className="text-xs font-semibold text-red-600 mt-2">{rateError}</p>
+                <p role="alert" className="mt-2 text-sm font-semibold text-destructive">{rateError}</p>
               )}
 
               {rateStatus === "done" && rates.length > 0 && (
                 <fieldset>
                   <legend className="sr-only">Choose a shipping speed</legend>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-3">
                     {rates.map((r) => {
                       const chosen = chosenRate?.id === r.id;
                       return (
                         <label
                           key={r.id || "flat"}
-                          className={`flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50 ${
-                            chosen ? "border-rx bg-rx-soft" : "border-border hover:border-rx/50"
+                          className={`flex min-h-14 cursor-pointer items-center gap-3 px-4 py-3 px-frame has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-frame-deep ${
+                            chosen ? "bg-rx-soft" : "bg-panel hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]"
                           }`}
                         >
                           <input
@@ -438,18 +449,18 @@ function CheckoutInner() {
                             value={r.id}
                             checked={chosen}
                             onChange={() => setChosenRate(r)}
-                            className="h-4 w-4 shrink-0 accent-[var(--rx)]"
+                            className="size-4 shrink-0 accent-[var(--rx)]"
                           />
                           <span className="flex-1 min-w-0">
-                            <span className={`block text-sm font-semibold ${chosen ? "text-rx" : "text-foreground"}`}>{rateName(r)}</span>
-                            {rateEta(r) && <span className="block text-xs text-muted-foreground">{rateEta(r)}</span>}
+                            <span className={`block text-[15px] font-semibold ${chosen ? "text-coral-deep" : "text-ink"}`}>{rateName(r)}</span>
+                            {rateEta(r) && <span className="block text-sm text-ink-soft">{rateEta(r)}</span>}
                           </span>
-                          <span className={`text-sm font-bold tabular-nums ${chosen ? "text-rx" : "text-foreground"}`}>{formatCurrency(r.priceCents)}</span>
+                          <span className={`font-heading text-xl tabular-nums ${chosen ? "text-coral-deep" : "text-ink"}`}>{formatCurrency(r.priceCents)}</span>
                         </label>
                       );
                     })}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <p className="mt-3 text-sm text-ink-soft">
                     {rates[0].id
                       ? `Prices include ${formatCurrency(rates[0].priceCents - rates[0].postageCents)} handling. Your shipping label is created as soon as you pay.`
                       : "Live shipping prices aren't available right now, so standard shipping applies."}
@@ -460,107 +471,108 @@ function CheckoutInner() {
           </div>
 
           {/* Creator Code */}
-          <div className="bg-white border border-border rounded-lg p-6">
-            <h2 className="font-heading font-extrabold text-lg text-foreground mb-1">Creator Code</h2>
-            <p className="text-xs text-muted-foreground mb-3">Have a creator code? Enter it here.</p>
-            <div className="flex gap-2">
+          <div className="px-window p-5 sm:p-6">
+            <h2 className="mb-1.5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="star" size={16} /></span>Creator Code</h2>
+            <p className="mb-4 text-sm text-ink-soft">Have a creator code? Enter it here.</p>
+            <div className="flex gap-3">
               <Input
                 value={codeInput}
                 onChange={(e) => { setCodeInput(e.target.value.toUpperCase()); setCodeStatus("idle"); setCreatorCode(""); setDiscountPercent(0); }}
                 onBlur={applyCreatorCode}
                 placeholder="CREATORCODE"
-                className="flex-1 font-mono uppercase"
+                className="h-11 flex-1 font-mono uppercase"
               />
               <button type="button" onClick={applyCreatorCode}
-                className="px-4 h-9 bg-secondary text-foreground text-sm font-bold rounded-lg hover:bg-secondary/70 transition-colors whitespace-nowrap">
+                className={pixelButton({ tone: "panel", size: "sm", className: "h-11 shrink-0" })}>
                 Apply
               </button>
             </div>
-            {codeStatus === "checking" && <p className="text-xs text-muted-foreground mt-2">Checking...</p>}
-            {codeStatus === "valid" && discountPercent > 0 && <p className="text-xs text-rx font-semibold mt-2"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />{discountPercent}% discount applied</p>}
-            {codeStatus === "valid" && discountPercent === 0 && <p className="text-xs text-rx font-semibold mt-2"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />Code applied</p>}
-            {codeStatus === "invalid" && <p className="text-xs text-red-600 mt-2">Invalid code. Please try again.</p>}
+            {codeStatus === "checking" && <p className="mt-2 text-sm text-ink-soft">Checking...</p>}
+            {codeStatus === "valid" && discountPercent > 0 && <p className="mt-2 text-sm font-semibold text-mint-deep"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />{discountPercent}% discount applied</p>}
+            {codeStatus === "valid" && discountPercent === 0 && <p className="mt-2 text-sm font-semibold text-mint-deep"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />Code applied</p>}
+            {codeStatus === "invalid" && <p className="mt-2 text-sm font-semibold text-destructive">Invalid code. Please try again.</p>}
           </div>
 
           {/* Gift Card */}
-          <div className="bg-white border border-border rounded-lg p-6">
-            <h2 className="font-heading font-extrabold text-lg text-foreground mb-1">Gift Card</h2>
-            <p className="text-xs text-muted-foreground mb-3">Have a gift card code? Enter it here.</p>
-            <div className="flex gap-2">
+          <div className="px-window p-5 sm:p-6">
+            <h2 className="mb-1.5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="gift" size={16} /></span>Gift Card</h2>
+            <p className="mb-4 text-sm text-ink-soft">Have a gift card code? Enter it here.</p>
+            <div className="flex gap-3">
               <Input
                 value={gcInput}
                 onChange={(e) => { setGcInput(e.target.value.toUpperCase()); setGcStatus("idle"); setGiftCardCode(""); setGiftCardAmountCents(0); }}
                 placeholder="GIFT-XXXX-XXXX"
-                className="flex-1 font-mono uppercase"
+                className="h-11 flex-1 font-mono uppercase"
               />
               <button type="button" onClick={validateGiftCard}
-                className="px-4 h-9 bg-secondary text-foreground text-sm font-bold rounded-lg hover:bg-secondary/70 transition-colors whitespace-nowrap">
+                className={pixelButton({ tone: "panel", size: "sm", className: "h-11 shrink-0" })}>
                 Apply
               </button>
             </div>
-            {gcStatus === "valid" && gcApplied > 0 && <p className="text-xs text-rx font-semibold mt-2"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />{formatCurrency(gcApplied)} off applied</p>}
-            {gcStatus === "invalid" && <p className="text-xs text-red-600 mt-2">Invalid or already used gift card.</p>}
+            {gcStatus === "valid" && gcApplied > 0 && <p className="mt-2 text-sm font-semibold text-mint-deep"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />{formatCurrency(gcApplied)} off applied</p>}
+            {gcStatus === "invalid" && <p className="mt-2 text-sm font-semibold text-destructive">Invalid or already used gift card.</p>}
           </div>
         </div>
 
         {/* Order summary */}
         <div className="lg:col-span-2">
-          <div className="bg-white border border-border rounded-lg p-6 sticky top-24">
-            <h2 className="font-heading font-extrabold text-lg text-foreground mb-4">Order Summary</h2>
+          <Window title="▶ RECEIPT" className="sticky top-24 pt-7">
+            <h2 className="mb-5 font-heading text-2xl uppercase tracking-[0.02em] text-ink">Order Summary</h2>
             <div className="flex flex-col gap-3 mb-4">
               {items.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{item.name} × {item.quantity}</span>
-                  <span className="font-medium">{formatCurrency(item.price_cents * item.quantity)}</span>
+                <div key={item.id} className="flex justify-between gap-3 text-sm">
+                  <span className="text-ink-soft">{item.name} × {item.quantity}</span>
+                  <span className="shrink-0 font-medium tabular-nums">{formatCurrency(item.price_cents * item.quantity)}</span>
                 </div>
               ))}
               {discountCents > 0 && (
-                <div className="flex justify-between text-sm text-green-600 font-semibold">
+                <div className="flex justify-between text-sm font-semibold text-mint-deep">
                   <span>Discount ({discountPercent}% off)</span>
                   <span>−{formatCurrency(discountCents)}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Sales Tax (6.625%)</span>
-                <span className="font-medium">{formatCurrency(taxCents)}</span>
+                <span className="text-ink-soft">Sales Tax (6.625%)</span>
+                <span className="font-medium tabular-nums">{formatCurrency(taxCents)}</span>
               </div>
               <div className="flex justify-between gap-3 text-sm">
-                <span className="text-muted-foreground">
+                <span className="text-ink-soft">
                   Shipping{chosenRate ? <span className="block text-xs">{rateName(chosenRate)}</span> : null}
                 </span>
                 {chosenRate
                   ? <span className="font-medium">{formatCurrency(shippingCents)}</span>
-                  : <span className="text-muted-foreground text-xs">Choose a speed</span>}
+                  : <span className="text-sm text-ink-soft">Choose a speed</span>}
               </div>
               {gcApplied > 0 && (
-                <div className="flex justify-between text-sm text-green-600 font-semibold">
+                <div className="flex justify-between text-sm font-semibold text-mint-deep">
                   <span>Gift Card</span>
                   <span>−{formatCurrency(gcApplied)}</span>
                 </div>
               )}
-              <div className="border-t border-border pt-2 flex justify-between font-bold">
+              <div className="mt-1 flex items-baseline justify-between border-t-[3px] border-dashed border-ink/40 pt-3 font-heading text-2xl uppercase text-ink">
                 <span>Total</span>
-                <span className="text-primary">{formatCurrency(finalTotal)}</span>
+                <span className="tabular-nums">{formatCurrency(finalTotal)}</span>
               </div>
             </div>
             {!chosenRate && (
-              <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-4">
+              <p className="mb-5 bg-butter/40 px-3 py-2.5 text-sm text-ink px-frame">
                 Enter your address and choose a shipping speed before paying.
               </p>
             )}
-            <p className="flex items-start gap-2 text-sm text-ink mb-4">
-              <Info className="h-4 w-4 mt-0.5 shrink-0 text-rx" strokeWidth={1.75} />
+            <p className="mb-5 flex items-start gap-2 text-sm text-ink">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-coral-deep" strokeWidth={1.75} />
               All sales final. Defective or missing items are replaced or refunded.
             </p>
             <Button
               onClick={handleCheckout}
               disabled={submitting}
-              className="w-full font-bold"
+              size="lg"
+              className="w-full"
             >
               {submitting ? "Redirecting..." : "Pay Securely with Stripe"}
             </Button>
             <MissingNote show={showMissing && !canPay()} />
-          </div>
+          </Window>
         </div>
       </div>
     </div>

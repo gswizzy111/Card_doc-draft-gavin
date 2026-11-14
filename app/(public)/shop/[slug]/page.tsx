@@ -11,6 +11,7 @@ import { Info, RefreshCw } from "lucide-react";
 import { isSoldOut } from "@/lib/site-config";
 import { PixelViewContent } from "@/components/pixel-view-content";
 import { getSubscriptionPriceCents } from "@/lib/store-config";
+import { PixelIcon, Window, pixelButton } from "@/components/pixel";
 
 export const dynamic = "force-dynamic";
 
@@ -45,16 +46,16 @@ function DescriptionBlock({ text }: { text: string }) {
       return (
         <ul className="flex flex-col gap-2">
           {items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-sm">
-              <span className="mt-[9px] h-1 w-1 rounded-full bg-rx shrink-0" aria-hidden />
-              <span className="text-muted-foreground">{item.trim()}</span>
+            <li key={i} className="flex items-start gap-3 text-[15px] leading-relaxed">
+              <span className="mt-[9px] size-2 shrink-0 bg-mint-deep" aria-hidden />
+              <span className="text-ink">{item.trim()}</span>
             </li>
           ))}
         </ul>
       );
     }
   }
-  return <p className="text-muted-foreground leading-relaxed text-sm">{text}</p>;
+  return <p className="text-[15px] leading-relaxed text-ink">{text}</p>;
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -90,58 +91,78 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 md:px-10 py-10 md:py-14">
+    <div className="mx-auto max-w-6xl px-4 py-10 md:px-10 md:py-14">
       <JsonLd data={structured} />
       <PixelViewContent contentName={product.name} contentCategory={product.category ?? "Shop"} />
-      <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 block">
+      <Link
+        href="/shop"
+        className="menu-cursor-item mb-8 inline-flex min-h-11 items-center gap-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft hover:text-ink focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep"
+      >
         &larr; Back to Shop
       </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
-        {/* Images */}
-        <div className="flex flex-col gap-3">
-          <div className="aspect-square bg-secondary overflow-hidden rounded-lg border border-rule">
-            {product.images?.[0] ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-secondary" />
-            )}
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16">
+        {/* The item on the exam table */}
+        <div className="flex flex-col gap-5">
+          <div className="px-window-ink p-3">
+            <div className="relative aspect-square overflow-hidden bg-muted shadow-[inset_0_0_0_3px_var(--ink)]">
+              {product.images?.[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover p-[3px]" />
+              ) : (
+                <div aria-hidden className="grid h-full w-full place-items-center px-dither">
+                  <PixelIcon name="kit" size={48} />
+                </div>
+              )}
+            </div>
           </div>
           {product.images?.length > 1 && (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-3">
               {product.images.slice(1).map((url: string, i: number) => (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img key={i} src={url} alt={product.name} className="w-16 h-16 object-cover rounded-md border border-rule" />
+                <img key={i} src={url} alt={product.name} className="size-16 bg-panel object-cover p-[3px] px-frame" />
               ))}
             </div>
           )}
         </div>
 
-        {/* Info */}
-        <div className="flex flex-col gap-6">
+        {/* Item card */}
+        <div className="flex flex-col gap-7">
           <div>
-            <p className="rx-label text-rx mb-2">
-              {product.category}
-            </p>
-            <h1 className="font-heading text-3xl md:text-5xl font-extrabold tracking-[-0.015em] text-ink mb-3">{product.name}</h1>
+            {product.category && (
+              <p className="mb-4 inline-flex h-7 items-center gap-2 bg-powder px-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
+                <span aria-hidden className="size-2 bg-frame-deep" />
+                {product.category}
+              </p>
+            )}
+            <h1 className="mb-5 font-heading text-[2.5rem] uppercase leading-[0.95] tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl">{product.name}</h1>
 
-            <p className="font-heading text-3xl font-bold tracking-[-0.01em] text-ink tabular-nums">{formatCurrency(product.price_cents)}</p>
+            <p className="inline-flex h-12 items-center gap-2.5 bg-butter pr-4 pl-3 font-heading text-[2rem] leading-none text-ink tabular-nums px-frame-shadow">
+              <span aria-hidden className="size-2 bg-ink" />
+              {formatCurrency(product.price_cents)}
+            </p>
           </div>
 
-          {product.description && <DescriptionBlock text={product.description} />}
-
-          {product.inventory_count > 0 && product.inventory_count <= 5 && (
-            <p className="font-mono text-xs text-rx">Only {product.inventory_count} left in stock</p>
+          {product.description && (
+            <Window title="ITEM INFO" className="pt-6">
+              <DescriptionBlock text={product.description} />
+            </Window>
           )}
 
-          <div className="border-t border-border pt-6 flex flex-col gap-4">
+          {product.inventory_count > 0 && product.inventory_count <= 5 && (
+            <p className="inline-flex items-center gap-2 self-start font-pixel text-xs uppercase tracking-[0.04em] text-coral-deep">
+              <span aria-hidden className="size-2 bg-coral-deep px-blink" />
+              Only {product.inventory_count} left in stock
+            </p>
+          )}
+
+          <div className="flex flex-col gap-4">
             {isSoldOut() ? (
-              <div className="flex items-center justify-center h-13 rounded-md bg-secondary border border-rule">
-                <span className="font-bold text-muted-foreground tracking-widest uppercase text-sm">Sold Out — Back Soon</span>
+              <div className="flex h-14 items-center justify-center bg-muted px-frame">
+                <span className="font-heading text-lg uppercase tracking-[0.04em] text-ink-soft">Sold Out — Back Soon</span>
               </div>
             ) : product.inventory_count === 0 ? (
-              <p className="text-muted-foreground font-medium">Out of stock</p>
+              <p className="font-heading text-xl uppercase tracking-[0.02em] text-ink-soft">Out of stock</p>
             ) : (
               <AddToCartButtonLarge
                 product={{
@@ -158,15 +179,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {!isSoldOut() && product.name.toLowerCase().includes("kit") && (
               <Link
                 href="/subscribe"
-                className="w-full flex items-center justify-center gap-2 h-13 font-semibold text-sm tracking-wide border border-ink/70 text-ink hover:border-rx hover:text-rx active:scale-[0.98] transition-all duration-150 rounded-md"
+                className={pixelButton({ tone: "mint", size: "lg", className: "h-auto min-h-14 w-full whitespace-normal py-3 text-center text-base leading-tight" })}
               >
-                <RefreshCw className="h-4 w-4" />
+                <RefreshCw className="h-4 w-4 shrink-0" strokeWidth={1.75} />
                 Subscribe — {formatCurrency(subscriptionPriceCents)}/mo · Save every month
               </Link>
             )}
 
-            <p className="flex items-start gap-2 text-sm text-ink">
-              <Info className="h-4 w-4 mt-0.5 shrink-0 text-rx" strokeWidth={1.75} />
+            <p className="mt-1 flex items-start gap-2.5 bg-panel/80 p-3 text-sm leading-relaxed text-ink px-frame">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-coral-deep" strokeWidth={1.75} />
               All sales final. Defective or missing items are replaced or refunded.
             </p>
           </div>

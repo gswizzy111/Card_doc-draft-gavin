@@ -68,10 +68,13 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
     : "Est. turnaround: 15–20 days from receipt";
 
   return (
-    <div className="bg-white border border-border rounded-lg p-6 flex flex-col gap-4">
-      <h3 className="font-heading font-extrabold text-lg text-foreground">Order Summary</h3>
+    <div className="px-window mt-4 flex flex-col gap-4 p-5 pt-7 sm:p-6 sm:pt-7">
+      <span aria-hidden className="absolute -top-4 left-4 z-[1] inline-flex h-7 items-center gap-2 bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame">
+        <span className="text-coral-deep">▶</span>CHART
+      </span>
+      <h3 className="font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink">Order Summary</h3>
 
-      <div className="flex flex-col gap-1 text-sm border-b border-border pb-3">
+      <div className="flex flex-col gap-1.5 border-b-[3px] border-dashed border-rule pb-4 text-sm">
         {isMixed ? (
           tierEntries.map(([tierId, count]) => {
             const tier = tierOf(tierId);
@@ -99,13 +102,13 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
         )}
       </div>
 
-      <div className="flex flex-col gap-1 text-sm">
+      <div className="flex flex-col gap-1.5 text-sm">
         <div className="flex justify-between text-muted-foreground">
           <span>Subtotal</span>
           <span>{formatCurrency(subtotal)}</span>
         </div>
         {discountCents > 0 && (
-          <div className="flex justify-between text-green-700 font-semibold">
+          <div className="flex justify-between text-mint-deep font-semibold">
             <span>
               {discountKind === "bulk"
                 ? `Bulk discount (${discountPercentApplied}% off, ${cards.length} cards)`
@@ -137,13 +140,13 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
           </div>
         )}
         {slabCrackCents > 0 && (
-          <div className="flex justify-between text-amber-700">
+          <div className="flex justify-between text-ink">
             <span>Slab Cracking × {slabCrackCount}</span>
             <span>{formatCurrency(slabCrackCents)}</span>
           </div>
         )}
         {pregradeCents > 0 && (
-          <div className="flex justify-between text-green-700">
+          <div className="flex justify-between text-mint-deep">
             <span>Pregrade × {pregradeCount}</span>
             <span>{formatCurrency(pregradeCents)}</span>
           </div>
@@ -155,7 +158,7 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
           </div>
         )}
         {giftCardCents > 0 && (
-          <div className="flex justify-between text-green-700 font-semibold">
+          <div className="flex justify-between text-mint-deep font-semibold">
             <span>Gift Card</span>
             <span>−{formatCurrency(giftCardCents)}</span>
           </div>
@@ -166,13 +169,13 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
             <span>{formatCurrency(tipCents)}</span>
           </div>
         )}
-        <div className="flex justify-between font-bold text-foreground pt-1 border-t border-border text-base">
+        <div className="mt-1.5 flex items-baseline justify-between border-t-[3px] border-dashed border-ink/40 pt-3 font-heading text-2xl uppercase text-ink">
           <span>Total</span>
-          <span className="text-primary">{formatCurrency(total)}</span>
+          <span className="tabular-nums">{formatCurrency(total)}</span>
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground">{turnaroundText}</p>
+      <p className="flex items-center gap-2 text-sm text-ink-soft"><span aria-hidden className="size-2 shrink-0 bg-frame-deep" />{turnaroundText}</p>
     </div>
   );
 }

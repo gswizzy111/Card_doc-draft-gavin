@@ -13,7 +13,7 @@ export function AccountHeader({ email, active }: { email: string; active: "order
     </Link>
   );
   return (
-    <header className="bg-white border-b border-border sticky top-0 z-10">
+    <header className="bg-panel border-b border-border sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-5 sm:gap-6 min-w-0">
           <Link href="/" className="font-heading font-black text-lg text-foreground hover:text-primary transition-colors shrink-0">

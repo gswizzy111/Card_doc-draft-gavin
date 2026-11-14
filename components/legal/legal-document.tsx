@@ -9,7 +9,7 @@ import { LinkedText } from "./linked-text";
 export function LegalDocument({
   blocks,
   variant = "page",
-  linkClassName = "font-semibold text-primary underline underline-offset-2 hover:opacity-80",
+  linkClassName = "font-semibold text-coral-deep underline underline-offset-2 hover:text-ink",
 }: {
   blocks: DocBlock[];
   variant?: "page" | "compact";
@@ -17,18 +17,18 @@ export function LegalDocument({
 }) {
   const page = variant === "page";
   return (
-    <div className={page ? "flex flex-col gap-4 text-[15px] md:text-base leading-relaxed text-muted-foreground" : "flex flex-col gap-2.5 text-[13px] leading-relaxed text-muted-foreground"}>
+    <div className={page ? "flex flex-col gap-4 font-sans text-[15px] md:text-base leading-relaxed text-ink-soft" : "flex flex-col gap-2.5 text-[13px] leading-relaxed text-muted-foreground"}>
       {blocks.map((b, i) => {
         if (b.kind === "title") {
           return (
-            <p key={i} className={page ? "font-heading text-xl md:text-2xl font-extrabold tracking-[-0.01em] text-foreground" : "font-bold text-foreground"}>
+            <p key={i} className={page ? "font-heading text-2xl md:text-3xl uppercase leading-[1.05] tracking-[0.02em] text-ink" : "font-bold text-foreground"}>
               {b.text}
             </p>
           );
         }
         if (b.kind === "heading") {
           return page ? (
-            <h2 key={i} id={b.id} className="scroll-mt-28 mt-8 border-t border-foreground/60 pt-6 font-heading text-2xl md:text-3xl font-extrabold tracking-[-0.01em] text-foreground">
+            <h2 key={i} id={b.id} className="scroll-mt-28 mt-8 border-t-2 border-dashed border-ink/25 pt-6 font-heading text-2xl md:text-3xl leading-[1.05] tracking-[0.02em] text-ink">
               {b.text}
             </h2>
           ) : (
@@ -40,7 +40,7 @@ export function LegalDocument({
             <ul key={i} className={page ? "flex flex-col gap-2.5" : "flex flex-col gap-1.5"}>
               {b.items.map((item, j) => (
                 <li key={j} className="flex items-start gap-3">
-                  <span className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  <span className="mt-[0.55em] size-2 shrink-0 bg-coral-deep" aria-hidden />
                   <span><LinkedText text={item} linkClassName={linkClassName} /></span>
                 </li>
               ))}
@@ -52,7 +52,7 @@ export function LegalDocument({
           <p key={i}>
             {clause ? (
               <>
-                <span className="font-semibold text-foreground">{clause}</span>
+                <span className="font-semibold text-ink">{clause}</span>
                 <LinkedText text={b.text.slice(clause.length)} linkClassName={linkClassName} />
               </>
             ) : (

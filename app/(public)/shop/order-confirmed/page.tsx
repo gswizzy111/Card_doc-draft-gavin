@@ -1,6 +1,5 @@
-import { CheckCircle } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { PixelIcon, SparkleSprite, StatusChip, Window, pixelButton } from "@/components/pixel";
 import { ClearCartAfterPayment } from "@/components/clear-cart-after-payment";
 import { PurchasePixel } from "@/components/purchase-pixel";
 import { readCheckoutReturn } from "@/lib/checkout-return";
@@ -21,18 +20,25 @@ export default async function ShopOrderConfirmedPage({
   );
 
   return (
-    <section className="flex-1 flex items-center justify-center min-h-[70vh] px-6">
+    <section className="flex min-h-[70vh] flex-1 items-center justify-center px-4 py-16">
       <PurchasePixel sessionId={sessionId} amountCents={amountCents} currency={currency} />
       <ClearCartAfterPayment paid={!!sessionId && complete !== false} />
-      <div className="max-w-sm w-full text-center flex flex-col items-center gap-6">
-        <CheckCircle className="h-16 w-16 text-primary" />
-        <div>
-          <h1 className="font-heading font-extrabold text-4xl text-foreground mb-2">Order Confirmed!</h1>
-          <p className="text-muted-foreground text-sm">Thanks for your order. We&apos;ll ship it out shortly and send you a tracking number.</p>
+      <div className="flex w-full max-w-md flex-col items-center gap-8 text-center">
+        {/* Discharged: the parcel leaves the pharmacy */}
+        <div aria-hidden className="relative grid size-32 place-items-center bg-mint px-frame-shadow">
+          <span className="absolute inset-2 px-dither opacity-60" />
+          <span className="relative"><PixelIcon name="box" size={64} /></span>
+          <span className="absolute -top-3 -right-3"><SparkleSprite scale={3} /></span>
+          <span className="absolute -bottom-2 -left-3"><SparkleSprite scale={2} delay={0.36} /></span>
         </div>
-        <div className="flex flex-col gap-3 w-full">
-          <Button render={<Link href="/shop" />} className="font-bold w-full">Continue Shopping</Button>
-          <Button variant="outline" render={<Link href="/" />} className="font-bold w-full border">Back to Home</Button>
+        <StatusChip status="discharged" />
+        <Window variant="dialog" className="w-full px-6 py-7">
+          <h1 className="mb-3 font-heading text-[2.75rem] uppercase leading-none tracking-[0.01em] text-ink md:text-5xl">Order Confirmed!</h1>
+          <p className="text-[15px] leading-relaxed text-ink-soft">Thanks for your order. We&apos;ll ship it out shortly and send you a tracking number.</p>
+        </Window>
+        <div className="flex w-full flex-col gap-3">
+          <Link href="/shop" className={pixelButton({ size: "md", className: "w-full" })}>Continue Shopping</Link>
+          <Link href="/" className={pixelButton({ tone: "panel", size: "md", className: "w-full" })}>Back to Home</Link>
         </div>
       </div>
     </section>

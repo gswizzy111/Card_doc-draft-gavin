@@ -6,9 +6,11 @@ import { ChevronsLeftRight } from "lucide-react";
 import { BeforeAfter } from "@/components/motion/before-after";
 import { usePrefersReducedMotion } from "@/components/motion/use-reduced-motion";
 import type { ResultCase } from "@/lib/about";
+import { HpBar } from "@/components/pixel/hp-bar";
 
 /**
- * Real before/after results on the ink stage, one case per slide. The slides
+ * Real before/after results on the night stage (the clinic's patient wall),
+ * one case per slide, each photo framed in pixel UI. The slides
  * sit in a native scroll-snap track: phones swipe between them (the next one
  * peeks in), and the case names above jump to one on any screen. A slider
  * case is the drag/keyboard <BeforeAfter/>; a composite case is the owner's
@@ -60,7 +62,7 @@ export function ResultsGallery({ cases }: { cases: ResultCase[] }) {
   return (
     <div>
       {cases.length > 1 && (
-        <div className="mb-8 md:mb-10 flex flex-wrap items-center gap-2" aria-label="Choose a result">
+        <div className="mb-8 md:mb-10 flex flex-wrap items-center gap-3" aria-label="Choose a result">
           {cases.map((c, i) => (
             <button
               key={c.id}
@@ -68,16 +70,17 @@ export function ResultsGallery({ cases }: { cases: ResultCase[] }) {
               onClick={() => go(i)}
               aria-controls={`result-${c.id}`}
               aria-current={i === active ? "true" : undefined}
-              className={`press h-10 rounded-full px-5 text-sm font-semibold transition-colors duration-200 ${
+              className={`menu-cursor-item press inline-flex h-11 items-center gap-2 px-4 font-pixel text-xs uppercase tracking-[0.04em] transition-colors duration-100 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-butter ${
                 i === active
-                  ? "bg-stage-fg text-stage"
-                  : "text-stage-muted ring-1 ring-inset ring-white/20 hover:text-stage-fg hover:ring-white/45"
+                  ? "bg-butter text-ink px-frame"
+                  : "bg-night-raise text-stage-fg shadow-[inset_0_0_0_2px_color-mix(in_srgb,var(--stage-muted)_45%,transparent)] hover:bg-[color-mix(in_srgb,var(--butter)_22%,var(--night-raise))]"
               }`}
             >
+              <span aria-hidden className={i === active ? "text-coral-deep" : "hidden"}>▶</span>
               {c.card}
             </button>
           ))}
-          <span className="ml-auto rx-label text-stage-muted tabular-nums" aria-live="polite">
+          <span className="ml-auto rx-label text-butter tabular-nums" aria-live="polite">
             {active + 1} / {cases.length}
           </span>
         </div>
@@ -98,7 +101,7 @@ export function ResultsGallery({ cases }: { cases: ResultCase[] }) {
           >
             <div className="md:col-span-7">
               {c.kind === "slider" ? (
-                <div className="rounded-lg bg-white p-2 md:p-2.5 ring-1 ring-white/10 shadow-[0_40px_80px_-40px_oklch(0_0_0/0.75)]">
+                <div className="bg-panel p-2 md:p-3 px-frame-shadow shadow-[0_0_0_3px_var(--frame)]">
                   <BeforeAfter
                     before={c.before}
                     after={c.after}
@@ -108,20 +111,21 @@ export function ResultsGallery({ cases }: { cases: ResultCase[] }) {
                   />
                 </div>
               ) : (
-                <div className="mx-auto max-w-[30rem]">
+                <div className="mx-auto max-w-[30rem] bg-panel p-2 md:p-3 px-frame-shadow">
                   <Image
                     src={c.image}
                     alt={c.alt}
                     sizes="(min-width: 768px) 480px, 88vw"
-                    className="w-full h-auto drop-shadow-[0_30px_40px_oklch(0_0_0/0.45)]"
+                    className="w-full h-auto"
                   />
                 </div>
               )}
             </div>
 
             <div className="md:col-span-5">
-              <h3 className="font-heading text-[1.75rem] md:text-4xl leading-[1.05] tracking-[-0.015em] text-stage-fg">{c.card}</h3>
-              {c.detail && <p className="mt-3 rx-label text-stage-muted">{c.detail}</p>}
+              <h3 className="font-heading uppercase text-[2rem] md:text-5xl leading-[1] tracking-[0.02em] text-stage-fg">{c.card}</h3>
+              {c.detail && <p className="mt-3 inline-flex min-h-7 items-center bg-night-raise px-2.5 py-1 rx-label text-butter px-frame">{c.detail}</p>}
+              <HpBar animate from={0.2} className="mt-5 max-w-[18rem] [&>span:first-child]:text-stage-fg" />
               <p className="mt-4 text-base md:text-[17px] leading-relaxed text-stage-muted max-w-[42ch]">{c.caption}</p>
               {c.kind === "slider" && (
                 <p className="mt-6 flex items-center gap-2.5 text-sm text-stage-muted">

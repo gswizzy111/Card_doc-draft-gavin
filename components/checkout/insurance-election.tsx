@@ -32,7 +32,7 @@ export function InsuranceElectionBox({
 }) {
   const option = (value: Exclude<InsuranceElection, null>, label: string, Icon: typeof ShieldCheck, disabled = false) => (
     <label
-      className={`flex items-start gap-3 rounded-lg border p-3 transition-colors ${
+      className={`flex items-start gap-3 border p-3 transition-colors ${
         disabled ? "opacity-50 cursor-not-allowed border-border" : election === value ? "border-primary bg-primary/5 cursor-pointer" : "border-border hover:border-primary/50 cursor-pointer"
       }`}
     >
@@ -63,7 +63,7 @@ export function InsuranceElectionBox({
       </Need>
       {!purchaseAvailable && unavailableNote && <p className="text-xs text-muted-foreground">{unavailableNote}</p>}
       {election === "purchased" && purchaseAvailable && (
-        <div className="flex flex-col gap-3 rounded-lg border border-border p-4">
+        <div className="flex flex-col gap-3 border border-border p-4">
           <ul className="flex flex-col gap-1.5 text-xs text-muted-foreground leading-relaxed">
             {INSURANCE_DETAILS.map((d) => <li key={d}>{d}</li>)}
           </ul>
@@ -73,7 +73,7 @@ export function InsuranceElectionBox({
         </div>
       )}
       {election === "declined" && (
-        <p className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm text-amber-950">
+        <p className="flex items-start gap-2 border border-butter bg-butter/40 px-3 py-2.5 text-sm text-ink">
           <Info className="h-4 w-4 mt-0.5 shrink-0" strokeWidth={1.75} />
           {INSURANCE_DECLINED_TEXT}
         </p>

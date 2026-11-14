@@ -37,8 +37,8 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
       <div className="max-w-7xl w-full mx-auto px-4 md:px-10 py-5">
         <Link href="/" className="inline-flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/card-doctor.jpg" alt="" className="w-9 h-9 rounded-md object-cover ring-1 ring-rule" />
-          <span className="font-heading text-lg tracking-[-0.01em] text-ink">The Card Doc</span>
+          <img src="/card-doctor.jpg" alt="" className="w-9 h-9 object-cover ring-1 ring-rule" />
+          <span className="font-heading text-lg tracking-[0.02em] text-ink">The Card Doc</span>
         </Link>
       </div>
       <div className="flex flex-1 items-center">
@@ -47,10 +47,10 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
             <UnsubscribePanel token={token} email={found.email} alreadyUnsubscribed={found.unsubscribed} />
           ) : (
             <>
-              <span className="flex h-12 w-12 items-center justify-center rounded-md bg-rx-soft text-rx mb-6">
+              <span className="flex h-12 w-12 items-center justify-center bg-rx-soft text-rx mb-6">
                 <MailWarning className="h-6 w-6" strokeWidth={1.75} aria-hidden />
               </span>
-              <h1 className="font-heading text-3xl md:text-4xl font-extrabold tracking-[-0.015em] text-ink mb-4">
+              <h1 className="font-heading text-3xl md:text-4xl tracking-[0.02em] text-ink mb-4">
                 {failed ? "Something went wrong" : "This link isn't valid"}
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">

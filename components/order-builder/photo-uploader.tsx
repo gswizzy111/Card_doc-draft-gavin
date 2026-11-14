@@ -4,6 +4,7 @@ import { useRef, useState, useCallback, useSyncExternalStore } from "react";
 import { AlertTriangle, ImageOff, X } from "lucide-react";
 import { toast } from "sonner";
 import { MAX_CARD_PHOTOS } from "@/lib/site-config";
+import { DocSprite, PixelIcon } from "@/components/pixel/sprites";
 
 interface PhotoUploaderProps {
   photoUrls: string[];
@@ -163,9 +164,9 @@ export function PhotoUploader({ photoUrls, onChange, max = MAX_CARD_PHOTOS }: Ph
 
   if (isInAppBrowser) {
     return (
-      <div className="bg-red-50 border border-red-400 rounded-lg p-3 text-sm">
-        <p className="font-extrabold text-red-900 mb-1 flex items-center gap-2"><ImageOff className="h-4 w-4 shrink-0" strokeWidth={2} />Photo upload blocked</p>
-        <p className="text-red-800 leading-relaxed">
+      <div className="bg-rx-soft p-3 text-sm px-frame">
+        <p className="mb-1 flex items-center gap-2 font-semibold text-destructive"><ImageOff className="h-4 w-4 shrink-0" strokeWidth={2} />Photo upload blocked</p>
+        <p className="text-destructive leading-relaxed">
           Instagram&apos;s browser doesn&apos;t allow photo uploads.{" "}
           <strong>Tap ··· → &quot;Open in browser&quot;</strong> to use Safari or Chrome, then come back to this page.
         </p>
@@ -176,21 +177,22 @@ export function PhotoUploader({ photoUrls, onChange, max = MAX_CARD_PHOTOS }: Ph
   const canAddMore = photoUrls.length < max;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4 bg-muted p-3 shadow-[inset_0_3px_0_var(--tile)] px-frame">
+      {/* The exam tray: thumbnails on a tray, then the drop slot */}
       {/* Thumbnails */}
       {photoUrls.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3 pt-1 pl-1">
           {photoUrls.map((url) => (
-            <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden border border-border group flex-shrink-0">
+            <div key={url} className="group relative size-24 shrink-0 bg-panel p-[3px] px-frame-shadow">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt="" className="w-full h-full object-cover" />
               <button
                 type="button"
                 onClick={() => remove(url)}
-                className="absolute top-1 right-1 w-5 h-5 bg-ink/80 text-paper rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                className="absolute -top-2 -right-2 grid size-8 place-items-center bg-ink text-panel hover:bg-destructive focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-frame-deep"
                 aria-label="Remove photo"
               >
-                <X className="h-3 w-3" />
+                <X className="h-4 w-4" strokeWidth={2.5} />
               </button>
             </div>
           ))}
@@ -208,32 +210,30 @@ export function PhotoUploader({ photoUrls, onChange, max = MAX_CARD_PHOTOS }: Ph
           onDragOver={(e) => { e.preventDefault(); if (!uploading) setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
-          className={`relative flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed px-4 py-7 transition-colors select-none
+          className={`relative flex select-none flex-col items-center justify-center gap-2.5 border-[3px] border-dashed px-4 py-7 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep
             ${uploading ? "cursor-not-allowed opacity-70" : "cursor-pointer"}
-            ${dragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary/50 hover:bg-secondary/20"}
+            ${dragOver ? "border-coral-deep bg-rx-soft" : "border-ink/35 bg-panel hover:border-ink/60 hover:bg-[color-mix(in_srgb,var(--butter)_25%,var(--panel))]"}
           `}
         >
           {uploading ? (
             <div className="flex flex-col items-center gap-2">
-              <div className="w-8 h-8 border border-primary border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm font-medium text-muted-foreground">Uploading photo…</p>
+              <DocSprite scale={2} />
+              <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink">Uploading photo…</p>
             </div>
           ) : (
             <>
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                </svg>
+              <div aria-hidden className="grid size-14 place-items-center bg-powder px-frame">
+                <PixelIcon name="camera" size={32} />
               </div>
               <div className="text-center">
-                <p className="text-sm font-semibold text-foreground">
+                <p className="font-heading text-lg uppercase tracking-[0.02em] text-ink">
                   {photoUrls.length === 0 ? "Upload photos of your card" : "Add more photos"}
                 </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="mt-1 text-[13px] text-ink-soft">
                   Tap to choose · Drag &amp; drop · Any photo format · Large files OK
                 </p>
               </div>
-              <p className="text-xs text-muted-foreground/70">
+              <p className="inline-flex h-6 items-center bg-muted px-2 font-pixel text-xs tabular-nums text-ink px-frame">
                 {photoUrls.length}/{max} photo{max !== 1 ? "s" : ""}
               </p>
             </>
@@ -243,13 +243,13 @@ export function PhotoUploader({ photoUrls, onChange, max = MAX_CARD_PHOTOS }: Ph
 
       {/* Inline error banner */}
       {uploadError && (
-        <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2.5">
-          <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5 text-red-600" strokeWidth={2.25} />
-          <p className="text-xs text-red-700 font-medium flex-1">{uploadError}</p>
+        <div className="flex items-start gap-2 bg-rx-soft px-3 py-2.5 px-frame">
+          <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5 text-destructive" strokeWidth={2.25} />
+          <p className="text-xs text-destructive font-medium flex-1">{uploadError}</p>
           <button
             type="button"
             onClick={() => setUploadError("")}
-            className="text-red-400 hover:text-red-600 shrink-0"
+            className="-my-2 -mr-2 grid size-9 shrink-0 place-items-center text-destructive hover:bg-panel"
             aria-label="Dismiss"
           >
             <X className="h-3 w-3" />

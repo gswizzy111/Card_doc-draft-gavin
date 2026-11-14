@@ -30,7 +30,7 @@ export default function PartnerLoginPage() {
 
   return (
     <div className="min-h-screen bg-secondary/30 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl border border-border p-8 w-full max-w-sm shadow-sm">
+      <div className="px-window-ink p-8 w-full max-w-sm">
         <h1 className="font-heading font-black text-2xl text-foreground mb-1">Partner Portal</h1>
         <p className="text-sm text-muted-foreground mb-6">The Card Doc</p>
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -43,15 +43,15 @@ export default function PartnerLoginPage() {
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
               placeholder="Enter your passcode"
-              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
               required
             />
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-11 bg-primary text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="w-full h-11 bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>

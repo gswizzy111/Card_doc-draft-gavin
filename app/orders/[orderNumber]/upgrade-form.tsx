@@ -42,7 +42,7 @@ export function UpgradeForm({ orderNumber, customerEmail, offers }: Props) {
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl border border-blue-200 p-6 mb-5">
+    <div className="bg-gradient-to-br from-blue-50 to-white border border-frame/50 p-6 mb-5">
       <p className="rx-label text-rx mb-1">Want Faster Service?</p>
       <h2 className="font-heading font-black text-lg text-foreground mb-1">Upgrade Your Restoration</h2>
       <p className="text-sm text-muted-foreground mb-5">
@@ -51,7 +51,7 @@ export function UpgradeForm({ orderNumber, customerEmail, offers }: Props) {
 
       <div className="flex flex-col gap-3">
         {offers.map(({ tier, totalCents: total, bulkPercent }) => (
-            <div key={tier.id} className="flex items-center justify-between gap-4 bg-white rounded-lg border border-blue-100 p-4">
+            <div key={tier.id} className="flex items-center justify-between gap-4 bg-panel border border-frame/50 p-4">
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-foreground">{tier.name}</p>
                 <p className="text-xs text-muted-foreground">
@@ -64,7 +64,7 @@ export function UpgradeForm({ orderNumber, customerEmail, offers }: Props) {
               <button
                 onClick={() => handleUpgrade(tier.id)}
                 disabled={loading !== null}
-                className="shrink-0 px-4 py-2 bg-rx text-white text-sm font-bold rounded-lg hover:bg-rx/90 transition-colors disabled:opacity-50"
+                className="shrink-0 px-4 py-2 bg-rx text-white text-sm font-bold hover:bg-rx/90 transition-colors disabled:opacity-50"
               >
                 {loading === tier.id ? "Redirecting..." : "Upgrade"}
               </button>
@@ -72,7 +72,7 @@ export function UpgradeForm({ orderNumber, customerEmail, offers }: Props) {
         ))}
       </div>
 
-      {error && <p className="text-sm text-red-500 mt-3">{error}</p>}
+      {error && <p className="text-sm text-destructive mt-3">{error}</p>}
     </div>
   );
 }

@@ -9,8 +9,8 @@ import { BUTTON_CN, FIELD_CN, LABEL_CN } from "../auth-card";
 type Profile = { name: string; phone: string; street1: string; street2: string; city: string; state: string; zip: string };
 
 function Saved({ ok, error }: { ok: boolean; error: string }) {
-  if (error) return <p role="alert" className="text-sm text-red-700">{error}</p>;
-  if (ok) return <p role="status" className="text-sm font-semibold text-green-700">Saved.</p>;
+  if (error) return <p role="alert" className="text-sm text-destructive">{error}</p>;
+  if (ok) return <p role="status" className="text-sm font-semibold text-mint-deep">Saved.</p>;
   return null;
 }
 
@@ -45,7 +45,7 @@ export function ProfileForm({ email, initial }: { email: string; initial: Profil
   }
 
   return (
-    <form onSubmit={save} className="bg-white rounded-xl border border-border p-6 flex flex-col gap-4">
+    <form onSubmit={save} className="px-window-ink p-6 flex flex-col gap-4">
       <h2 className="font-heading font-black text-lg text-foreground">Your details</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
@@ -130,7 +130,7 @@ export function PasswordForm() {
   }
 
   return (
-    <form onSubmit={save} className="bg-white rounded-xl border border-border p-6 flex flex-col gap-4">
+    <form onSubmit={save} className="px-window-ink p-6 flex flex-col gap-4">
       <h2 className="font-heading font-black text-lg text-foreground">Change password</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>

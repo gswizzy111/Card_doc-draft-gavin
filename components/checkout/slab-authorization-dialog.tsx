@@ -7,7 +7,7 @@ import { SLAB_FEE_CENTS, SLAB_TITLE, cardTitle, slabAuthorization } from "@/lib/
 import { signSlab, slabSignature, slabSigned, type SigningState, type SlabCard } from "./signing-section";
 import { Need, Req, revealMissing } from "./required";
 
-const FIELD = "w-full h-10 rounded-md border border-input bg-white px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50";
+const FIELD = "h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
 
 /**
  * The Slab Removal Authorization for one card, opened as soon as the customer
@@ -66,7 +66,7 @@ function SlabDialog({ card, state, onChange, onClose }: {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-[38dvh] overflow-y-auto rounded-md border border-border bg-white p-3" tabIndex={0} aria-label={`${SLAB_TITLE} for ${d.card_name}`}>
+        <div className="max-h-[38dvh] overflow-y-auto px-frame bg-panel p-3" tabIndex={0} aria-label={`${SLAB_TITLE} for ${d.card_name}`}>
           <LegalDocument blocks={doc.blocks} variant="compact" />
         </div>
 
@@ -89,12 +89,12 @@ function SlabDialog({ card, state, onChange, onClose }: {
           <button
             type="button"
             onClick={sign}
-            className="h-11 px-6 rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors"
+            className="h-11 px-6 bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors"
           >
             Sign slab authorization
           </button>
         </div>
-        {tried && !ready && <p className="text-sm font-semibold text-red-700 -mt-2" role="alert">Please fill in the fields outlined in red.</p>}
+        {tried && !ready && <p className="text-sm font-semibold text-destructive -mt-2" role="alert">Please fill in the fields outlined in red.</p>}
       </DialogContent>
     </Dialog>
   );

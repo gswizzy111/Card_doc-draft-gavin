@@ -47,7 +47,7 @@ export function ComplaintForm({ caseId, token }: { caseId: string; token: string
           Your complaint *
         </label>
         <textarea
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gray-400 bg-white resize-none transition-colors"
+          className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-gray-400 bg-panel resize-none transition-colors"
           rows={6}
           value={complaint}
           onChange={(e) => setComplaint(e.target.value)}
@@ -55,11 +55,11 @@ export function ComplaintForm({ caseId, token }: { caseId: string; token: string
           autoFocus
         />
       </div>
-      {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+      {error && <p className="text-sm text-destructive font-medium">{error}</p>}
       <button
         type="submit"
         disabled={submitting || !complaint.trim()}
-        className="w-full h-11 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-colors disabled:opacity-40"
+        className="w-full h-11 bg-gray-900 text-white text-sm font-bold hover:bg-gray-800 transition-colors disabled:opacity-40"
       >
         {submitting ? "Submitting..." : "Submit Complaint"}
       </button>
