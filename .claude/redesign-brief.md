@@ -107,3 +107,34 @@ a section truly pins/scrubs.
   `node .claude/skills/preview-site/scripts/shoot.mjs <paths>` (set `OUT_DIR`
   to a folder of your own) and Read the PNGs.
 - Do not commit; the lead commits.
+
+## Revision 2 (owner feedback, Nov 14): "more professional, a little less cartoony"
+
+The owner likes the direction. Keep the clinic idea, the muted palette, the
+before/after card slider hero, the symptoms ticker and the Trusted by section.
+Turn the cartoon volume down so it reads as a trustworthy, premium service
+with a retro pixel accent, not a game. Rules for this pass:
+
+- **Type:** headings move to a clean, confident sans (free, via next/font;
+  not Inter) in mostly sentence/title case, not all-caps pixel everywhere.
+  The pixel font becomes an accent only: small labels, status chips, the
+  eyebrow tags, maybe prices or stat numbers. Body stays Atkinson Hyperlegible
+  Next.
+- **Calmer surfaces:** plain cream/panel backgrounds instead of the tile
+  floor pattern (a very faint grid at most, in one or two places). Thinner
+  borders (2px, not 3px) and smaller, softer pixel shadows. More whitespace,
+  fewer boxes inside boxes.
+- **Fewer props:** remove most sprites placed around sections (the Doc
+  mascot repeated on pages, hopping hurt cards, "!" blinks, sparkles
+  scattered everywhere, random icons beside headings). Keep at most one
+  small pixel illustration per page where it earns its place (e.g. the
+  footer, 404, success screens). Pixel icons only where they label
+  something (services, steps), at a modest size.
+- **Fewer gimmicks:** the blinking ▼ on dialog boxes goes away by default
+  (keep it only on the hero dialog if anywhere); typewriter effects off;
+  status chips and HP bars only where they explain the process (how it
+  works, before/after), not as decoration on every card. Decorative labels
+  like "THE DOC", "FRONT DESK", "TREATMENT MENU" mostly go.
+- **Motion:** subtle and quick; stepped pixel motion only on small accents.
+- Keep everything else from the brief: wording unchanged, appearance only,
+  AA contrast, reduced motion, phone first, original art only.
