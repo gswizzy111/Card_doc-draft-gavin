@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Gem } from "lucide-react";
-import { FACT_ROW } from "./fact-row";
+import { PixelIcon } from "@/components/pixel/sprites";
+import { pixelButton } from "@/components/pixel/pixel-button";
+import { CLOSED_ACTION, FACT_ROW, TOOLTIP } from "./fact-row";
 
 const RATE = 0.07;
 const MIN_VALUE = 5000;
@@ -25,35 +26,32 @@ export function DiamondCard({
 
   // Same structure as the other tiers: the badge in the corner, slots in the facts
   const bannerLabel = isSoldOut ? "SOLD OUT" : "White Glove";
-  const bannerCls = isSoldOut ? "bg-secondary text-muted-foreground" : "bg-ink text-white";
+  const bannerCls = isSoldOut ? "bg-muted text-ink" : "bg-ink text-panel";
   const showSlots = !isSoldOut && slotsLeft !== null && restorationsOpen;
+  const closed = isSoldOut || !restorationsOpen;
 
   return (
-    <div className={`comic-lift relative h-full rounded-2xl border-[2.5px] border-ink bg-bone flex flex-col comic-shadow-rx ${(isSoldOut || !restorationsOpen) ? "opacity-70" : ""}`}>
-      {/* Foil wash: Diamond is the one tier printed on holo stock */}
-      <div aria-hidden className="holo-bands pointer-events-none absolute inset-x-0 top-0 h-28 rounded-t-[13px] opacity-[0.22] [background-position:30%_40%] [mask-image:linear-gradient(to_bottom,#000,transparent)]" />
-      <div className="relative flex h-12 items-end justify-between gap-3 px-6">
-        <span className="metal metal-diamond mb-[5px] h-3.5 w-11 rounded-[3px]" aria-hidden />
-        <span className={`whitespace-nowrap font-heading font-extrabold text-[10px] leading-4 uppercase tracking-[0.08em] rounded-full border-2 border-ink px-2.5 py-0.5 ${bannerCls}`}>
+    <article className="comic-lift px-window flex h-full flex-col">
+      {/* Ward plate: Diamond is the one tier printed on holo stock */}
+      <div className={`holo-bands flex h-16 shrink-0 items-center justify-between gap-3 border-b-[3px] border-frame px-4 [box-shadow:inset_0_3px_0_color-mix(in_srgb,var(--panel)_55%,transparent)] ${closed ? "grayscale-[0.75]" : ""}`}>
+        <span aria-hidden className="grid size-11 shrink-0 place-items-center bg-panel px-frame">
+          <PixelIcon name="sparkle" size={32} />
+        </span>
+        <span className={`inline-flex h-7 items-center whitespace-nowrap px-2.5 font-pixel text-xs leading-none uppercase tracking-[0.04em] px-frame ${bannerCls}`}>
           {bannerLabel}
         </span>
       </div>
 
-      <div className="relative p-6 pt-4 flex flex-col flex-1">
-        <div className="flex items-start gap-3 mb-5">
-          <Gem className="w-5 h-5 flex-shrink-0 mt-0.5 text-rx" strokeWidth={2} />
-          <div>
-            <h3 className="font-heading text-[1.6rem] font-black uppercase tracking-[-0.015em] text-ink leading-none">Diamond</h3>
-            <p className="text-sm text-muted-foreground mt-0.5 min-h-10">White-glove service for high-value cards</p>
-          </div>
-        </div>
+      <div className="flex flex-1 flex-col p-5 md:p-6">
+        <h3 className="font-heading text-[1.85rem] uppercase leading-none tracking-[0.02em] text-ink">Diamond</h3>
+        <p className="mt-1.5 mb-5 min-h-10 text-sm text-ink-soft">White-glove service for high-value cards</p>
 
         {/* Dynamic price display */}
         <div className="mb-6">
-          <div className="font-heading text-5xl font-black tracking-[-0.03em] text-ink tabular-nums">
+          <div className="font-heading text-[3.25rem] leading-none text-ink tabular-nums lining-nums">
             {priceDollars ? `$${priceDollars}` : "7%"}
           </div>
-          <p className="font-mono text-xs text-muted-foreground mt-1">
+          <p className="rx-label mt-2">
             {priceDollars
               ? `of your $${numericValue.toLocaleString()} card value`
               : "of declared card value · cards $5,000+"}
@@ -62,7 +60,7 @@ export function DiamondCard({
 
         {/* Facts, then the value field as one more row of them */}
         <div className="@container">
-          <dl className="divide-y-2 divide-dashed divide-ink/15 border-t-2 border-ink">
+          <dl className="divide-y-2 divide-dashed divide-ink/20 border-t-[3px] border-ink">
             <div className={FACT_ROW}>
               <dt className="rx-label @min-[16.5rem]:self-center">Turnaround</dt>
               <dd className="font-medium text-ink @min-[16.5rem]:text-right">5–10 business days <span className="text-xs text-muted-foreground">(est.)</span></dd>
@@ -73,7 +71,7 @@ export function DiamondCard({
                 $5,000+
                 <span className="relative group">
                   <span className="text-xs text-muted-foreground cursor-help">*</span>
-                  <span className="pointer-events-none absolute bottom-full right-0 mb-1.5 w-max max-w-[180px] rounded-md bg-ink px-2.5 py-1.5 text-xs text-paper opacity-0 group-hover:opacity-100 transition-opacity z-20 leading-snug">
+                  <span className={TOOLTIP}>
                     Current value, raw or graded
                   </span>
                 </span>
@@ -89,13 +87,14 @@ export function DiamondCard({
             )}
           </dl>
 
-          <div className="border-t border-rule py-2.5">
+          {/* The value field: a small calculator slot on the chart */}
+          <div className="border-t-2 border-dashed border-ink/20 py-3">
             <div className="flex flex-col gap-1.5 @min-[16.5rem]:flex-row @min-[16.5rem]:items-center @min-[16.5rem]:gap-3">
               <label htmlFor="diamond-card-value" className="rx-label @min-[16.5rem]:min-w-0 @min-[16.5rem]:flex-1">
                 Estimated card value (USD)
               </label>
-              <div className="relative shrink-0 @min-[16.5rem]:w-[8rem]">
-                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">$</span>
+              <div className="relative shrink-0 @min-[16.5rem]:w-[8.5rem]">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-ink-soft">$</span>
                 <input
                   id="diamond-card-value"
                   type="number"
@@ -103,18 +102,18 @@ export function DiamondCard({
                   placeholder="e.g. 6000"
                   value={rawValue}
                   onChange={(e) => setRawValue(e.target.value)}
-                  className="w-full h-10 pl-6 pr-2.5 rounded-md border border-input bg-white text-base md:text-sm tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none placeholder:text-muted-foreground focus:outline-none focus:border-rx focus:ring-2 focus:ring-rx/20"
+                  className="h-11 w-full border-2 border-ink bg-panel pl-7 pr-2.5 text-base tabular-nums shadow-[inset_0_3px_0_var(--muted)] outline-none [appearance:textfield] placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
               </div>
             </div>
             {tooLow && (
-              <p className="text-xs text-amber-800 font-semibold mt-2">
+              <p className="mt-2.5 bg-butter px-2.5 py-1.5 text-xs font-semibold text-ink px-frame">
                 Diamond requires cards valued at $5,000+. Consider Fast Pass for cards under $5,000.
               </p>
             )}
             {priceDollars && (
-              <p className="text-xs text-rx font-semibold mt-2">
-                Your price: <span className="text-lg font-bold">${priceDollars}</span> per card
+              <p className="mt-2.5 flex flex-wrap items-baseline gap-x-1.5 bg-rx-soft px-2.5 py-1.5 text-xs font-semibold text-coral-deep px-frame">
+                Your price: <span className="font-heading text-xl leading-none tabular-nums text-ink">${priceDollars}</span> per card
               </p>
             )}
           </div>
@@ -123,23 +122,23 @@ export function DiamondCard({
         {/* The action sits on the card's floor, level with the other tiers */}
         <div className="mt-auto pt-6">
         {isSoldOut ? (
-          <div className="w-full h-12 flex items-center justify-center rounded-[0.7rem] border-2 border-ink/25 font-heading font-extrabold uppercase tracking-[0.03em] text-[13px] bg-secondary text-muted-foreground cursor-not-allowed">
+          <div className={CLOSED_ACTION}>
             Sold Out
           </div>
         ) : !restorationsOpen ? (
-          <div className="w-full h-12 flex items-center justify-center rounded-[0.7rem] border-2 border-ink/25 font-heading font-extrabold uppercase tracking-[0.03em] text-[13px] bg-secondary text-muted-foreground cursor-not-allowed">
+          <div className={CLOSED_ACTION}>
             Currently Closed
           </div>
         ) : (
           <Link
             href="/restoration?tier=elite"
-            className="comic-btn press w-full h-12 text-[13px]"
+            className={pixelButton({ size: "md", className: "w-full" })}
           >
             Select Diamond
           </Link>
         )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }

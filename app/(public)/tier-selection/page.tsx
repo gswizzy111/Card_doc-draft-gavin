@@ -10,15 +10,16 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getRestorationsOpen, getSlotsOpenedAt } from "@/lib/store-config";
 import { TIER_MAX_SLOTS } from "@/lib/site-config";
 import { tierSlotUsage } from "@/lib/tier-slots";
-import { AlertTriangle, Check, CheckCircle, ChevronDown, Zap, Star, Crown, Rocket } from "lucide-react";
+import { Check, ChevronDown, Zap } from "lucide-react";
 import { WaitlistModal } from "./waitlist-modal";
 import { DiamondCard } from "./diamond-card";
-import { FACT_ROW } from "./fact-row";
+import { CLOSED_ACTION, FACT_ROW, TOOLTIP } from "./fact-row";
 import { BulkSwitch } from "./bulk-switch";
 import { BULK_PLANS, bulkPriceCents, isBulkEligible } from "@/lib/bulk-pricing";
 import { SnapDeck } from "@/components/motion/snap-deck";
 import { PixelViewContent } from "@/components/pixel-view-content";
 import { PageHero } from "@/components/marketing/page-hero";
+import { CardSprite, DocSprite, PixelIcon, Window, pixelButton, type PixelIconName } from "@/components/pixel";
 
 export const dynamic = "force-dynamic";
 
@@ -28,16 +29,17 @@ export const metadata: Metadata = {
   alternates: canonical("/tier-selection"),
 };
 
-const ICON_MAP = {
-  regular:       CheckCircle,
-  expedited:     Zap,
-  premium:       Star,
-  ultra_premium: Crown,
-  elite:         Crown,    // replaced by DiamondCard client component
-  fast_pass:     Rocket,
-} as const;
+// Each ward level's chart symbol (a pixel icon on its metal plate)
+const ICON_MAP: Record<string, PixelIconName> = {
+  regular:       "bandage",
+  expedited:     "clock",
+  premium:       "star",
+  ultra_premium: "shield",
+  elite:         "sparkle", // replaced by DiamondCard client component
+  fast_pass:     "calendar",
+};
 
-// Tier identity lives in a small polished-metal swatch, not in recoloring the card.
+// Tier identity lives in the ward plate's polished-metal band, not in recoloring the card.
 const SWATCH: Record<string, string> = {
   regular:       "metal-bronze",
   expedited:     "metal-silver",
@@ -49,6 +51,17 @@ const SWATCH: Record<string, string> = {
 function formatTurnaround(tier: RestorationTier): string {
   if (tier.turnaround_label) return tier.turnaround_label;
   return `${tier.turnaround_min_days}–${tier.turnaround_max_days} days`;
+}
+
+/** The hero's patient: a hurt card, the ▶ cursor, the same card healed. */
+function HealPair() {
+  return (
+    <div className="flex items-end gap-3 pb-1">
+      <CardSprite variant="hurt" scale={4} />
+      <span className="mb-11 font-pixel text-sm text-coral-deep px-nudge">▶</span>
+      <CardSprite variant="healed" scale={4} />
+    </div>
+  );
 }
 
 function TierCard({
@@ -66,7 +79,7 @@ function TierCard({
   label?: React.ReactNode;
 }) {
   const swatch = SWATCH[tier.id] ?? SWATCH.regular;
-  const Icon = ICON_MAP[tier.id as keyof typeof ICON_MAP] ?? CheckCircle;
+  const icon = ICON_MAP[tier.id] ?? ICON_MAP.regular;
 
   const s = settingsMap[tier.id];
   // DB max_slots takes priority; fall back to site-config TIER_MAX_SLOTS constant
@@ -74,11 +87,12 @@ function TierCard({
   const slotsLeft = maxSlots !== null && slotCounts ? Math.max(0, maxSlots - (slotCounts[tier.id] ?? 0)) : null;
   const isSoldOut = s?.is_open === false || (slotsLeft !== null && slotsLeft === 0);
 
-  // Corner pill: sold out, else the owner's badge (or the card's own label).
+  // Corner chip: sold out, else the owner's badge (or the card's own label).
   // Slots left sit in the facts beside the action, the same row on every card.
   const bannerLabel: React.ReactNode = isSoldOut ? "SOLD OUT" : (label ?? tier.badge ?? null);
-  const bannerCls: string = isSoldOut ? "bg-secondary text-muted-foreground" : "bg-rx text-white";
+  const bannerCls: string = isSoldOut ? "bg-muted text-ink" : "bg-rx text-panel";
   const showSlots = !isSoldOut && slotsLeft !== null && restorationsOpen;
+  const closed = isSoldOut || !restorationsOpen;
 
   const price = tier.pricing_type === "percentage"
     ? `${((tier.pricing_rate ?? 0) * 100).toFixed(0)}%`
@@ -91,24 +105,24 @@ function TierCard({
     : "per card";
 
   const action = isSoldOut ? (
-    <div className="w-full h-12 flex items-center justify-center rounded-[0.7rem] border-2 border-ink/25 font-heading font-extrabold uppercase tracking-[0.03em] text-[13px] bg-secondary text-muted-foreground cursor-not-allowed">
+    <div className={CLOSED_ACTION}>
       Sold Out
     </div>
   ) : !restorationsOpen ? (
-    <div className="w-full h-12 flex items-center justify-center rounded-[0.7rem] border-2 border-ink/25 font-heading font-extrabold uppercase tracking-[0.03em] text-[13px] bg-secondary text-muted-foreground cursor-not-allowed">
+    <div className={CLOSED_ACTION}>
       Currently Closed
     </div>
   ) : (
     <Link
       href={`/restoration?tier=${tier.id}`}
-      className="comic-btn press w-full h-12 text-[13px]"
+      className={pixelButton({ size: "md", className: "w-full" })}
     >
       Select {tier.name}
     </Link>
   );
 
   const facts = (
-    <dl className="@container divide-y-2 divide-dashed divide-ink/15 border-t-2 border-ink">
+    <dl className="@container divide-y-2 divide-dashed divide-ink/20 border-t-[3px] border-ink">
       <div className={FACT_ROW}>
         <dt className="rx-label @min-[16.5rem]:self-center">Turnaround</dt>
         <dd className="font-medium text-ink @min-[16.5rem]:text-right">
@@ -126,7 +140,7 @@ function TierCard({
             : `Up to $${(tier.max_card_value_cents / 100).toLocaleString()}`}
           <span className="relative group">
             <span className="text-xs text-muted-foreground cursor-help">*</span>
-            <span className="pointer-events-none absolute bottom-full right-0 mb-1.5 w-max max-w-[180px] rounded-md bg-ink px-2.5 py-1.5 text-xs text-paper opacity-0 group-hover:opacity-100 transition-opacity z-20 leading-snug">
+            <span className={TOOLTIP}>
               Current value, raw or graded
             </span>
           </span>
@@ -142,41 +156,39 @@ function TierCard({
       )}
       {tier.id === "fast_pass" && (
         <div className="flex items-center gap-2 py-2.5 text-sm">
-          <Check className="h-4 w-4 text-rx" strokeWidth={2.25} />
-          <span className="text-muted-foreground">Skips the restoration queue</span>
+          <Check className="h-4 w-4 text-mint-deep" strokeWidth={2.5} />
+          <span className="text-ink-soft">Skips the restoration queue</span>
         </div>
       )}
     </dl>
   );
 
   return (
-    <div className={`comic-lift relative h-full rounded-2xl border-[2.5px] border-ink bg-bone flex flex-col comic-shadow-sm ${(isSoldOut || !restorationsOpen) ? "opacity-70" : ""}`}>
-      {/* Fixed height, so a card with a corner pill lines up with one without */}
-      <div className="flex h-12 items-end justify-between gap-3 px-6">
-        <span className={`metal mb-[5px] h-3.5 w-11 rounded-[3px] ${swatch}`} aria-hidden />
+    <article className="comic-lift px-window-ink flex h-full flex-col">
+      {/* Ward plate: the tier's metal band, its chart icon and the corner chip.
+          Fixed height, so a card with a chip lines up with one without. */}
+      <div className={`metal ${swatch} flex h-16 shrink-0 items-center justify-between gap-3 border-b-[3px] border-ink px-4 ${closed ? "grayscale-[0.75]" : ""}`}>
+        <span aria-hidden className="grid size-11 shrink-0 place-items-center bg-panel px-frame">
+          <PixelIcon name={icon} size={32} />
+        </span>
         {bannerLabel && (
-          <span className={`inline-flex items-center gap-1 whitespace-nowrap font-heading font-extrabold text-[10px] leading-4 uppercase tracking-[0.08em] rounded-full border-2 border-ink px-2.5 py-0.5 ${bannerCls}`}>
+          <span className={`inline-flex h-7 items-center gap-1 whitespace-nowrap px-2.5 font-pixel text-xs leading-none uppercase tracking-[0.04em] px-frame ${bannerCls}`}>
             {bannerLabel}
           </span>
         )}
       </div>
 
-      <div className="p-6 pt-4 flex flex-col flex-1">
-        <div className="flex items-start gap-3 mb-5">
-          <Icon className="w-5 h-5 flex-shrink-0 mt-0.5 text-rx" strokeWidth={2} />
-          <div className="min-w-0">
-            <h3 className="font-heading text-[1.6rem] font-black uppercase tracking-[-0.015em] text-ink leading-none">{tier.name}</h3>
-            {/* Two lines reserved, so prices line up across a row */}
-            <p className="text-sm text-muted-foreground mt-0.5 min-h-10">{tier.description}</p>
-          </div>
-        </div>
+      <div className="flex flex-1 flex-col p-5 md:p-6">
+        <h3 className="font-heading text-[1.85rem] uppercase leading-none tracking-[0.02em] text-ink">{tier.name}</h3>
+        {/* Two lines reserved, so prices line up across a row */}
+        <p className="mt-1.5 mb-5 min-h-10 text-sm text-ink-soft">{tier.description}</p>
 
         <div className="mb-6">
           {tier.pricing_type !== "percentage" && isBulkEligible(tier.id) ? (
             // One price per plan; the BulkSwitch above the grid shows the chosen one
             BULK_PLANS.map((p) => (
               <div key={p.id} data-plan={p.id} className="flex flex-wrap items-baseline gap-x-2.5">
-                <span className="font-heading text-5xl font-black tracking-[-0.03em] text-ink tabular-nums">
+                <span className="font-heading text-[3.25rem] leading-none text-ink tabular-nums lining-nums">
                   ${(bulkPriceCents(tier.price_cents, p.percent) / 100).toFixed(2)}
                 </span>
                 {p.percent > 0 && (
@@ -185,9 +197,9 @@ function TierCard({
               </div>
             ))
           ) : (
-            <div className="font-heading text-5xl font-black tracking-[-0.03em] text-ink tabular-nums">{price}</div>
+            <div className="font-heading text-[3.25rem] leading-none text-ink tabular-nums lining-nums">{price}</div>
           )}
-          <p className="font-mono text-xs text-muted-foreground mt-1">{priceNote}</p>
+          <p className="rx-label mt-2">{priceNote}</p>
         </div>
 
         {facts}
@@ -195,7 +207,7 @@ function TierCard({
         {/* The action sits on the card's floor, level across a row */}
         <div className="mt-auto pt-6">{action}</div>
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -275,18 +287,25 @@ export default async function TierSelectionPage() {
     breadcrumbs([{ name: "Restoration Pricing", path: "/tier-selection" }]),
   ];
 
+  // Phones: the deck's track scrolls sideways, so each card keeps room for its
+  // outline and hard shadow inside it.
+  const slot = "rx-reveal h-full max-md:pt-[3px] max-md:pr-3 max-md:pb-3 max-md:pl-[3px]";
+
   return (
     <div className="min-h-screen page-glow">
       <JsonLd data={structured} />
       <PixelViewContent contentName="Restoration Tiers" contentCategory="Restoration" />
-      {/* Closed text banner */}
+      {/* Closed: the front desk's notice, under the night sign */}
       {!restorationsOpen && (
-        <div className="bg-amber-50 border-b border-amber-200">
-          <div className="max-w-5xl mx-auto px-4 md:px-6 py-4 text-center">
-            <p className="text-sm font-bold text-amber-900">Restorations are currently closed.</p>
-            <p className="mt-0.5 text-sm font-semibold text-amber-900">
-              We&apos;re not accepting new restoration orders right now — but you can still browse our pricing below.
-            </p>
+        <div className="stage stage-light border-b-[3px] border-ink">
+          <div className="mx-auto flex max-w-5xl items-end gap-4 px-4 pt-5 pb-7 md:gap-6 md:px-6">
+            <DocSprite scale={2} className="mb-1 hidden shrink-0 sm:block" />
+            <Window variant="dialog" title="Front desk" className="flex-1 pr-10 md:pr-12">
+              <p className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink md:text-[1.75rem]">Restorations are currently closed.</p>
+              <p className="mt-1.5 text-[15px] font-semibold leading-relaxed text-ink-soft">
+                We&apos;re not accepting new restoration orders right now — but you can still browse our pricing below.
+              </p>
+            </Window>
           </div>
         </div>
       )}
@@ -296,6 +315,7 @@ export default async function TierSelectionPage() {
           className="mb-8"
           title="Choose Your Restoration Level"
           lines={["Choose Your", "Restoration Level"]}
+          sprite={<HealPair />}
           lead={restorationsOpen
             ? "Select the tier that best fits your cards' needs."
             : "We're temporarily closed. Browse our pricing below and join the waitlist to be notified when we reopen."}
@@ -308,15 +328,15 @@ export default async function TierSelectionPage() {
         <BulkSwitch>
         <SnapDeck
           labels={[...topTiers, ...midTiers, ...(eliteTier ? [eliteTier] : []), ...(fastPass ? [fastPass] : [])].map((t) => t.name)}
-          gridClassName="md:grid md:grid-cols-2 min-[67rem]:grid-cols-3 md:gap-5 min-[67rem]:gap-6"
+          gridClassName="md:grid md:grid-cols-2 min-[67rem]:grid-cols-3 md:gap-7 min-[67rem]:gap-8"
         >
           {[...topTiers, ...midTiers].map((tier, i) => (
-            <div key={tier.id} className="rx-reveal h-full" style={{ ["--i" as string]: i }}>
+            <div key={tier.id} className={slot} style={{ ["--i" as string]: i }}>
               <TierCard tier={tier} {...sharedProps} />
             </div>
           ))}
           {eliteTier && (
-            <div className="rx-reveal h-full" style={{ ["--i" as string]: topTiers.length + midTiers.length }}>
+            <div className={slot} style={{ ["--i" as string]: topTiers.length + midTiers.length }}>
               <DiamondCard
                 slotsLeft={eliteSlotsLeft}
                 isSoldOut={eliteIsSoldOut}
@@ -325,7 +345,7 @@ export default async function TierSelectionPage() {
             </div>
           )}
           {fastPass && (
-            <div className="rx-reveal h-full" style={{ ["--i" as string]: topTiers.length + midTiers.length + 1 }}>
+            <div className={slot} style={{ ["--i" as string]: topTiers.length + midTiers.length + 1 }}>
               <TierCard
                 tier={fastPass}
                 {...sharedProps}
@@ -336,25 +356,25 @@ export default async function TierSelectionPage() {
         </SnapDeck>
         </BulkSwitch>
 
-        {/* Turnaround disclaimer */}
-        <details className="mt-8 border border-amber-200 bg-amber-50 rounded-md group">
-          <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none [&::-webkit-details-marker]:hidden">
-            <div className="flex items-center gap-2.5">
-              <AlertTriangle className="h-4 w-4 text-amber-700" strokeWidth={2} />
-              <span className="text-sm font-semibold text-amber-900">About our turnaround time estimates</span>
-            </div>
-            <ChevronDown className="h-4 w-4 text-amber-700 group-open:rotate-180 transition-transform duration-150" />
+        {/* Turnaround disclaimer: the chart's fine print, folded */}
+        <details className="group mt-10 px-window-ink md:mt-12">
+          <summary className="flex min-h-14 cursor-pointer list-none select-none items-center justify-between gap-3 bg-butter px-4 py-3 md:px-5 [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-3">
+              <PixelIcon name="clipboard" size={32} className="shrink-0" />
+              <span className="font-heading text-lg leading-tight tracking-[0.02em] text-ink md:text-xl">About our turnaround time estimates</span>
+            </span>
+            <ChevronDown className="h-5 w-5 shrink-0 text-ink group-open:rotate-180" strokeWidth={2} />
           </summary>
-          <div className="px-5 pb-5 text-sm text-amber-900 space-y-2 leading-relaxed border-t border-amber-200 pt-4">
+          <div className="space-y-2 border-t-[3px] border-ink px-4 pt-4 pb-5 text-sm leading-relaxed text-ink md:px-5">
             <p>
               All turnaround times shown are <strong>rough estimates only</strong> and are not a guarantee or promise of completion within any specific timeframe.
             </p>
             <p>
               Actual processing times may be affected by order volume, card condition, shipping delays, holidays, or other circumstances outside our control. We will always do our best to meet or beat the estimated range, but <strong>The Card Doc cannot be held liable</strong> for delays.
             </p>
-            <p className="text-xs text-amber-700">
+            <p className="text-xs text-ink-soft">
               By placing an order you acknowledge that turnaround times are estimates and agree that delays do not entitle you to a refund or cancellation. See our{" "}
-              <Link href="/terms" className="underline hover:text-amber-900">Terms of Service</Link> for full details.
+              <Link href="/terms" className="font-semibold text-coral-deep underline underline-offset-2 hover:text-ink">Terms of Service</Link> for full details.
             </p>
           </div>
         </details>
@@ -362,15 +382,18 @@ export default async function TierSelectionPage() {
         {/* Waitlist modal — auto-opens when closed */}
         {!restorationsOpen && <WaitlistModal />}
 
-        {/* Footer info */}
-        <div className="mt-8 border-y-2 border-ink py-6">
-          <p className="text-muted-foreground">
-            Not sure which tier fits?{" "}
-            <Link href="/how-it-works" className="text-rx hover:underline font-semibold">
-              Learn what we can restore
-            </Link>
-            .
-          </p>
+        {/* Footer info: the doc's pointer to the symptoms chart */}
+        <div className="mt-10 flex items-end gap-3 md:mt-12 md:gap-5">
+          <DocSprite scale={2} className="mb-1 shrink-0" />
+          <Window variant="dialog" className="flex-1 py-4 pr-10 md:py-5">
+            <p className="text-ink">
+              Not sure which tier fits?{" "}
+              <Link href="/how-it-works" className="font-semibold text-coral-deep underline decoration-2 underline-offset-4 hover:text-ink">
+                Learn what we can restore
+              </Link>
+              .
+            </p>
+          </Window>
         </div>
 
       </div>

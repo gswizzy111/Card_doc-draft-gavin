@@ -5,6 +5,7 @@ import { OrderBuilder } from "@/components/order-builder/builder";
 import { isSoldOut, TIER_SELECTION_ENABLED } from "@/lib/site-config";
 import { getRestorationsOpen } from "@/lib/store-config";
 import type { RestorationTierId } from "@/lib/restoration-tiers";
+import { CardSprite, DocSprite, Window } from "@/components/pixel";
 import { PixelViewContent } from "@/components/pixel-view-content";
 
 interface PageProps {
@@ -31,10 +32,16 @@ export default async function RestorationPage({ searchParams }: PageProps) {
 
   if (isSoldOut()) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-24 text-center">
-        <p className="rx-label text-rx mb-4">Restoration Services</p>
-        <h1 className="font-heading text-3xl md:text-4xl text-foreground mb-4">Currently Unavailable</h1>
-        <p className="text-muted-foreground">We&apos;re at capacity right now. Check back soon — we&apos;ll be accepting new restoration orders again shortly.</p>
+      <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center md:py-28">
+        <div aria-hidden className="mb-6 flex items-end gap-4">
+          <DocSprite scale={3} />
+          <CardSprite variant="hurt" scale={3} />
+        </div>
+        <Window variant="dialog" title="Front desk" className="w-full pb-8 md:pb-9">
+          <p className="rx-label text-coral-deep mb-3">Restoration Services</p>
+          <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink mb-4 md:text-5xl">Currently Unavailable</h1>
+          <p className="text-ink-soft leading-relaxed">We&apos;re at capacity right now. Check back soon — we&apos;ll be accepting new restoration orders again shortly.</p>
+        </Window>
       </div>
     );
   }

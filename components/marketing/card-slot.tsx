@@ -1,35 +1,39 @@
 import Link from "next/link";
-import Image from "next/image";
-import doctor from "@/public/card-doctor.jpg";
+import { CardSprite, DocPortrait } from "@/components/pixel";
 
+/**
+ * The check-in slot: a coral intake box with a dashed card-shaped opening.
+ * A hurt card hovers over it and drops in a frame on hover. Links to /start.
+ */
 export function CardSlot({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/start"
       aria-label="Place card here. The Doc will see you now. Start your order."
-      className={`card-slot group relative block aspect-[5/7] rounded-[1.1rem] border-[3px] border-ink bg-rx text-white comic-shadow ${className}`}
+      className={`card-slot group relative block aspect-[5/7] text-ink shadow-[7px_7px_0_var(--px-shadow)] ${className}`}
     >
-      <span aria-hidden className="halftone-light absolute inset-0 rounded-[inherit]" />
-      <svg aria-hidden className="absolute inset-2.5 h-[calc(100%-1.25rem)] w-[calc(100%-1.25rem)] overflow-visible">
-        <rect width="100%" height="100%" rx="10" fill="none" stroke="white" strokeOpacity="0.75" strokeWidth="2.5" strokeDasharray="11 9" className="slot-dash" />
-      </svg>
-      <span className="relative grid h-full grid-rows-[auto_1fr_auto] justify-items-center px-4 pt-5 pb-4 text-center sm:px-5 sm:pt-6">
-        <span className="sticker block h-11 w-11 overflow-hidden bg-bone -rotate-6 transition-transform duration-500 ease-[var(--ease-out)] group-hover:rotate-6 sm:h-14 sm:w-14">
-          <Image src={doctor} alt="" sizes="56px" className="h-full w-full object-cover object-[50%_18%]" />
+      <span aria-hidden className="absolute inset-0 bg-coral-fill px-frame" />
+      <span aria-hidden className="absolute inset-2.5 border-[3px] border-dashed border-ink/55 bg-rx-soft/45 group-hover:bg-butter/60" />
+      <span className="relative grid h-full grid-rows-[auto_1fr_auto] justify-items-center px-3 pt-5 pb-4 text-center sm:px-5 sm:pt-6">
+        <span className="flex items-end gap-2">
+          <DocPortrait size="xs" alt="" />
+          <span aria-hidden className="transition-transform duration-150 [transition-timing-function:steps(2,end)] group-hover:translate-y-1.5">
+            <CardSprite variant="hurt" scale={2} animate={false} />
+          </span>
         </span>
         <span className="self-center">
-          <span className="block font-heading font-black uppercase leading-[0.92] tracking-[-0.01em] text-[clamp(1.35rem,6vw,2.1rem)] lg:text-[2.1rem]">
+          <span className="block font-heading uppercase leading-[0.92] text-[clamp(1.6rem,7vw,2.25rem)] lg:text-[2.25rem]">
             Place card here.
           </span>
-          <span className="mt-2.5 block font-heading text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/85 sm:text-[12px]">
+          <span className="mt-2.5 block font-pixel text-xs uppercase leading-snug text-ink">
             The Doc will see you now.
           </span>
         </span>
-        <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/90 sm:text-xs">
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden className="h-3.5 w-3.5">
-            <rect x="3" y="3" width="14" height="14" rx="4.2" stroke="currentColor" strokeWidth="1.9" />
-            <circle cx="10" cy="10" r="3.3" stroke="currentColor" strokeWidth="1.9" />
-            <circle cx="14.3" cy="5.8" r="1.05" fill="currentColor" />
+        <span className="flex items-center gap-1.5 bg-panel px-2 py-1 text-xs font-semibold text-ink px-frame">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden className="h-3.5 w-3.5" shapeRendering="crispEdges">
+            <rect x="3" y="3" width="14" height="14" stroke="currentColor" strokeWidth="2" />
+            <rect x="7" y="7" width="6" height="6" stroke="currentColor" strokeWidth="2" />
+            <rect x="13.5" y="5" width="2" height="2" fill="currentColor" />
           </svg>
           the_card_doc
         </span>

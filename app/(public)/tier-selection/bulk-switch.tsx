@@ -9,6 +9,9 @@ import { BULK_PLANS, type BulkPlan } from "@/lib/bulk-pricing";
  * data-bulk on the wrapper and globals.css shows the matching one, so the
  * cards stay server-rendered. `note` replaces the Restorations page's note;
  * `stacked` keeps the note under the switch at every width (a narrow column).
+ *
+ * Drawn as an RPG menu tray: a night panel of three slots, the chosen one lit
+ * butter with the ▶ cursor beside its label.
  */
 export function BulkSwitch({ children, note, stacked = false }: { children: React.ReactNode; note?: React.ReactNode; stacked?: boolean }) {
   const [plan, setPlan] = useState<BulkPlan>("single");
@@ -31,9 +34,9 @@ export function BulkSwitch({ children, note, stacked = false }: { children: Reac
 
   return (
     <div data-bulk={plan}>
-      <div className={stacked ? "mb-6 flex flex-col gap-3" : "mb-6 md:mb-8 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"}>
+      <div className={stacked ? "mb-8 flex flex-col gap-5" : "mb-8 flex flex-col gap-5 md:mb-10 md:flex-row md:items-center md:justify-between md:gap-8"}>
         {/* A segmented control, so on phones it doesn't read as another row of tier chips */}
-        <div role="radiogroup" aria-label="Number of cards" className={`grid w-full grid-cols-3 rounded-full border-[2.5px] border-ink bg-bone p-1 shadow-[3px_3px_0_var(--ink)]${stacked ? "" : " md:inline-grid md:w-auto"}`}>
+        <div role="radiogroup" aria-label="Number of cards" className={`grid w-full grid-cols-3 gap-[6px] bg-night p-[6px] px-frame-shadow${stacked ? "" : " md:inline-grid md:w-auto md:shrink-0"}`}>
           {BULK_PLANS.map((p, i) => {
             const active = p.id === plan;
             return (
@@ -46,13 +49,18 @@ export function BulkSwitch({ children, note, stacked = false }: { children: Reac
                 tabIndex={active ? 0 : -1}
                 onClick={() => setPlan(p.id)}
                 onKeyDown={(e) => onKeyDown(e, i)}
-                className={`press flex h-12 flex-col items-center justify-center rounded-full px-3 transition-colors duration-200 md:px-6 ${
-                  active ? "bg-ink text-paper" : "text-muted-foreground hover:text-ink"
+                className={`press relative flex h-14 flex-col items-center justify-center gap-1 px-2 outline-offset-[-6px] focus-visible:outline-2 focus-visible:outline-dashed md:px-6 ${
+                  active
+                    ? "bg-butter text-ink shadow-[inset_0_-4px_0_#d4b552,inset_0_2px_0_#f8e9ad] focus-visible:outline-ink"
+                    : "bg-night-raise text-stage-fg hover:bg-[#463f60] focus-visible:outline-butter"
                 }`}
               >
-                <span className="font-heading text-sm font-extrabold leading-tight">{p.label}</span>
-                <span className={`font-mono text-[10px] uppercase leading-tight tracking-wide ${
-                  p.percent > 0 ? (active ? "text-rx-bright" : "text-rx") : active ? "text-paper/70" : "text-muted-foreground"
+                <span className="flex items-center gap-1.5 font-heading text-[1.05rem] uppercase leading-none tracking-[0.03em]">
+                  <span aria-hidden className={`font-pixel text-[0.7rem] text-coral-deep ${active ? "" : "hidden"}`}>▶</span>
+                  {p.label}
+                </span>
+                <span className={`font-pixel text-xs uppercase leading-none tracking-[0.04em] ${
+                  p.percent > 0 ? (active ? "text-coral-deep" : "text-rx-bright") : active ? "text-ink-soft" : "text-stage-muted"
                 }`}>
                   {p.percent > 0 ? `${p.percent}% off` : "Standard"}
                 </span>
@@ -60,7 +68,7 @@ export function BulkSwitch({ children, note, stacked = false }: { children: Reac
             );
           })}
         </div>
-        <p className={stacked ? "text-sm text-muted-foreground" : "text-sm text-muted-foreground md:max-w-sm md:text-right"}>
+        <p className={`bg-panel px-4 py-3 text-sm leading-relaxed text-ink-soft px-frame${stacked ? "" : " md:max-w-md"}`}>
           {note ?? <>Bulk pricing is applied automatically at checkout for every tier except Diamond. Discounts don&apos;t combine: you get the biggest one.</>}
         </p>
       </div>

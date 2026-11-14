@@ -1,25 +1,32 @@
-import { BadgeCheck, MessageCircle, ScanSearch, Users } from "lucide-react";
 import { REASONS } from "@/lib/about";
+import { PixelIcon, type PixelIconName } from "@/components/pixel";
 
+/**
+ * The clinic's status strip: four pixel chips (cards restored, free photo
+ * review, reply time, years collecting). Phones scroll them sideways;
+ * wider screens wrap them.
+ */
 export function TrustPills({ cardsRestored, className = "", align = "center" }: { cardsRestored: string; className?: string; align?: "center" | "start" }) {
-  const pills = [
-    { Icon: BadgeCheck, text: `${cardsRestored} Cards Restored` },
-    { Icon: ScanSearch, text: "Free Photo Review" },
-    { Icon: MessageCircle, text: "We reply within 1 business day." },
-    { Icon: Users, text: REASONS.items[1].title },
+  const pills: { icon: PixelIconName; tile: string; text: string }[] = [
+    { icon: "heart-plus", tile: "bg-rx-soft", text: `${cardsRestored} Cards Restored` },
+    { icon: "camera", tile: "bg-powder", text: "Free Photo Review" },
+    { icon: "chat", tile: "bg-mint", text: "We reply within 1 business day." },
+    { icon: "user", tile: "bg-butter", text: REASONS.items[1].title },
   ];
   return (
     <div className={`relative ${className}`}>
       <ul
         aria-label="Why collectors trust The Card Doc"
-        className={`no-scrollbar -mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 ${align === "center" ? "sm:justify-center" : ""}`}
+        className={`no-scrollbar -mx-4 flex snap-x gap-3 overflow-x-auto px-4 py-[6px] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 ${align === "center" ? "sm:justify-center" : ""}`}
       >
-        {pills.map(({ Icon, text }) => (
+        {pills.map(({ icon, tile, text }) => (
           <li
             key={text}
-            className="flex shrink-0 snap-start items-center gap-2 whitespace-nowrap rounded-full border-2 border-ink bg-bone px-3.5 py-1.5 text-[12px] font-semibold text-ink md:text-[13px]"
+            className="flex h-9 shrink-0 snap-start items-center gap-2 whitespace-nowrap bg-panel pr-3 text-[13px] font-semibold text-ink px-frame"
           >
-            <Icon className="h-3.5 w-3.5 text-rx" strokeWidth={2.25} />
+            <span aria-hidden className={`grid h-full w-9 place-items-center border-r-[3px] border-ink ${tile}`}>
+              <PixelIcon name={icon} size={16} />
+            </span>
             {text}
           </li>
         ))}
