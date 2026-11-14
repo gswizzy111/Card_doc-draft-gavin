@@ -15,7 +15,6 @@ import { CardSlot } from "@/components/marketing/card-slot";
 import { HERO, PROCESS, REASONS, RESULTS } from "@/lib/about";
 import {
   CardSprite,
-  ClinicScene,
   DocPortrait,
   DocSprite,
   HealSparkles,
@@ -190,35 +189,40 @@ function PhotoWindow({
   );
 }
 
-/** Scene coordinates are in the art's own pixels; --s is the whole-number scale. */
-const at = (x: number, y: number): React.CSSProperties => ({
-  left: `calc(${x}px * var(--s))`,
-  top: `calc(${y}px * var(--s))`,
-});
-const spriteSize = (w: number) => ({ width: `calc(${w}px * var(--s))`, height: "auto" }) as React.CSSProperties;
-
 /**
- * The front desk: the clinic scene drawn at a whole-number scale (2x on
- * phones, 3x on tablets and wide desktops) and cropped to its column, so
- * every art pixel stays square. The Doc waits on the waiting-room floor and
- * a hurt card hops on the mat, about to check in.
+ * The patient chart: a trading-card-shaped frame around the Mickey Mantle
+ * before/after slider. Drag the divider to compare damaged and restored.
  */
-function FrontDesk() {
+function PatientCard({ name }: { name: string }) {
   return (
-    <div className="relative h-[calc(140px*var(--s))] w-full overflow-hidden [--s:2] md:[--s:3] lg:w-[calc(240px*var(--s))]">
-      <div className="absolute top-0 left-1/2 w-[calc(240px*var(--s))] -translate-x-1/2">
-        <ClinicScene priority label="The Card Doc clinic: a front desk with a healing station, a waiting room and a tiled floor" />
-        <span aria-hidden className="absolute" style={at(140, 68)}>
-          <DocSprite scale={1} className="specimen-land" style={spriteSize(24)} />
-        </span>
-        <span aria-hidden className="absolute font-pixel leading-none text-coral-deep px-blink" style={{ ...at(149, 58), fontSize: "calc(8px * var(--s))" }}>
-          !
-        </span>
-        <span aria-hidden className="absolute px-bob" style={at(111, 82)}>
-          <CardSprite variant="hurt" scale={1} style={spriteSize(18)} />
+    <figure className="relative mx-auto w-full max-w-[34rem] bg-butter p-2.5 px-frame-shadow md:p-3">
+      <div className="flex items-center justify-between gap-2 bg-panel px-3 py-2 px-frame">
+        <span className="font-heading text-xl uppercase leading-none text-ink md:text-2xl">{name}</span>
+        <span aria-hidden className="flex items-center gap-1.5">
+          <PixelIcon name="heart-plus" size={20} />
         </span>
       </div>
-    </div>
+      <div className="relative mt-2.5 px-frame">
+        <BeforeAfter
+          before={mantleBefore}
+          after={mantleAfter}
+          beforeAlt="A Mickey Mantle card before restoration, cracked across the face and jersey"
+          afterAlt="The same Mickey Mantle card after restoration"
+          sizes="(min-width: 1280px) 520px, (min-width: 768px) 70vw, 92vw"
+          priority
+        />
+      </div>
+      <figcaption className="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-2 bg-panel px-3 py-3 px-frame">
+        <div className="flex flex-col gap-2">
+          <StatusChip status="discharged" className="self-start" />
+          <HpBar level={1} animate />
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          <StatusChip status="treatment">ADMITTED</StatusChip>
+          <HpBar level={0.18} label={null} className="w-full" />
+        </div>
+      </figcaption>
+    </figure>
   );
 }
 
@@ -235,17 +239,13 @@ export default async function HomePage() {
         <TrustPills cardsRestored={cardsRestored} className="hero-in relative z-20 mx-auto max-w-7xl px-4 pt-4 md:px-10 md:pt-6" />
 
         <div className="relative mx-auto grid max-w-7xl gap-x-10 px-4 pt-4 pb-14 md:px-10 md:pt-8 lg:pb-20 xl:grid-cols-[minmax(0,1fr)_auto] xl:grid-rows-[auto_auto] xl:gap-y-8">
-          {/* The clinic screen */}
-          <div className="hero-in -mx-4 md:mx-0 lg:mx-auto lg:w-fit xl:col-start-2 xl:row-start-1 xl:self-end" style={{ ["--d" as string]: 80 }}>
-            <Window tone="ink" title="Front desk" className="mx-0 p-0 max-md:shadow-none md:p-0">
-              <div className="p-[6px] md:p-2">
-                <FrontDesk />
-              </div>
-            </Window>
+          {/* The patient chart: drag to compare */}
+          <div className="hero-in order-2 mt-10 xl:order-none xl:col-start-2 xl:row-start-1 xl:mt-0 xl:w-[32rem] xl:self-end" style={{ ["--d" as string]: 80 }}>
+            <PatientCard name={mantle?.card ?? "Mickey Mantle"} />
           </div>
 
           {/* The Doc greets the visitor */}
-          <div className="relative z-10 -mt-8 md:-mt-10 lg:mx-auto lg:w-full lg:max-w-[736px] xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:mt-0 xl:self-center">
+          <div className="relative z-10 order-1 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:mt-0 xl:self-center">
             <Window variant="dialog" className="hero-in px-5 pt-6 pb-9 md:px-8 md:pt-8 md:pb-10" style={{ ["--d" as string]: 180 }}>
               <div className="flex items-center gap-3">
                 <DocPortrait size="sm" nameplate="The Doc" alt="" />
@@ -269,7 +269,7 @@ export default async function HomePage() {
             </Window>
           </div>
 
-          <div className="lg:mx-auto lg:w-full lg:max-w-[736px] xl:col-start-2 xl:row-start-2 xl:mx-0 xl:max-w-none xl:self-start">
+          <div className="order-3 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:col-start-2 xl:row-start-2 xl:mx-0 xl:max-w-none xl:self-start">
             <Window tone="ink" title="We never" className="hero-in mt-8 p-0 md:p-0 xl:mt-4" style={{ ["--d" as string]: 300 }}>
               <ul className="grid pt-3 sm:grid-cols-3 sm:pt-2">
                 {PROCESS.never.map((item, i) => (
@@ -288,51 +288,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ── Intake: a real patient, and the slot for yours ─────────────── */}
-      <div className="wall-band">
-        <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-4 pt-14 pb-12 md:px-10 md:pt-20 lg:grid-cols-12 lg:items-end">
-          <div className="specimen-land relative lg:col-span-7">
-            <Window as="figure" tone="ink" className="p-2 md:p-3">
-              <div className="relative">
-                <Image
-                  src={mantlePair}
-                  alt="A cracked Mickey Mantle card in a black glove next to the same card after restoration in a blue glove"
-                  sizes="(min-width: 1024px) 680px, 92vw"
-                  className="h-auto w-full"
-                  priority
-                />
-                <StatusChip status="treatment" className="absolute bottom-2 left-2">ADMITTED</StatusChip>
-                <StatusChip status="discharged" className="absolute right-2 bottom-2" />
-              </div>
-              <figcaption className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-1 pb-1">
-                <HpBar level={0.18} />
-                <span className="font-heading text-lg uppercase leading-none text-ink">{mantle?.card ?? "Mickey Mantle"}</span>
-                <HpBar level={1} label={null} />
-              </figcaption>
-            </Window>
-          </div>
-
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] items-end gap-5 sm:gap-8 lg:col-span-5 lg:grid-cols-[minmax(0,1fr)_auto]">
-            <CardSlot className="w-full max-w-[16rem]" />
-
-            <div className="flex flex-col items-center gap-4 pb-2">
-              <div className="relative grid size-32 place-items-center bg-butter px-frame-shadow sm:size-36">
-                <span className="px-3 text-center font-heading text-2xl uppercase leading-[1.02] text-ink sm:text-[1.7rem]">
-                  Free<br />Photo<br />Review
-                </span>
-                <span aria-hidden className="absolute -top-5 -right-5"><SparkleSprite scale={2} /></span>
-                <span aria-hidden className="absolute -bottom-4 -left-5"><SparkleSprite scale={2} delay={0.4} /></span>
-              </div>
-              <CardSprite variant="healed" scale={3} className="mt-2" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <TrustedBy />
-
-      <ReviewsBand title="What our customers say" />
 
       {/* ── Symptoms ticker ────────────────────────────────────────────── */}
       <section aria-label="What we can fix" className="overflow-hidden border-y-[3px] border-ink bg-night py-5 md:py-7">
@@ -353,6 +308,31 @@ export default async function HomePage() {
           ))}
         </VelocityMarquee>
       </section>
+
+      <TrustedBy />
+
+      {/* ── Intake: the slot for your card ─────────────────────────────── */}
+      <div className="wall-band">
+        <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-4 pt-10 pb-10 md:px-10 md:pt-12 md:pb-12 lg:place-items-center">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] mx-auto w-full max-w-xl items-end gap-5 sm:gap-8">
+            <CardSlot className="w-full max-w-[16rem]" />
+
+            <div className="flex flex-col items-center gap-4 pb-2">
+              <div className="relative grid size-32 place-items-center bg-butter px-frame-shadow sm:size-36">
+                <span className="px-3 text-center font-heading text-2xl uppercase leading-[1.02] text-ink sm:text-[1.7rem]">
+                  Free<br />Photo<br />Review
+                </span>
+                <span aria-hidden className="absolute -top-5 -right-5"><SparkleSprite scale={2} /></span>
+                <span aria-hidden className="absolute -bottom-4 -left-5"><SparkleSprite scale={2} delay={0.4} /></span>
+              </div>
+              <CardSprite variant="healed" scale={3} className="mt-2" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <ReviewsBand title="What our customers say" />
 
       {/* ── Results: admitted vs discharged ────────────────────────────── */}
       <section aria-labelledby="results-heading" className="relative">
@@ -375,23 +355,20 @@ export default async function HomePage() {
           <div className="mt-14 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-12">
             <div data-reveal className="lg:col-span-7">
               <PhotoWindow label={mantle?.card ?? "Mickey Mantle"} detail={mantle?.detail}>
-                <div className="mb-3 grid grid-cols-2 gap-3">
-                  <div className="flex flex-col gap-2">
-                    <StatusChip status="discharged" className="self-start" />
-                    <HpBar level={1} animate />
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <StatusChip status="treatment">ADMITTED</StatusChip>
-                    <HpBar level={0.18} className="w-full" />
-                  </div>
+                <div className="relative">
+                  <Image
+                    src={mantlePair}
+                    alt="A cracked Mickey Mantle card in a black glove next to the same card after restoration in a blue glove"
+                    sizes="(min-width: 1280px) 700px, (min-width: 1024px) 56vw, 92vw"
+                    className="h-auto w-full"
+                  />
+                  <StatusChip status="treatment" className="absolute bottom-2 left-2">ADMITTED</StatusChip>
+                  <StatusChip status="discharged" className="absolute right-2 bottom-2" />
                 </div>
-                <BeforeAfter
-                  before={mantleBefore}
-                  after={mantleAfter}
-                  beforeAlt="A Mickey Mantle card before restoration, cracked across the face and jersey"
-                  afterAlt="The same Mickey Mantle card after restoration"
-                  sizes="(min-width: 1280px) 700px, (min-width: 1024px) 56vw, 92vw"
-                />
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  <HpBar level={0.18} />
+                  <HpBar level={1} label={null} animate />
+                </div>
               </PhotoWindow>
               {mantle && (
                 <Window variant="dialog" className="mt-8 max-w-2xl">

@@ -1,70 +1,59 @@
-import { VelocityMarquee } from "@/components/motion/velocity-marquee";
 import { TRUSTED_BY, type TrustedPage } from "@/lib/trusted-by";
-import { PixelIcon } from "@/components/pixel";
+import { PixelIcon, Window } from "@/components/pixel";
 
-// Each copy of the marquee row repeats the list until it holds at least this
-// many names, so even a short list is wider than the screen and loops without
-// a gap.
-const MIN_PER_COPY = 4;
-
-function Entry({ page, decorative }: { page: TrustedPage; decorative: boolean }) {
+function Guest({ page, i }: { page: TrustedPage; i: number }) {
   return (
-    <li className={`shrink-0 flex items-center ${decorative ? "marquee-repeat" : ""}`} aria-hidden={decorative || undefined}>
+    <li data-reveal style={{ transitionDelay: `${i * 90}ms` }}>
       <a
         href={page.href}
         target="_blank"
         rel="noopener noreferrer"
-        tabIndex={decorative ? -1 : undefined}
-        className="menu-cursor-item group flex min-h-11 items-center gap-3 px-6 py-1.5 md:px-10"
+        className="group block h-full focus-visible:outline-none"
       >
-        <span aria-hidden className="menu-cursor">▶</span>
-        <span className="whitespace-nowrap font-heading text-3xl uppercase leading-none text-ink group-hover:text-coral-deep md:text-4xl">
-          {page.name}
-        </span>
-        <span className="whitespace-nowrap text-[13px] text-ink-soft">
-          {page.role && <>{page.role} · </>}
-          <span className="font-semibold text-ink">{page.handle}</span>
-          {page.followers && <> {page.followers} followers</>}
-        </span>
+        <Window className="lift flex h-full items-center gap-4 px-4 py-4 transition-transform duration-150 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 md:gap-5 md:px-6 md:py-5">
+          <span aria-hidden className="grid size-16 shrink-0 place-items-center bg-powder px-frame md:size-20">
+            <PixelIcon name="user" size={48} />
+          </span>
+          <span className="flex min-w-0 flex-col gap-1.5">
+            <span className="font-heading text-3xl uppercase leading-none text-ink group-hover:text-coral-deep md:text-4xl">
+              {page.name}
+            </span>
+            {page.role && <span className="text-[15px] leading-snug text-ink-soft">{page.role}</span>}
+            <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-soft">
+              <span className="font-semibold text-ink">{page.handle}</span>
+              {page.followers && <span>{page.followers} followers</span>}
+              <span aria-hidden className="font-pixel text-xs uppercase text-frame-deep">▶ {page.platform}</span>
+            </span>
+          </span>
+        </Window>
       </a>
-      <span aria-hidden className="shrink-0">
-        <PixelIcon name="star" size={16} />
-      </span>
     </li>
   );
 }
 
 /**
- * "Trusted by": people The Card Doc has restored cards for, as the clinic's
- * guest register: a slow marquee of names (role, handle and followers beside
- * each, linking to their page) on a panel strip, that surges with scroll
- * speed and pauses under a mouse. Static, one of each, wrapping under reduced
- * motion. Renders nothing until lib/trusted-by.ts has entries.
+ * "Trusted by": people The Card Doc has restored cards for, shown as the
+ * clinic's guest register: one window per person (role, handle and
+ * followers), each linking to their page. Renders nothing until
+ * lib/trusted-by.ts has entries.
  */
 export function TrustedBy() {
   if (TRUSTED_BY.length === 0) return null;
-  const reps = Math.ceil(MIN_PER_COPY / TRUSTED_BY.length);
-  const row = Array.from({ length: reps }, (_, r) => TRUSTED_BY.map((page) => ({ page, decorative: r > 0 }))).flat();
 
   return (
-    <section aria-labelledby="trusted-by" className="relative border-b-[3px] border-ink bg-panel pt-9 pb-6 md:pt-10 md:pb-7">
-      <p
-        id="trusted-by"
-        data-reveal
-        className="absolute -top-4 left-1/2 z-[1] inline-flex h-8 -translate-x-1/2 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase leading-none text-ink px-frame"
-      >
-        <span aria-hidden className="text-coral-deep">▶</span>
-        Trusted by
-      </p>
-      <div className="marquee-mask overflow-hidden">
-        <VelocityMarquee>
-          <ul className="flex">
-            {row.map(({ page, decorative }, i) => <Entry key={i} page={page} decorative={decorative} />)}
-          </ul>
-          <ul aria-hidden className="marquee-dupe flex">
-            {row.map(({ page }, i) => <Entry key={i} page={page} decorative />)}
-          </ul>
-        </VelocityMarquee>
+    <section aria-labelledby="trusted-by" className="wall-band border-b-[3px] border-ink">
+      <div className="mx-auto max-w-7xl px-4 py-14 md:px-10 md:py-20">
+        <div data-reveal className="flex items-center gap-4">
+          <span aria-hidden className="grid size-12 place-items-center bg-butter px-frame md:size-14">
+            <PixelIcon name="star" size={32} />
+          </span>
+          <h2 id="trusted-by" className="font-heading text-[clamp(2.5rem,6vw,4rem)] uppercase leading-[0.9] text-ink">
+            Trusted by
+          </h2>
+        </div>
+        <ul className={`mt-8 grid gap-6 md:mt-10 ${TRUSTED_BY.length > 1 ? "md:grid-cols-2" : ""} ${TRUSTED_BY.length > 2 ? "lg:grid-cols-3" : ""}`}>
+          {TRUSTED_BY.map((page, i) => <Guest key={page.href} page={page} i={i} />)}
+        </ul>
       </div>
     </section>
   );
