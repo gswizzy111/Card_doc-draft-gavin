@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCardsRestoredStat } from "@/lib/site-stats";
 import { TrustPills } from "@/components/marketing/trust-pills";
 import { ReviewsBand } from "@/components/marketing/comic-reviews";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -201,10 +200,9 @@ function TierCard({
 }
 
 export default async function TierSelectionPage() {
-  const [restorationsOpen, slotsOpenedAt, cardsRestored] = await Promise.all([
+  const [restorationsOpen, slotsOpenedAt] = await Promise.all([
     getRestorationsOpen(),
     getSlotsOpenedAt(),
-    getCardsRestoredStat(),
   ]);
   const defaultTiers = getAllTiers();
   const admin = createAdminClient();
@@ -308,7 +306,7 @@ export default async function TierSelectionPage() {
             : "We're temporarily closed. Browse our pricing below and join the waitlist to be notified when we reopen."}
         />
 
-        <TrustPills cardsRestored={cardsRestored} align="start" className="hero-in mb-12 md:mb-14" />
+        <TrustPills align="start" className="hero-in mb-12 md:mb-14" />
 
         {/* All six tiers on one track, equal heights per row: 3 x 2 from 1072px (where
             a card's facts fit side by side, see fact-row.ts), 2 x 3 below that */}

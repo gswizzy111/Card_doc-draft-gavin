@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCardsRestoredStat } from "@/lib/site-stats";
 import { TrustPills } from "@/components/marketing/trust-pills";
 import { JsonLd } from "@/components/seo/json-ld";
 import { INSTAGRAM_URL, breadcrumbs, canonical } from "@/lib/seo";
@@ -28,8 +27,7 @@ const ART: Record<string, { band: string; variant: CardVariant }> = {
   "/prep": { band: "bg-[color-mix(in_srgb,var(--powder)_45%,var(--panel))]", variant: "sleeve" },
 };
 
-export default async function StartPage() {
-  const cardsRestored = await getCardsRestoredStat();
+export default function StartPage() {
   const [restoration, prep, kits] = SERVICE_CARDS;
 
   return (
@@ -87,7 +85,7 @@ export default async function StartPage() {
           <span className={pixelButton({ tone: "panel", size: "sm", className: "self-start sm:self-auto" })}>{kits.action}</span>
         </Link>
 
-        <TrustPills cardsRestored={cardsRestored} align="start" className="mt-14" />
+        <TrustPills align="start" className="mt-14" />
 
         {/* The four stops, as a route map */}
         <div className="mt-16 border-y-2 border-ink/15 px-1 py-10 sm:px-4">

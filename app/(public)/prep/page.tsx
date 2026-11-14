@@ -9,7 +9,6 @@ import { ReviewsBand } from "@/components/marketing/comic-reviews";
 import { TrustPills } from "@/components/marketing/trust-pills";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ORG_ID, SITE, breadcrumbs, canonical } from "@/lib/seo";
-import { getCardsRestoredStat } from "@/lib/site-stats";
 import { BulkSwitch } from "@/app/(public)/tier-selection/bulk-switch";
 import { BULK_PLANS, bulkPriceCents } from "@/lib/bulk-pricing";
 
@@ -53,7 +52,7 @@ function valueRate(percent: number) {
 }
 
 export default async function PrepPage() {
-  const [prices, cardsRestored] = await Promise.all([getPrepPrices(), getCardsRestoredStat()]);
+  const prices = await getPrepPrices();
   const structured = [
     {
       "@context": "https://schema.org",
@@ -89,7 +88,7 @@ export default async function PrepPage() {
           lead={<>We surface-clean and prep your cards so they&apos;re submission-ready. Graders make their own call, so no grade is ever guaranteed.</>}
         />
 
-        <TrustPills cardsRestored={cardsRestored} align="start" className="hero-in mb-12 md:mb-14" />
+        <TrustPills align="start" className="hero-in mb-12 md:mb-14" />
 
         {!prices.isOpen && (
           <div className="mb-10">

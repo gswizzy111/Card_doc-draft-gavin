@@ -5,11 +5,11 @@ import { CountUp } from "@/components/motion/count-up";
 import { VelocityMarquee } from "@/components/motion/velocity-marquee";
 import { BeforeAfter } from "@/components/motion/before-after";
 import { TrustedBy } from "@/components/marketing/trusted-by";
-import { getCardsRestoredStat } from "@/lib/site-stats";
 import { ORG_ID, SITE, INSTAGRAM_URL, canonical } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ReviewsBand } from "@/components/marketing/comic-reviews";
-import { TrustPills } from "@/components/marketing/trust-pills";
+import { TrustMarquee, CARDS_RESTORED_DISPLAY } from "@/components/marketing/trust-pills";
+import { WatchTheWork } from "@/components/marketing/watch-the-work";
 import { SERVICE_CARDS } from "@/lib/service-cards";
 import { CardSlot } from "@/components/marketing/card-slot";
 import { HERO, PROCESS, REASONS, RESULTS } from "@/lib/about";
@@ -36,6 +36,21 @@ export const metadata: Metadata = {
 
 const TAGLINE = "Expert card restoration & PSA prep — every card treated like it's worth a fortune.";
 const INSTAGRAM = INSTAGRAM_URL;
+
+/** The card kinds the owner lists in the FAQ answer below, as labels. */
+const CARD_KINDS: { label: string; tile: string }[] = [
+  { label: "Pokémon", tile: "bg-rx-soft" },
+  { label: "Magic: The Gathering", tile: "bg-rx-soft" },
+  { label: "Yu-Gi-Oh!", tile: "bg-rx-soft" },
+  { label: "Baseball", tile: "bg-powder" },
+  { label: "Basketball", tile: "bg-powder" },
+  { label: "Football", tile: "bg-powder" },
+  { label: "Hockey", tile: "bg-powder" },
+  { label: "Vintage", tile: "bg-butter" },
+  { label: "Modern", tile: "bg-butter" },
+  { label: "Raw", tile: "bg-mint" },
+  { label: "Graded", tile: "bg-mint" },
+];
 
 const FIXES = ["Creases", "Dents", "Dimples", "Edge lifts", "Corner lifts", "Minor bends", "Holo polishing", "Surface cleaning"];
 
@@ -212,26 +227,28 @@ function PatientCard({ name }: { name: string }) {
   );
 }
 
-export default async function HomePage() {
-  const cardsRestored = await getCardsRestoredStat();
+export default function HomePage() {
+  // The owner's figure (display only; lib/site-stats.ts keeps the live count).
+  const cardsRestored = CARDS_RESTORED_DISPLAY;
+  const allCards = FAQ.find((f) => f.q === "What types of cards do you work on?")?.a;
   const mantle = RESULTS.find((r) => r.id === "mickey-mantle");
   const charmanderCase = RESULTS.find((r) => r.id === "charmander");
   return (
     <div className="min-h-screen">
       <JsonLd data={structuredData()} />
 
+      <TrustMarquee className="hero-in" />
+
       {/* ── Front desk ─────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        <TrustPills cardsRestored={cardsRestored} className="hero-in relative z-20 mx-auto max-w-7xl px-4 pt-5 md:px-10 md:pt-7" />
-
-        <div className="relative mx-auto grid max-w-7xl gap-x-16 px-4 pt-8 pb-16 md:px-10 md:pt-12 lg:pb-24 xl:grid-cols-[minmax(0,1fr)_auto] xl:grid-rows-[auto_auto] xl:gap-y-8">
+        <div className="relative mx-auto grid max-w-7xl gap-x-16 px-4 pt-8 pb-10 md:px-10 md:pt-14 md:pb-14 lg:pb-20 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
           {/* The patient chart: drag to compare */}
-          <div className="hero-in order-2 mt-12 xl:order-none xl:col-start-2 xl:row-start-1 xl:mt-0 xl:w-[30rem] xl:self-end" style={{ ["--d" as string]: 80 }}>
+          <div className="hero-in order-2 mt-10 md:mt-12 xl:order-none xl:col-start-2 xl:row-start-1 xl:mt-0 xl:w-[30rem]" style={{ ["--d" as string]: 80 }}>
             <PatientCard name={mantle?.card ?? "Mickey Mantle"} />
           </div>
 
-          {/* The headline */}
-          <div className="relative z-10 order-1 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:self-center">
+          {/* The headline, the two actions, and what we never do right under them */}
+          <div className="relative z-10 order-1 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-start-1">
             <div className="hero-in" style={{ ["--d" as string]: 180 }}>
               <h1 className="font-heading font-bold leading-[1.02] tracking-[-0.03em] text-[clamp(2.5rem,10vw,4rem)] xl:text-[clamp(3.25rem,4.6vw,4.5rem)] [text-wrap:balance]">
                 <span className="block text-ink">{HERO.headline[0]}</span>
@@ -249,10 +266,7 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-          </div>
-
-          <div className="order-3 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:col-start-2 xl:row-start-2 xl:mx-0 xl:max-w-none xl:self-start">
-            <div className="hero-in mt-8 xl:mt-2" style={{ ["--d" as string]: 300 }}>
+            <div className="hero-in mt-7 max-w-[36rem] border-l-2 md:mt-8 border-coral-deep pl-4" style={{ ["--d" as string]: 300 }}>
               <p className="font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-ink-soft">We never</p>
               <ul className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-3">
                 {PROCESS.never.map((item) => (
@@ -263,6 +277,29 @@ export default async function HomePage() {
                 ))}
               </ul>
             </div>
+          </div>
+        </div>
+
+        {/* ── We do all cards ───────────────────────────────────────────── */}
+        <div aria-labelledby="all-cards-heading" role="region" className="border-t-2 border-tile bg-panel/60">
+          <div className="mx-auto grid max-w-7xl gap-x-12 gap-y-5 px-4 py-8 md:px-10 md:py-11 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center">
+            <h2 id="all-cards-heading" className="font-heading text-[clamp(1.875rem,5vw,2.5rem)] font-bold leading-none tracking-[-0.02em] text-ink">
+              We do all cards.
+            </h2>
+            <div className="min-w-0">
+              {allCards && <p className="max-w-[62ch] text-[15px] leading-relaxed text-ink-soft md:text-base">{allCards}</p>}
+              <ul aria-label="Cards we work on" className="mt-4 flex flex-wrap gap-2">
+                {CARD_KINDS.map(({ label, tile }) => (
+                  <li key={label} className="flex h-8 shrink-0 items-center gap-2 bg-panel px-3 text-[13px] font-semibold whitespace-nowrap text-ink px-frame">
+                    <span aria-hidden className={`size-2 ${tile} outline outline-1 outline-ink/40`} />
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <Link href="/tier-selection" className={pixelButton({ className: "justify-self-start lg:justify-self-end" })}>
+              Book a Restoration
+            </Link>
           </div>
         </div>
       </section>
@@ -286,26 +323,6 @@ export default async function HomePage() {
           ))}
         </VelocityMarquee>
       </section>
-
-      <TrustedBy />
-
-      {/* ── Intake: the slot for your card ─────────────────────────────── */}
-      <div className="wall-band">
-        <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-4 py-14 md:px-10 md:py-20 lg:place-items-center">
-          <div className="mx-auto grid w-full max-w-xl grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] items-center gap-6 sm:gap-10">
-            <CardSlot className="w-full max-w-[16rem]" />
-
-            <div className="grid size-32 place-items-center justify-self-center bg-panel px-frame-shadow sm:size-36">
-              <span className="px-3 text-center font-heading text-xl font-bold leading-[1.1] text-ink sm:text-2xl">
-                Free<br />Photo<br />Review
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <ReviewsBand title="What our customers say" />
 
       {/* ── Results: admitted vs discharged ────────────────────────────── */}
       <section aria-labelledby="results-heading" className="relative">
@@ -383,27 +400,56 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Why collectors choose us ───────────────────────────────────── */}
-      <section aria-labelledby="reasons-heading" className="wall-band">
-        <div className="relative mx-auto max-w-7xl px-4 pt-20 pb-20 md:px-10 md:pt-28 md:pb-28">
-          <h2 id="reasons-heading" data-reveal className={`max-w-3xl ${H2}`}>
-            {REASONS.title}
-          </h2>
-          <ul data-reveal="stagger" className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {REASONS.items.map((item, i) => (
-              <li key={item.title} className="flex">
-                <Window tone="ink" className="flex w-full flex-col">
-                  <span aria-hidden className={`grid size-11 place-items-center ${REASON_TILE[i % REASON_TILE.length]}`}>
-                    <PixelIcon name={REASON_ICONS[i] ?? "heart-plus"} size={24} />
-                  </span>
-                  <h3 className="mt-5 font-heading text-xl font-semibold leading-snug text-ink">{item.title}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{item.body}</p>
-                </Window>
-              </li>
-            ))}
-          </ul>
+      {/* ── Watch the work ─────────────────────────────────────────────── */}
+      <section aria-labelledby="watch-heading" className="bg-panel/60">
+        <div className="mx-auto max-w-7xl px-4 py-20 md:px-10 md:py-28">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+            <h2 id="watch-heading" data-reveal className={H2}>
+              Watch the work
+            </h2>
+            <a
+              href={INSTAGRAM}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 font-semibold text-ink underline decoration-coral-deep decoration-2 underline-offset-4 hover:text-coral-deep"
+            >
+              <span aria-hidden className="grid size-6 place-items-center bg-rx-soft">
+                <PixelIcon name="camera" size={16} />
+              </span>
+              @the_card_doc
+              <span className="sr-only">on Instagram (opens in a new tab)</span>
+            </a>
+          </div>
+          <div className="mt-10 md:mt-12">
+            <WatchTheWork />
+          </div>
+          <div className="mt-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-ink-soft">Restoration results vary by card condition.</p>
+            <Link href="/tier-selection" className={pixelButton({ className: "self-start sm:self-auto" })}>
+              Book a Restoration
+            </Link>
+          </div>
         </div>
       </section>
+
+      <ReviewsBand title="What our customers say" />
+
+      <TrustedBy />
+
+      {/* ── Intake: the slot for your card ─────────────────────────────── */}
+      <div className="wall-band">
+        <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-4 py-14 md:px-10 md:py-20 lg:place-items-center">
+          <div className="mx-auto grid w-full max-w-xl grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] items-center gap-6 sm:gap-10">
+            <CardSlot className="w-full max-w-[16rem]" />
+
+            <div className="grid size-32 place-items-center justify-self-center bg-panel px-frame-shadow sm:size-36">
+              <span className="px-3 text-center font-heading text-xl font-bold leading-[1.1] text-ink sm:text-2xl">
+                Free<br />Photo<br />Review
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* ── Services ───────────────────────────────────────────────────── */}
       <section aria-labelledby="services-heading">
@@ -427,12 +473,34 @@ export default async function HomePage() {
                     <span className="mt-1.5 block text-[15px] leading-relaxed text-ink-soft">{line}</span>
                   </span>
                   <span className="col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center md:col-span-1 md:flex-col md:items-end">
-                    <span className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft tabular-nums">
+                    <span className={price.startsWith("From") ? "font-heading text-xl font-bold leading-none tracking-[-0.01em] text-ink tabular-nums md:text-2xl" : "font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft"}>
                       {price}
                     </span>
                     <span className={pixelButton({ className: "w-full sm:w-auto md:min-w-40" })}>{action}</span>
                   </span>
                 </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── Why collectors choose us ───────────────────────────────────── */}
+      <section aria-labelledby="reasons-heading" className="wall-band">
+        <div className="relative mx-auto max-w-7xl px-4 pt-20 pb-20 md:px-10 md:pt-28 md:pb-28">
+          <h2 id="reasons-heading" data-reveal className={`max-w-3xl ${H2}`}>
+            {REASONS.title}
+          </h2>
+          <ul data-reveal="stagger" className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {REASONS.items.map((item, i) => (
+              <li key={item.title} className="flex">
+                <Window tone="ink" className="flex w-full flex-col">
+                  <span aria-hidden className={`grid size-11 place-items-center ${REASON_TILE[i % REASON_TILE.length]}`}>
+                    <PixelIcon name={REASON_ICONS[i] ?? "heart-plus"} size={24} />
+                  </span>
+                  <h3 className="mt-5 font-heading text-xl font-semibold leading-snug text-ink">{item.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{item.body}</p>
+                </Window>
               </li>
             ))}
           </ul>
