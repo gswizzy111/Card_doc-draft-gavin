@@ -7,16 +7,16 @@ export function AccountHeader({ email, active }: { email: string; active: "order
     <Link
       href={href}
       aria-current={on ? "page" : undefined}
-      className={`menu-cursor-item inline-flex min-h-11 items-center gap-1.5 font-heading text-lg uppercase tracking-[0.03em] ${on ? "text-ink underline underline-offset-[6px] decoration-[3px] decoration-coral-deep" : "text-ink-soft hover:text-ink"}`}
+      className={`menu-cursor-item inline-flex min-h-11 items-center gap-1.5 font-heading text-lg ${on ? "text-ink underline underline-offset-[6px] decoration-[3px] decoration-coral-deep" : "text-ink-soft hover:text-ink"}`}
     >
       {label}
     </Link>
   );
   return (
-    <header className="sticky top-0 z-10 border-b-[3px] border-ink bg-panel shadow-[0_3px_0_var(--trim)]">
+    <header className="sticky top-0 z-10 border-b-2 border-ink bg-panel shadow-[0_3px_0_var(--trim)]">
       <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
         <div className="flex items-center gap-5 sm:gap-6 min-w-0">
-          <Link href="/" className="inline-flex min-h-11 shrink-0 items-center font-heading text-xl tracking-[0.02em] text-ink hover:text-coral-deep">
+          <Link href="/" className="inline-flex min-h-11 shrink-0 items-center font-heading text-xl text-ink hover:text-coral-deep">
             The Card Doc
           </Link>
           <nav aria-label="Account" className="flex items-center gap-4">

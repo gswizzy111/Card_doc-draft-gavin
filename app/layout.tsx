@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Atkinson_Hyperlegible_Next, Jersey_10, Silkscreen } from "next/font/google";
+import { Atkinson_Hyperlegible_Next, Bricolage_Grotesque, Silkscreen } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { MetaPixelRouteTracker } from "@/components/meta-pixel-route-tracker";
@@ -8,13 +8,13 @@ import { siteUrl } from "@/lib/site-url";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ORGANIZATION } from "@/lib/seo";
 
-// Display, headings, buttons, nav and prices: a chunky, condensed pixel face
-// that stays legible small (its C never reads as an O). One weight; sized up
-// with font-size-adjust in globals.css.
-const jersey = Jersey_10({
+// Display, headings, buttons and nav: a confident grotesque with some
+// character (ink-trapped joins, optical sizes) that sits well next to the
+// small pixel accents. Variable weight; the opsz axis tightens big headlines.
+const bricolage = Bricolage_Grotesque({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: "400",
+  axes: ["opsz"],
   display: "swap",
 });
 
@@ -25,7 +25,8 @@ const atkinson = Atkinson_Hyperlegible_Next({
   display: "swap",
 });
 
-// Tiny labels only (chips, HUD text, the ▶ cursor): a small-size pixel face.
+// The pixel accent, used sparingly: eyebrow tags, status chips, small HUD
+// labels and price hints. Never headings or body copy.
 const silkscreen = Silkscreen({
   variable: "--font-pixel",
   subsets: ["latin"],
@@ -73,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jersey.variable} ${atkinson.variable} ${silkscreen.variable} h-full antialiased`}>
+    <html lang="en" className={`${bricolage.variable} ${atkinson.variable} ${silkscreen.variable} h-full antialiased`}>
       <head>
         <meta name="facebook-domain-verification" content="ihjnpqbitwq29e5kx3x0dujilxh1n9" />
         {/* Runs before anything else on the page and loads Google Analytics

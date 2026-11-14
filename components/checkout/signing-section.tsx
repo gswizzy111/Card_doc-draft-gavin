@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { Download, ExternalLink, PenLine } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 import { LegalDocument } from "@/components/legal/legal-document";
 import {
   AGREE_LABEL, CERTIFICATION_CLAUSE, CERTIFICATION_TEXT, ESIGN_BLOCKS, ESIGN_LABEL,
@@ -11,7 +11,6 @@ import type { CardDetails } from "@/lib/legal/agreements-v1";
 import type { SubmittedSigning } from "@/lib/checkout-signing";
 import { Need, Req } from "./required";
 import { PIXEL_FIELD } from "@/components/ui/input";
-import { WindowTab } from "@/components/pixel/window";
 
 /**
  * Everything a customer signs or chooses before an order is placed (Terms
@@ -97,7 +96,7 @@ export function SigningSection({
   return (
     <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-3 bg-panel p-4 px-frame sm:p-5">
-        <h3 className="font-heading text-xl uppercase tracking-[0.02em] text-ink">Optional permissions</h3>
+        <h3 className="font-heading text-xl text-ink">Optional permissions</h3>
         <label className="flex cursor-pointer items-start gap-3 text-[15px] leading-relaxed">
           <input
             type="checkbox"
@@ -121,11 +120,9 @@ export function SigningSection({
       </section>
 
       {/* The records desk: the signature card */}
-      <section className="px-window mt-4 flex flex-col gap-5 p-4 pt-7 sm:p-6 sm:pt-8">
-        <WindowTab aria-hidden cursor>RECORDS</WindowTab>
+      <section className="px-window flex flex-col gap-5 p-4 sm:p-6">
         <div>
-          <h3 className="flex items-center gap-3 font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">
-            <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-butter px-frame"><PenLine className="h-5 w-5 text-ink" strokeWidth={1.75} /></span>
+          <h3 className="font-heading text-2xl leading-tight text-ink">
             Sign to confirm your order
           </h3>
           <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
@@ -156,8 +153,8 @@ export function SigningSection({
             <LegalDocument blocks={ESIGN_BLOCKS} variant="compact" />
           </div>
         </details>
-        <Need missing={showMissing && !named(state.signerName)} note="Type your full legal name to sign." className="flex max-w-md flex-col gap-2 border-t-[3px] border-dashed border-rule pt-5">
-          <label htmlFor={`${id}-legal-name`} className="font-pixel text-xs uppercase tracking-[0.04em] text-ink">Full legal name<Req /></label>
+        <Need missing={showMissing && !named(state.signerName)} note="Type your full legal name to sign." className="flex max-w-md flex-col gap-2 border-t-2 border-dashed border-rule pt-5">
+          <label htmlFor={`${id}-legal-name`} className="text-sm font-semibold text-ink">Full legal name<Req /></label>
           <input
             id={`${id}-legal-name`}
             className={NAME_INPUT}

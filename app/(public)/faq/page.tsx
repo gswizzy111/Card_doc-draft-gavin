@@ -3,7 +3,6 @@ import { canonical } from "@/lib/seo";
 import { PageHero } from "@/components/marketing/page-hero";
 import { FAQ_SECTIONS } from "./faq-data";
 import { FaqSearch } from "./faq-search";
-import { PixelIcon } from "@/components/pixel";
 
 export const metadata: Metadata = {
   alternates: canonical("/faq"),
@@ -24,19 +23,18 @@ export default function FAQPage() {
   return (
     <>
       {/* Hero: the records office */}
-      <section className="page-glow border-b-[3px] border-ink pt-12 pb-14 md:pt-20 md:pb-20">
+      <section className="border-b-2 border-tile pt-14 pb-14 md:pt-24 md:pb-20">
         <div className="max-w-6xl mx-auto px-4 md:px-10">
           <PageHero
             eyebrow="FAQ"
             title="Common questions."
-            sprite={<PixelIcon name="clipboard" size={96} />}
             lead="Everything you need to know before placing your first order."
           />
         </div>
       </section>
 
       {/* Questions, searchable: the record files */}
-      <section className="tile-floor-sm py-12 md:py-20">
+      <section className="py-12 md:py-20">
         <div className="max-w-3xl mx-auto px-4 md:px-8">
           <FaqSearch sections={FAQ_SECTIONS} />
         </div>

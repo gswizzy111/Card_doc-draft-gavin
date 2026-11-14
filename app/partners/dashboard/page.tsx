@@ -47,7 +47,7 @@ export default async function PartnerDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)]">{partner.store_name ?? partner.name}</h1>
+            <h1 className="font-heading text-4xl leading-none text-ink">{partner.store_name ?? partner.name}</h1>
             <p className="text-muted-foreground text-sm mt-1">Partner Dashboard — The Card Doc</p>
           </div>
           <form action="/api/partners/logout" method="POST">
@@ -77,7 +77,7 @@ export default async function PartnerDashboard() {
           ].map(({ label, allocated, sold, remaining }) => (
             <div key={label} className="bg-panel px-frame p-4">
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">{label}</p>
-              <p className="font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink">{remaining}<span className="text-sm font-normal text-muted-foreground">/{allocated}</span></p>
+              <p className="font-heading text-3xl leading-tight text-ink">{remaining}<span className="text-sm font-normal text-muted-foreground">/{allocated}</span></p>
               <p className="text-xs text-muted-foreground mt-1">{sold} sold</p>
             </div>
           ))}
@@ -91,7 +91,7 @@ export default async function PartnerDashboard() {
 
         {/* Sales history */}
         <div className="px-window-ink p-6 mb-4">
-          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">Sales History</h2>
+          <h2 className="font-heading text-2xl leading-tight text-ink mb-4">Sales History</h2>
           {!allSales.length ? (
             <p className="text-sm text-muted-foreground">No sales logged yet.</p>
           ) : (
@@ -111,7 +111,7 @@ export default async function PartnerDashboard() {
 
         {/* Referrals history */}
         <div className="px-window-ink p-6">
-          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">
+          <h2 className="font-heading text-2xl leading-tight text-ink mb-4">
             Referrals <span className="text-muted-foreground font-normal text-sm">({referrals?.length ?? 0} total)</span>
           </h2>
           {!referrals?.length ? (

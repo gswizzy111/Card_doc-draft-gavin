@@ -51,7 +51,7 @@ export default async function AffiliateDashboard() {
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Creator dashboard · The Card Doc</p>
-            <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] mt-1 [overflow-wrap:anywhere]">{creator.name}</h1>
+            <h1 className="font-heading text-4xl leading-none text-ink mt-1 [overflow-wrap:anywhere]">{creator.name}</h1>
           </div>
           <form action="/api/affiliates/logout" method="POST" className="shrink-0">
             <button className="text-sm text-muted-foreground hover:text-foreground transition-colors py-1">Sign out</button>
@@ -90,7 +90,7 @@ export default async function AffiliateDashboard() {
         <div className="grid gap-6 md:grid-cols-2">
           {/* By service */}
           <div className="px-window-ink p-6">
-            <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">By service</h2>
+            <h2 className="font-heading text-2xl leading-tight text-ink">By service</h2>
             <p className="text-xs text-muted-foreground mb-2">Sales and revenue, with your commission on the right</p>
             <ServiceRow label="Restorations" t={s.restoration} />
             <ServiceRow label="Restoration kits" t={s.kit} />
@@ -98,7 +98,7 @@ export default async function AffiliateDashboard() {
 
           {/* By month */}
           <div className="px-window-ink p-6">
-            <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-3">Last 6 months</h2>
+            <h2 className="font-heading text-2xl leading-tight text-ink mb-3">Last 6 months</h2>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
@@ -124,7 +124,7 @@ export default async function AffiliateDashboard() {
 
         {/* Recent sales */}
         <div className="px-window-ink p-6">
-          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">Recent sales</h2>
+          <h2 className="font-heading text-2xl leading-tight text-ink">Recent sales</h2>
           <p className="text-xs text-muted-foreground mb-3">The last {RECENT} orders with your code. Customer names and details aren&apos;t shown.</p>
           {sales.length === 0 ? (
             <p className="text-sm text-muted-foreground py-4">No sales with your code yet. Share it with your followers and they&apos;ll show up here.</p>

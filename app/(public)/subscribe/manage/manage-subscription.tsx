@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
-import { PixelIcon } from "@/components/pixel/sprites";
 
 type SubResult = {
   found: boolean;
@@ -109,22 +108,12 @@ export function ManageSubscription({ token }: { token: string }) {
   return (
     <div className="min-h-screen page-glow flex items-center justify-center px-4 py-14 md:py-20">
       <div className="w-full max-w-lg">
-        <Link href="/" className="mb-6 inline-flex min-h-11 items-center gap-2 bg-panel px-3 text-sm font-semibold text-ink px-frame hover:bg-butter transition-colors duration-100">← Back to home</Link>
+        <Link href="/" className="mb-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-coral-deep underline-offset-4 hover:underline">← Back to home</Link>
 
       {/* The pharmacy counter */}
       <div className="px-window p-0 md:p-0">
-        <div aria-hidden className="flex h-10 items-center justify-between gap-3 border-b-[3px] border-frame bg-mint px-5">
-          <span className="flex items-center gap-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink">
-            <PixelIcon name="kit" size={16} />
-            PHARMACY
-          </span>
-          <span className="flex gap-1.5">
-            <span className="size-2 bg-ink" />
-            <span className="size-2 bg-ink/40" />
-          </span>
-        </div>
         <div className="p-5 md:p-8">
-        <h1 className="font-heading uppercase text-[2.25rem] md:text-5xl leading-[0.95] tracking-[0.01em] text-ink mb-3">Manage Your Subscription</h1>
+        <h1 className="font-heading text-[2.25rem] md:text-5xl leading-tight text-ink mb-3">Manage Your Subscription</h1>
         <p className="text-[15px] text-ink-soft mb-6">Enter the email you used to subscribe. We&apos;ll email you a link to manage it.</p>
 
         <form onSubmit={handleLookup} className="flex gap-3 mb-6">
@@ -137,7 +126,7 @@ export function ManageSubscription({ token }: { token: string }) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             required
-            className="h-12 flex-1 min-w-0 rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+            className="h-12 flex-1 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
           />
           <button
             type="submit"
@@ -159,14 +148,14 @@ export function ManageSubscription({ token }: { token: string }) {
         )}
 
         {checking && token && (
-          <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft px-blink">Loading…</p>
+          <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">Loading…</p>
         )}
 
         {result?.found && (
           <div className="bg-panel p-5 space-y-4 px-frame shadow-[inset_0_6px_0_var(--mint)]">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="font-heading uppercase text-2xl tracking-[0.02em] text-ink">Monthly Kit Club</p>
+                <p className="font-heading text-2xl text-ink">Monthly Kit Club</p>
                 {typeof result.price_cents === "number" && (
                   <p className="text-sm text-ink-soft mt-0.5 [font-feature-settings:'lnum'_1]">{formatCurrency(result.price_cents)} / month</p>
                 )}

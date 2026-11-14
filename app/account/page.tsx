@@ -64,13 +64,13 @@ export default async function AccountPage() {
 
       <div className="max-w-4xl mx-auto px-6 py-10 flex flex-col gap-8">
         <div>
-          <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)]">Welcome back, {displayName}</h1>
+          <h1 className="font-heading text-4xl leading-none text-ink">Welcome back, {displayName}</h1>
           <p className="text-muted-foreground text-sm mt-1">View and manage your orders below.</p>
         </div>
 
         {/* Restoration Orders */}
         <section>
-          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">Restoration Orders</h2>
+          <h2 className="font-heading text-2xl leading-tight text-ink mb-4">Restoration Orders</h2>
           {restorationOrders.length === 0 ? (
             <div className="px-window-ink p-8 text-center text-muted-foreground text-sm">
               No restoration orders found.{" "}
@@ -120,7 +120,7 @@ export default async function AccountPage() {
         {/* Kit Orders */}
         {kitOrders.length > 0 && (
           <section>
-            <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">Kit Orders</h2>
+            <h2 className="font-heading text-2xl leading-tight text-ink mb-4">Kit Orders</h2>
             <div className="flex flex-col gap-3">
               {kitOrders.map((order) => {
                 const items = (order.items ?? []) as ShopItem[];

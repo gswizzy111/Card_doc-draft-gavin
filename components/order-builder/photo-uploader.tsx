@@ -4,7 +4,7 @@ import { useRef, useState, useCallback, useSyncExternalStore } from "react";
 import { AlertTriangle, ImageOff, X } from "lucide-react";
 import { toast } from "sonner";
 import { MAX_CARD_PHOTOS } from "@/lib/site-config";
-import { DocSprite, PixelIcon } from "@/components/pixel/sprites";
+import { PixelIcon } from "@/components/pixel/sprites";
 
 interface PhotoUploaderProps {
   photoUrls: string[];
@@ -177,13 +177,13 @@ export function PhotoUploader({ photoUrls, onChange, max = MAX_CARD_PHOTOS }: Ph
   const canAddMore = photoUrls.length < max;
 
   return (
-    <div className="flex flex-col gap-4 bg-muted p-3 shadow-[inset_0_3px_0_var(--tile)] px-frame">
+    <div className="flex flex-col gap-4">
       {/* The exam tray: thumbnails on a tray, then the drop slot */}
       {/* Thumbnails */}
       {photoUrls.length > 0 && (
         <div className="flex flex-wrap gap-3 pt-1 pl-1">
           {photoUrls.map((url) => (
-            <div key={url} className="group relative size-24 shrink-0 bg-panel p-[3px] px-frame-shadow">
+            <div key={url} className="group relative size-24 shrink-0 bg-panel p-[2px] px-frame">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt="" className="w-full h-full object-cover" />
               <button
@@ -210,30 +210,27 @@ export function PhotoUploader({ photoUrls, onChange, max = MAX_CARD_PHOTOS }: Ph
           onDragOver={(e) => { e.preventDefault(); if (!uploading) setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
-          className={`relative flex select-none flex-col items-center justify-center gap-2.5 border-[3px] border-dashed px-4 py-7 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep
+          className={`relative flex select-none flex-col items-center justify-center gap-2.5 border-2 border-dashed px-4 py-7 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep
             ${uploading ? "cursor-not-allowed opacity-70" : "cursor-pointer"}
             ${dragOver ? "border-coral-deep bg-rx-soft" : "border-ink/35 bg-panel hover:border-ink/60 hover:bg-[color-mix(in_srgb,var(--butter)_25%,var(--panel))]"}
           `}
         >
           {uploading ? (
             <div className="flex flex-col items-center gap-2">
-              <DocSprite scale={2} />
-              <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink">Uploading photo…</p>
+              <p className="animate-pulse font-pixel text-xs uppercase tracking-[0.04em] text-ink">Uploading photo…</p>
             </div>
           ) : (
             <>
-              <div aria-hidden className="grid size-14 place-items-center bg-powder px-frame">
-                <PixelIcon name="camera" size={32} />
-              </div>
+              <PixelIcon name="camera" size={32} />
               <div className="text-center">
-                <p className="font-heading text-lg uppercase tracking-[0.02em] text-ink">
+                <p className="font-heading text-lg text-ink">
                   {photoUrls.length === 0 ? "Upload photos of your card" : "Add more photos"}
                 </p>
                 <p className="mt-1 text-[13px] text-ink-soft">
                   Tap to choose · Drag &amp; drop · Any photo format · Large files OK
                 </p>
               </div>
-              <p className="inline-flex h-6 items-center bg-muted px-2 font-pixel text-xs tabular-nums text-ink px-frame">
+              <p className="font-pixel text-xs tabular-nums text-ink-soft">
                 {photoUrls.length}/{max} photo{max !== 1 ? "s" : ""}
               </p>
             </>

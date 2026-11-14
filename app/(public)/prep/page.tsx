@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PixelViewContent } from "@/components/pixel-view-content";
 import { PageHero } from "@/components/marketing/page-hero";
-import { CardSprite, DocSprite, PixelIcon, Window, pixelButton } from "@/components/pixel";
+import { CardSprite, PixelIcon, Window, pixelButton } from "@/components/pixel";
 import { ReviewsBand } from "@/components/marketing/comic-reviews";
 import { TrustPills } from "@/components/marketing/trust-pills";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -86,21 +86,14 @@ export default async function PrepPage() {
           eyebrow="Prep Service"
           title="Get Your Cards Grade-Ready"
           lines={["Get Your Cards", "Grade-Ready"]}
-          sprite={
-            <div className="flex items-end gap-3 pb-1">
-              <PixelIcon name="magnifier" size={48} className="mb-6" />
-              <CardSprite variant="sleeve" scale={4} />
-            </div>
-          }
           lead={<>We surface-clean and prep your cards so they&apos;re submission-ready. Graders make their own call, so no grade is ever guaranteed.</>}
         />
 
         <TrustPills cardsRestored={cardsRestored} align="start" className="hero-in mb-12 md:mb-14" />
 
         {!prices.isOpen && (
-          <div className="mb-10 flex items-end gap-3 md:gap-5">
-            <DocSprite scale={2} className="mb-1 shrink-0" />
-            <Window variant="dialog" title="Front desk" className="flex flex-1 items-center gap-3 bg-butter py-4 pr-10 font-semibold text-ink md:py-5">
+          <div className="mb-10">
+            <Window className="flex items-center gap-3 bg-butter py-4 font-semibold text-ink md:py-5">
               <PixelIcon name="clock" size={32} className="shrink-0" />
               Prep is temporarily paused — check back soon.
             </Window>
@@ -113,20 +106,19 @@ export default async function PrepPage() {
             <BulkSwitch stacked note="Bulk pricing is applied automatically at checkout to every card. Add-ons and shipping aren't discounted.">
             <div className="px-window-ink flex flex-col">
               {/* The pre-exam room's price board */}
-              <div className="relative flex items-center justify-between gap-4 border-b-[3px] border-ink bg-mint px-5 py-5 md:px-7">
-                <div aria-hidden className="absolute inset-0 px-dither opacity-60" />
+              <div className="relative flex items-center justify-between gap-4 border-b-2 border-ink/80 bg-[color-mix(in_srgb,var(--mint)_55%,var(--panel))] px-5 py-5 md:px-7">
                 <div className="relative">
-                  <h2 className="font-heading text-[2rem] uppercase leading-none tracking-[0.02em] text-ink md:text-[2.5rem]">Prep Pricing</h2>
+                  <h2 className="font-heading text-[2rem] leading-none text-ink md:text-[2.5rem]">Prep Pricing</h2>
                   <p className="mt-1.5 text-sm font-semibold text-ink">Per card — price based on declared value</p>
                 </div>
-                <span aria-hidden className="relative grid size-16 shrink-0 place-items-center bg-panel px-frame">
-                  <CardSprite variant="sleeve" scale={2} />
+                <span aria-hidden className="relative shrink-0">
+                  <CardSprite variant="sleeve" scale={2} animate={false} />
                 </span>
               </div>
               <div className="divide-y-2 divide-dashed divide-ink/20">
                 <div className="flex flex-col gap-3 px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 md:px-7">
                   <div>
-                    <p className="flex items-center gap-2 font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">
+                    <p className="flex items-center gap-2 font-heading text-xl leading-tight text-ink">
                       <span aria-hidden className="size-3 shrink-0 bg-mint px-frame" />
                       Cards under $1,500
                     </p>
@@ -147,7 +139,7 @@ export default async function PrepPage() {
                 </div>
                 <div className="flex flex-col gap-3 px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 md:px-7">
                   <div>
-                    <p className="flex items-center gap-2 font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">
+                    <p className="flex items-center gap-2 font-heading text-xl leading-tight text-ink">
                       <span aria-hidden className="size-3 shrink-0 bg-butter px-frame" />
                       Cards $1,500 and over
                     </p>
@@ -177,7 +169,7 @@ export default async function PrepPage() {
                   </div>
                 </div>
               </div>
-              <div className="border-t-[3px] border-ink bg-muted px-5 py-5 md:px-7">
+              <div className="border-t-2 border-ink/15 px-5 py-5 md:px-7">
                 {prices.isOpen ? (
                   <Link
                     href="/prep/order"
@@ -186,7 +178,7 @@ export default async function PrepPage() {
                     Order Prep
                   </Link>
                 ) : (
-                  <div className="flex h-14 w-full cursor-not-allowed items-center justify-center bg-panel font-heading text-lg uppercase tracking-[0.04em] text-ink-soft px-frame">
+                  <div className="flex h-14 w-full cursor-not-allowed items-center justify-center bg-panel font-heading text-lg text-ink-soft px-frame">
                     Currently Paused
                   </div>
                 )}
@@ -196,17 +188,15 @@ export default async function PrepPage() {
 
             {/* Add-ons: the extra tests on the chart */}
             <div>
-              <h2 className="mb-5 font-heading text-[2rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:2px_2px_0_var(--wall)]">Available Add-Ons</h2>
+              <h2 className="mb-5 font-heading text-[2rem] leading-none text-ink">Available Add-Ons</h2>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div className="px-window-ink flex flex-col gap-3 p-5">
                   <div className="flex items-start justify-between gap-3">
-                    <span aria-hidden className="grid size-16 shrink-0 place-items-center bg-powder px-frame">
-                      <PixelIcon name="clipboard" size={32} />
-                    </span>
-                    <span className="inline-flex h-7 items-center bg-rx px-2 font-pixel text-xs text-panel tabular-nums px-frame">+{fmt(prices.preGradePriceCents)}/card</span>
+                    <PixelIcon name="clipboard" size={32} className="shrink-0" />
+                    <span className="font-pixel text-sm text-coral-deep tabular-nums">+{fmt(prices.preGradePriceCents)}/card</span>
                   </div>
                   <div>
-                    <h3 className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">Pre-Grade Assessment</h3>
+                    <h3 className="font-heading text-xl leading-tight text-ink">Pre-Grade Assessment</h3>
                     <p className="mt-1 text-sm leading-relaxed text-ink-soft">
                       We assess each card and give you an estimated grade before you submit — so you know what to expect.
                     </p>
@@ -214,29 +204,26 @@ export default async function PrepPage() {
                 </div>
                 <div className="px-window-ink flex flex-col gap-3 p-5">
                   <div className="flex items-start justify-between gap-3">
-                    <span aria-hidden className="grid size-16 shrink-0 place-items-center bg-butter px-frame">
-                      <CardSprite variant="slab" scale={2} />
-                    </span>
-                    <span className="inline-flex h-7 items-center bg-rx px-2 font-pixel text-xs text-panel tabular-nums px-frame">+{fmt(prices.slabCrackPriceCents)}/card</span>
+                    <span aria-hidden className="shrink-0"><CardSprite variant="slab" scale={2} animate={false} /></span>
+                    <span className="font-pixel text-sm text-coral-deep tabular-nums">+{fmt(prices.slabCrackPriceCents)}/card</span>
                   </div>
                   <div>
-                    <h3 className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">Slab Crack</h3>
+                    <h3 className="font-heading text-xl leading-tight text-ink">Slab Crack</h3>
                     <p className="mt-1 text-sm leading-relaxed text-ink-soft">
                       Already graded? We carefully crack the slab and include the raw card in your prep order.
                     </p>
                   </div>
                 </div>
               </div>
-              <p className="mt-4 inline-block bg-panel px-3 py-1.5 text-xs text-ink-soft px-frame">Add-ons are selected during the order process.</p>
+              <p className="mt-4 text-xs text-ink-soft">Add-ons are selected during the order process.</p>
             </div>
           </div>
 
           <div className="flex flex-col gap-10">
             {/* Not included: the room's do-not list */}
             <div className="px-window-ink">
-              <div className="flex items-center justify-between gap-3 border-b-[3px] border-ink bg-rx-soft px-5 py-3">
+              <div className="border-b-2 border-ink/15 px-5 pt-5 pb-3">
                 <p className="font-pixel text-xs uppercase tracking-[0.04em] text-coral-deep">Prep does not include:</p>
-                <CardSprite variant="hurt" scale={2} />
               </div>
               <ul className="grid grid-cols-1 gap-x-6 gap-y-2.5 px-5 pt-4 min-[400px]:grid-cols-2">
                 {["Crease work", "Edge & corner work", "Dent removal", "Any restorative work"].map((item) => (
@@ -256,15 +243,12 @@ export default async function PrepPage() {
               </p>
             </div>
 
-            <div className="flex items-end gap-3">
-              <DocSprite scale={2} className="mb-1 shrink-0" />
-              <Window variant="dialog" className="flex-1 py-4 pr-10 text-sm text-ink">
-                Questions?{" "}
-                <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="font-semibold text-coral-deep underline decoration-2 underline-offset-4 hover:text-ink">
-                  DM us @the_card_doc
-                </a>
-              </Window>
-            </div>
+            <p className="px-1 text-sm text-ink">
+              Questions?{" "}
+              <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="font-semibold text-coral-deep underline decoration-2 underline-offset-4 hover:text-ink">
+                DM us @the_card_doc
+              </a>
+            </p>
           </div>
         </div>
 

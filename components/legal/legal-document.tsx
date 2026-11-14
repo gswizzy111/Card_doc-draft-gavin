@@ -21,14 +21,14 @@ export function LegalDocument({
       {blocks.map((b, i) => {
         if (b.kind === "title") {
           return (
-            <p key={i} className={page ? "font-heading text-2xl md:text-3xl uppercase leading-[1.05] tracking-[0.02em] text-ink" : "font-bold text-foreground"}>
+            <p key={i} className={page ? "font-heading text-2xl md:text-3xl font-bold leading-tight tracking-[-0.02em] text-ink" : "font-bold text-foreground"}>
               {b.text}
             </p>
           );
         }
         if (b.kind === "heading") {
           return page ? (
-            <h2 key={i} id={b.id} className="scroll-mt-28 mt-8 border-t-2 border-dashed border-ink/25 pt-6 font-heading text-2xl md:text-3xl leading-[1.05] tracking-[0.02em] text-ink">
+            <h2 key={i} id={b.id} className="scroll-mt-28 mt-8 border-t-2 border-tile pt-6 font-heading text-xl md:text-2xl font-semibold leading-snug tracking-[-0.01em] text-ink">
               {b.text}
             </h2>
           ) : (
@@ -40,7 +40,7 @@ export function LegalDocument({
             <ul key={i} className={page ? "flex flex-col gap-2.5" : "flex flex-col gap-1.5"}>
               {b.items.map((item, j) => (
                 <li key={j} className="flex items-start gap-3">
-                  <span className="mt-[0.55em] size-2 shrink-0 bg-coral-deep" aria-hidden />
+                  <span className="mt-[0.6em] size-1.5 shrink-0 bg-coral-deep" aria-hidden />
                   <span><LinkedText text={item} linkClassName={linkClassName} /></span>
                 </li>
               ))}

@@ -86,7 +86,7 @@ export function CheckEmail({ info, onConfirmed, onStartOver, onBack }: {
 
   return (
     <div className="px-window-ink p-6 sm:p-8">
-      <h1 ref={heading} tabIndex={-1} className="font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink text-center outline-none">
+      <h1 ref={heading} tabIndex={-1} className="font-heading text-3xl leading-tight text-ink text-center outline-none">
         {state.sent ? "Check your email" : "We couldn't send your link"}
       </h1>
 

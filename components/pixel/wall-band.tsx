@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Section header device: a peach clinic wall with a wainscot trim stripe.
- * `sprite` is a slot for a pixel sprite (plant, machine, sign) that stands
- * on the trim at the right.
+ * Section band: a calm peach wash with a thin trim line at the foot.
+ * `sprite` is an opt-in slot for one small pixel sprite that stands on the
+ * trim at the right; leave it empty on most pages (revision 2 props budget).
  */
 export function WallBand({
   as: Tag = "div",

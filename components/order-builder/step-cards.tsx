@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { PhotoUploader } from "./photo-uploader";
-import { CardSprite } from "@/components/pixel/sprites";
 import { CardIdentityFields, emptyIdentity, type CardIdentity } from "@/components/checkout/card-identity-fields";
 import { Need, Req } from "@/components/checkout/required";
 import { VALUE_HELP } from "@/lib/legal/current-terms";
@@ -115,7 +114,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">
+        <h2 className="mb-2 font-heading text-[2.25rem] leading-none text-ink md:text-5xl">
           Tell us about your cards.
         </h2>
         <p className="text-ink-soft">
@@ -133,8 +132,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
           return (
             <div key={card.id} className="px-window flex flex-col gap-5 p-4 pt-5 sm:p-6">
               <div className="flex items-center justify-between">
-                <h3 className="flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink">
-                  <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-rx-soft px-frame"><CardSprite variant="hurt" scale={1} animate={false} /></span>
+                <h3 className="font-heading text-2xl leading-none text-ink">
                   Card {i + 1}
                 </h3>
                 {cards.length > 1 && (
@@ -229,7 +227,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                             : styles.normal
                         }`}
                       >
-                        <span className="block font-heading text-lg uppercase leading-tight tracking-[0.02em]">
+                        <span className="block font-heading text-lg leading-tight">
                           {selected && <Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />}{t.name}
                           {!available && t.max_card_value_cents && (
                             <span className="ml-1 font-sans text-xs normal-case tracking-normal">(max ${(t.max_card_value_cents / 100).toLocaleString()})</span>

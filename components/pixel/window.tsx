@@ -12,19 +12,20 @@ const TONE: Record<WindowTone, string> = {
  * The clinic's core container: a pixel window with stepped corners.
  *
  * - `variant="window"`: a plain panel.
- * - `variant="dialog"`: an NPC dialog box; a ▼ blinks in the corner
- *   (static under reduced motion). Pass `next={false}` to hide it.
+ * - `variant="dialog"`: a dialog box. The ▼ prompt is opt-in (revision 2):
+ *   `next` shows it still in the corner, `next="blink"` makes it blink
+ *   (static under reduced motion). Keep the blink to the home hero at most.
  * - `tone`: `frame` (blue frame, default), `ink` (ink outline) or `night`.
  * - `title`: an optional tab label that sits on the top edge.
  *
- * The outline draws 3px outside the box, so leave a little room around it.
+ * The outline draws 2px outside the box, so leave a little room around it.
  */
 export function Window({
   as: Tag = "div",
   variant = "window",
   tone = "frame",
   title,
-  next = true,
+  next = false,
   className,
   children,
   ...props
@@ -33,18 +34,18 @@ export function Window({
   variant?: "window" | "dialog";
   tone?: WindowTone;
   title?: React.ReactNode;
-  next?: boolean;
+  next?: boolean | "blink";
 } & React.HTMLAttributes<HTMLElement>) {
   return (
     <Tag
       data-slot="pixel-window"
-      className={cn(TONE[tone], variant === "dialog" && "px-dialog", "p-5 md:p-6", title ? "mt-4" : "", className)}
+      className={cn(TONE[tone], variant === "dialog" && "px-dialog", "p-5 md:p-7", title ? "mt-4" : "", className)}
       {...props}
     >
       {title && <WindowTab>{title}</WindowTab>}
       {children}
       {variant === "dialog" && next && (
-        <span aria-hidden className="px-dialog-next">
+        <span aria-hidden className={cn("px-dialog-next", next === "blink" && "px-dialog-next-blink")}>
           ▼
         </span>
       )}
@@ -53,7 +54,7 @@ export function Window({
 }
 
 /**
- * The butter tab that sits on a window's top edge. `<Window title>` uses it;
+ * The small label tab that sits on a window's top edge. `<Window title>` uses it;
  * use it directly on a plain `.px-window*` element (give that element
  * `relative mt-4`). `cursor` adds the ▶ before the label.
  */
@@ -70,7 +71,7 @@ export function WindowTab({
     <span
       {...props}
       className={cn(
-        "absolute -top-4 left-4 z-[1] inline-flex h-7 items-center gap-1.5 bg-butter px-2.5 font-pixel text-xs uppercase text-ink px-frame",
+        "absolute -top-3.5 left-4 z-[1] inline-flex h-6 items-center gap-1.5 bg-butter px-2 font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.04em] text-ink shadow-[0_0_0_2px_color-mix(in_srgb,var(--ink)_70%,var(--panel))]",
         className
       )}
     >

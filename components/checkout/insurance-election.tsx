@@ -52,7 +52,7 @@ export function InsuranceElectionBox({
   return (
     <div className="flex flex-col gap-3" id="insurance-election">
       <div>
-        <h3 className="font-heading text-xl uppercase tracking-[0.02em] text-ink">Shipping insurance<Req /> <span className="font-sans text-xs normal-case tracking-normal text-ink-soft">(choose one)</span></h3>
+        <h3 className="font-heading text-xl text-ink">Shipping insurance<Req /> <span className="font-sans text-xs normal-case tracking-normal text-ink-soft">(choose one)</span></h3>
         <p className="mt-1 text-sm text-ink-soft">{NOT_INSURED_TEXT}</p>
       </div>
       <Need missing={showMissing && election === null} note="Choose to buy or decline shipping insurance.">

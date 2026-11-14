@@ -51,7 +51,7 @@ export function SnapDeck({
             role="tab"
             aria-selected={i === active}
             onClick={() => go(i)}
-            className={`press my-[3px] shrink-0 px-4 h-11 font-heading text-base uppercase px-frame transition-colors duration-100 [transition-timing-function:steps(1,end)] ${
+            className={`press my-[3px] shrink-0 px-4 h-11 font-heading text-base font-semibold px-frame transition-colors duration-150 ease-out ${
               i === active ? "bg-butter text-ink" : "bg-panel text-ink-soft"
             }`}
           >
@@ -76,7 +76,7 @@ export function SnapDeck({
         {items.map((_, i) => (
           <span
             key={i}
-            className={`h-2 transition-[width,background-color] duration-150 [transition-timing-function:steps(2,end)] ${i === active ? "w-6 bg-coral-deep" : "w-2 bg-ink/25"}`}
+            className={`h-2 transition-[width,background-color] duration-200 ease-out ${i === active ? "w-6 bg-coral-deep" : "w-2 bg-ink/25"}`}
           />
         ))}
       </div>

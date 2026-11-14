@@ -35,7 +35,7 @@ export function StepCustomer({ customer, onChange, showMissing = false }: StepCu
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">
+        <h2 className="mb-2 font-heading text-[2.25rem] leading-none text-ink md:text-5xl">
           Where should we ship them back?
         </h2>
         <p className="text-muted-foreground">We&apos;ll also use this to confirm your order.</p>

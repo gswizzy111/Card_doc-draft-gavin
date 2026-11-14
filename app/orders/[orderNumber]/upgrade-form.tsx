@@ -44,7 +44,7 @@ export function UpgradeForm({ orderNumber, customerEmail, offers }: Props) {
   return (
     <div className="bg-gradient-to-br from-blue-50 to-white border border-frame/50 p-6 mb-5">
       <p className="rx-label text-rx mb-1">Want Faster Service?</p>
-      <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-1">Upgrade Your Restoration</h2>
+      <h2 className="font-heading text-2xl leading-tight text-ink mb-1">Upgrade Your Restoration</h2>
       <p className="text-sm text-muted-foreground mb-5">
         You can upgrade to a higher service level until your cards arrive. You only pay the difference.
       </p>

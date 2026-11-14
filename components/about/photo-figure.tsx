@@ -27,7 +27,7 @@ export function PhotoFigure({
   if (!photo) return null;
   return (
     <figure className={className}>
-      <div className={bare ? "bg-ink p-[3px]" : "bg-panel p-2 md:p-2.5 px-frame-shadow"}>
+      <div className={bare ? "bg-ink p-[2px]" : "bg-panel p-2 md:p-2.5 px-frame-shadow"}>
         <div className={`overflow-hidden ${bare ? "" : "shadow-[0_0_0_2px_var(--frame)]"} ${aspect ?? ""}`}>
           <Image
             src={photo.src}
@@ -39,8 +39,7 @@ export function PhotoFigure({
         </div>
       </div>
       {photo.caption && (
-        <figcaption className="mt-3 inline-flex items-center gap-2 bg-panel px-2.5 py-1.5 text-[13px] text-ink-soft px-frame">
-          <span aria-hidden className="font-pixel text-xs text-coral-deep">▶</span>
+        <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
           {photo.caption}
         </figcaption>
       )}

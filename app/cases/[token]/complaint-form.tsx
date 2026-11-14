@@ -32,7 +32,7 @@ export function ComplaintForm({ caseId, token }: { caseId: string; token: string
     return (
       <div className="text-center py-6">
         <div className="text-4xl mb-3">✅</div>
-        <p className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-2">Complaint submitted</p>
+        <p className="font-heading text-2xl leading-tight text-ink mb-2">Complaint submitted</p>
         <p className="text-sm text-gray-500 leading-relaxed">
           We&apos;ll review your case and get back to you within <strong>3 business days</strong>.
         </p>
@@ -47,7 +47,7 @@ export function ComplaintForm({ caseId, token }: { caseId: string; token: string
           Your complaint *
         </label>
         <textarea
-          className="w-full resize-none py-2.5 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+          className="w-full resize-none py-2.5 min-w-0 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
           rows={6}
           value={complaint}
           onChange={(e) => setComplaint(e.target.value)}

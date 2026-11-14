@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { SparkleSprite } from "@/components/pixel/sprites";
 
 export function RestorationWaitlistForm({ onSuccess }: { onSuccess?: () => void } = {}) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
@@ -35,15 +34,13 @@ export function RestorationWaitlistForm({ onSuccess }: { onSuccess?: () => void 
   if (status === "success") {
     return (
       <div className="relative mx-auto max-w-md bg-mint px-6 py-5 text-center px-frame">
-        <SparkleSprite iterations={1} className="absolute top-2 left-3" />
-        <SparkleSprite iterations={1} delay={0.25} className="absolute right-4 bottom-3" />
-        <p className="mb-1 font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">You&apos;re on the list!</p>
+        <p className="mb-1 font-heading text-2xl leading-tight text-ink">You&apos;re on the list!</p>
         <p className="text-sm text-ink">We&apos;ll reach out as soon as we&apos;re accepting restorations again.</p>
       </div>
     );
   }
 
-  const inp = "h-12 w-full border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35";
+  const inp = "h-12 w-full border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-md mx-auto">

@@ -61,8 +61,9 @@ const TAB_HINTS: Record<string, string> = {
 };
 
 /**
- * The clinic's top menu, like an RPG command bar. `sprite` is a slot for a
- * small pixel sprite beside the logo (components/pixel/sprites.tsx).
+ * The clinic's top menu: the logo portrait, three service tabs and Explore.
+ * The ▶ cursor shows on hover, focus and the current tab. `sprite` is an
+ * opt-in slot beside the logo (empty by default; revision 2).
  */
 export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
   const [open, setOpen] = useState(false);
@@ -119,12 +120,12 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
   );
 
   return (
-    <header className="relative bg-panel border-b-[3px] border-ink">
+    <header className="relative bg-panel border-b-2 border-ink/80">
       <nav className="max-w-7xl mx-auto px-4 md:px-10 h-16 flex items-center justify-between gap-4 md:grid md:grid-cols-[1fr_auto_1fr] lg:gap-6">
         {/* Logo: the doc's portrait, framed like a party member */}
         <Link href="/" className="group flex items-center gap-3 shrink-0 justify-self-start">
-          <DocPortrait size="xs" alt="The Card Doc" className="transition-transform duration-75 group-hover:-translate-y-0.5" />
-          <span className="font-heading text-xl font-bold tracking-[0.02em] text-ink whitespace-nowrap">The Card Doc</span>
+          <DocPortrait size="xs" alt="The Card Doc" />
+          <span className="font-heading text-xl font-bold text-ink whitespace-nowrap">The Card Doc</span>
           {sprite && <span aria-hidden className="hidden lg:inline-flex">{sprite}</span>}
         </Link>
 
@@ -138,13 +139,13 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                 href={tab.href}
                 aria-current={active ? "page" : undefined}
                 onMouseEnter={() => setHovered(tab.href)}
-                className={`menu-cursor-item relative flex items-center gap-1.5 px-3 font-heading text-[17px] font-semibold tracking-[0.02em] transition-colors duration-75 ${
+                className={`menu-cursor-item relative flex items-center gap-1.5 px-3 font-heading text-base font-semibold transition-colors duration-100 ${
                   active ? "text-ink" : "text-ink-soft hover:text-ink"
                 }`}
               >
                 <MenuCursor />
                 <span className="relative">{tab.label}</span>
-                {active && <span aria-hidden className="absolute inset-x-3 bottom-0 h-[3px] bg-coral-deep" />}
+                {active && <span aria-hidden className="absolute inset-x-3 bottom-0 h-0.5 bg-coral-deep" />}
               </Link>
             );
           })}
@@ -157,7 +158,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
               closeDelay={120}
               onMouseEnter={() => setHovered("explore")}
               data-active={exploreHighlighted ? "" : undefined}
-              className={`menu-cursor-item group relative flex items-center gap-1.5 px-3 font-heading text-[17px] font-semibold tracking-[0.02em] outline-none transition-colors duration-75 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep ${
+              className={`menu-cursor-item group relative flex items-center gap-1.5 px-3 font-heading text-base font-semibold outline-none transition-colors duration-100 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep ${
                 exploreActive || exploreOpen ? "text-ink" : "text-ink-soft hover:text-ink"
               }`}
             >
@@ -168,7 +169,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                 strokeWidth={2.5}
                 aria-hidden
               />
-              {exploreActive && <span aria-hidden className="absolute inset-x-3 bottom-0 h-[3px] bg-coral-deep" />}
+              {exploreActive && <span aria-hidden className="absolute inset-x-3 bottom-0 h-0.5 bg-coral-deep" />}
             </MenuPrimitive.Trigger>
             <MenuPrimitive.Portal>
               <MenuPrimitive.Positioner side="bottom" align="center" sideOffset={10} collisionPadding={16} className="z-[60] outline-none">
@@ -180,11 +181,11 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                       closeOnClick
                       render={<Link href={FIX_PAGE.href} />}
                       aria-current={isCurrent(FIX_PAGE.href) ? "page" : undefined}
-                      className="menu-cursor-item group/fix flex items-center justify-between gap-6 bg-butter/70 px-5 py-4 outline-none transition-colors duration-75 shadow-[inset_0_-4px_0_var(--trim)] data-[highlighted]:bg-butter"
+                      className="menu-cursor-item group/fix flex items-center justify-between gap-6 bg-butter/45 px-5 py-4 outline-none transition-colors duration-100 data-[highlighted]:bg-butter/80"
                     >
                       <span>
                         <span className="rx-label block !text-coral-deep">Sports cards &amp; TCG</span>
-                        <span className="mt-1 flex items-center gap-2 font-heading text-2xl font-semibold text-ink">
+                        <span className="mt-1 flex items-center gap-2 font-heading text-xl font-semibold text-ink">
                           <MenuCursor />
                           {FIX_PAGE.label}
                         </span>
@@ -223,7 +224,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-5 border-t-2 border-dashed border-rule bg-muted/60 px-6 py-3">
+                  <div className="flex items-center gap-5 border-t border-rule bg-muted/50 px-6 py-3">
                     {LEGAL_LINKS.map((l) => (
                       <MenuPrimitive.LinkItem
                         key={l.href}
@@ -272,8 +273,6 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
           </button>
         </div>
       </nav>
-      {/* Wainscot trim under the bar: the clinic wall */}
-      <div aria-hidden className="h-1.5 bg-trim shadow-[inset_0_-2px_0_color-mix(in_srgb,var(--ink)_18%,transparent)]" />
 
       {/* Mobile menu: a full-screen night window, portaled to <body> so its
           fixed positioning is never trapped. Opens in stepped frames. */}
@@ -289,12 +288,12 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reduce ? 0.12 : 0.2, ease: FRAMES(3) }}
-            className="stage stage-light vt-menu md:hidden !fixed inset-0 z-[70] flex flex-col overflow-y-auto overscroll-contain bg-night text-stage-fg pt-[env(safe-area-inset-top)] pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+            className="stage vt-menu md:hidden !fixed inset-0 z-[70] flex flex-col overflow-y-auto overscroll-contain bg-night text-stage-fg pt-[env(safe-area-inset-top)] pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
           >
-            <div className="flex h-16 shrink-0 items-center justify-between border-b-[3px] border-frame px-4">
+            <div className="flex h-16 shrink-0 items-center justify-between border-b border-stage-muted/25 px-4">
               <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3">
                 <DocPortrait size="xs" alt="The Card Doc" />
-                <span className="font-heading text-xl font-bold tracking-[0.02em]">The Card Doc</span>
+                <span className="font-heading text-xl font-bold">The Card Doc</span>
               </Link>
               <button
                 onClick={() => setOpen(false)}
@@ -324,7 +323,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                           className="menu-cursor-item press grid grid-cols-[1.25rem_1fr] items-center gap-x-1 px-2 py-3 hover:bg-white/[0.06]"
                         >
                           <MenuCursor className="text-[1rem]" />
-                          <span className={`block font-heading text-[2rem] leading-none font-bold tracking-[0.02em] ${active ? "text-rx-bright" : "text-stage-fg"}`}>
+                          <span className={`block font-heading text-[1.75rem] leading-tight font-semibold ${active ? "text-rx-bright" : "text-stage-fg"}`}>
                             {tab.label}
                           </span>
                           <span className="col-start-2 mt-1.5 block font-pixel text-xs text-stage-muted">{TAB_HINTS[tab.href]}</span>
@@ -354,7 +353,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                           className="menu-cursor-item press grid h-12 grid-cols-[1.25rem_1fr] items-center gap-x-1 px-2 hover:bg-white/[0.06]"
                         >
                           <MenuCursor />
-                          <span className={`font-heading text-[1.375rem] font-semibold tracking-[0.02em] ${current ? "text-rx-bright" : "text-stage-fg"}`}>
+                          <span className={`font-heading text-xl font-medium ${current ? "text-rx-bright" : "text-stage-fg"}`}>
                             {l.label}
                           </span>
                         </Link>
@@ -375,7 +374,7 @@ export function Nav({ sprite }: { sprite?: React.ReactNode } = {}) {
                     key={l.href}
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="px-btn px-btn-panel h-12 justify-between px-4 font-sans text-[15px] font-bold normal-case tracking-normal"
+                    className="px-btn px-btn-panel h-12 justify-between px-4 font-sans text-[15px] font-bold"
                   >
                     {l.label}
                     {l.href === "/cart" && itemCount > 0 && (

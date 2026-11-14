@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PurchasePixel } from "@/components/purchase-pixel";
 import { readCheckoutReturn } from "@/lib/checkout-return";
-import { HealSparkles, PixelIcon, StatusChip, pixelButton } from "@/components/pixel";
+import { HealSparkles, PixelIcon, pixelButton } from "@/components/pixel";
 
 export default async function GiftCardSuccessPage({
   searchParams,
@@ -18,15 +18,12 @@ export default async function GiftCardSuccessPage({
       <PurchasePixel sessionId={sessionId} amountCents={amountCents} currency={currency} />
       {/* The gift shop's discharge screen */}
       <div className="px-window w-full max-w-md p-0 md:p-0 text-center">
-        <div aria-hidden className="relative flex h-40 items-end justify-center overflow-hidden border-b-[3px] border-frame bg-mint/45 pb-5">
-          <HealSparkles count={6} />
-          <span className="relative grid size-24 place-items-center bg-rx-soft px-frame">
-            <PixelIcon name="gift" size={64} />
-          </span>
+        <div aria-hidden className="relative flex h-32 items-end justify-center overflow-hidden border-b-2 border-frame/30 bg-[color-mix(in_srgb,var(--mint)_35%,var(--panel))] pb-5">
+          <HealSparkles />
+          <span className="relative"><PixelIcon name="gift" size={48} /></span>
         </div>
         <div className="p-6 md:p-8">
-          <StatusChip status="discharged" className="mb-5" />
-          <h1 className="font-heading uppercase text-[2.5rem] md:text-5xl leading-[0.95] tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] mb-4">Gift Card Purchased!</h1>
+          <h1 className="font-heading text-[2.5rem] md:text-5xl leading-tight text-ink mb-4">Gift Card Purchased!</h1>
           <p className="text-ink-soft mb-8">
             The gift card code has been emailed. It can be applied at checkout on any restoration order.
           </p>

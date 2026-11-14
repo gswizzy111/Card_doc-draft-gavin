@@ -34,7 +34,7 @@ function emptyCard(): CardEntry {
 const valueCents = (c: CardEntry) => Math.round((parseFloat(c.declaredValue.replace(/[^0-9.]/g, "")) || 0) * 100);
 
 const inputCls =
-  "w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-2 min-h-11 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
+  "w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-2 min-h-11 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]";
 
 export function AddCardsForm({ orderNumber, customerEmail, tierInfo, cardsOnOrder }: Props) {
   const tier = tierInfo.id;
@@ -113,7 +113,7 @@ export function AddCardsForm({ orderNumber, customerEmail, tierInfo, cardsOnOrde
   return (
     <div className="bg-gradient-to-br from-rx-soft to-white border border-rx/30 p-6 mb-5">
       <p className="rx-label text-rx mb-1">Add to Your Order</p>
-      <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-1">Add More Cards</h2>
+      <h2 className="font-heading text-2xl leading-tight text-ink mb-1">Add More Cards</h2>
       <p className="text-sm text-muted-foreground mb-5">
         Add cards before we receive your shipment. Priced at your {tierInfo.name} rate
         {isElite

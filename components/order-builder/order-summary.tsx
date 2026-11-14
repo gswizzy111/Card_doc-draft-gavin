@@ -4,7 +4,6 @@ import type { CardEntry, ShippingRate, InsuranceSelection } from "@/lib/types";
 import { INSURANCE_ENABLED } from "@/lib/site-config";
 import { computeOrderTotals, tierFor } from "@/lib/order-totals";
 import type { RestorationTier, RestorationTierId } from "@/lib/restoration-tiers";
-import { WindowTab } from "@/components/pixel/window";
 
 interface OrderSummaryProps {
   cards: CardEntry[];
@@ -69,11 +68,10 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
     : "Est. turnaround: 15–20 days from receipt";
 
   return (
-    <div className="px-window mt-4 flex flex-col gap-4 p-5 pt-7 sm:p-6 sm:pt-7">
-      <WindowTab aria-hidden cursor>CHART</WindowTab>
-      <h3 className="font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink">Order Summary</h3>
+    <div className="px-window flex flex-col gap-4 p-5 sm:p-6">
+      <h3 className="font-heading text-2xl leading-none text-ink">Order Summary</h3>
 
-      <div className="flex flex-col gap-1.5 border-b-[3px] border-dashed border-rule pb-4 text-sm">
+      <div className="flex flex-col gap-1.5 border-b-2 border-dashed border-rule pb-4 text-sm">
         {isMixed ? (
           tierEntries.map(([tierId, count]) => {
             const tier = tierOf(tierId);
@@ -168,7 +166,7 @@ export function OrderSummary({ cards, shippingMethod, selectedRate, discountPerc
             <span>{formatCurrency(tipCents)}</span>
           </div>
         )}
-        <div className="mt-1.5 flex items-baseline justify-between border-t-[3px] border-dashed border-ink/40 pt-3 font-heading text-2xl uppercase text-ink">
+        <div className="mt-1.5 flex items-baseline justify-between border-t-2 border-dashed border-ink/40 pt-3 font-heading text-2xl text-ink">
           <span>Total</span>
           <span className="tabular-nums">{formatCurrency(total)}</span>
         </div>

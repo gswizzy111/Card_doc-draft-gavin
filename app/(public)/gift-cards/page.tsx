@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { MissingNote, Need, Req, revealMissing } from "@/components/checkout/required";
 import { PixelIcon } from "@/components/pixel/sprites";
-import { HealSparkles } from "@/components/pixel/heal-sparkles";
 
 const PRESET_AMOUNTS = [25, 50, 75, 100, 150, 200];
 
@@ -79,21 +78,10 @@ export default function GiftCardsPage() {
       <div className="max-w-5xl mx-auto px-4 md:px-10 py-12 md:py-20">
         {/* The clinic gift shop: the sign on the wall */}
         <div className="mb-10 md:mb-12">
-          <p aria-hidden className="mb-5 inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame md:text-[13px]">
-            <span className="text-coral-deep">▶</span>GIFT SHOP
+          <h1 className="font-heading leading-tight text-ink text-[clamp(2.5rem,9vw,4rem)]">Gift Cards</h1>
+          <p className="mt-5 max-w-2xl text-lg text-ink-soft leading-relaxed">
+            Give the gift of card restoration. The recipient gets a code they can apply at checkout.
           </p>
-          <div className="flex items-end gap-4 md:gap-5">
-            <span aria-hidden className="grid size-16 shrink-0 place-items-center bg-rx-soft px-frame md:size-20">
-              <PixelIcon name="gift" size={48} />
-            </span>
-            <h1 className="font-heading uppercase leading-[0.95] tracking-[0.01em] text-ink text-[clamp(2.75rem,12vw,4.75rem)] [text-shadow:3px_3px_0_var(--wall)]">Gift Cards</h1>
-          </div>
-          <div className="px-window px-dialog mt-7 max-w-2xl p-4 pr-9 md:p-5 md:pr-10">
-            <p className="text-lg text-ink leading-relaxed">
-              Give the gift of card restoration. The recipient gets a code they can apply at checkout.
-            </p>
-            <span aria-hidden className="px-dialog-next">▼</span>
-          </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-12 lg:items-start">
@@ -112,9 +100,6 @@ export default function GiftCardsPage() {
                 </span>
               </div>
             </div>
-            <div className="relative mx-auto -mb-4 h-20 w-full lg:mb-0 lg:h-24">
-              <HealSparkles count={4} />
-            </div>
           </div>
 
           <div className="px-window-ink p-5 md:p-8 flex flex-col gap-7">
@@ -129,7 +114,7 @@ export default function GiftCardsPage() {
                   type="button"
                   onClick={() => { setAmountDollars(amt); setUseCustom(false); }}
                   aria-pressed={!useCustom && amountDollars === amt}
-                  className={`px-btn h-14 w-full px-1 text-2xl [font-feature-settings:'lnum'_1] ${
+                  className={`px-btn h-12 w-full px-1 text-xl [font-feature-settings:'lnum'_1] ${
                     !useCustom && amountDollars === amt
                       ? "px-btn-butter"
                       : "px-btn-panel"
@@ -162,7 +147,7 @@ export default function GiftCardsPage() {
                   value={customAmount}
                   onChange={(e) => setCustomAmount(e.target.value)}
                   placeholder="Enter amount (10–1000)"
-                  className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] flex-1 min-w-0"
+                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] flex-1 min-w-0"
                   autoFocus
                 />
               </div>
@@ -179,7 +164,7 @@ export default function GiftCardsPage() {
                 value={purchaserName}
                 onChange={(e) => setPurchaserName(e.target.value)}
                 placeholder="Your name"
-                className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+                className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
               />
 </Need>
               <Need className="flex flex-col" missing={miss(purchaserEmail)} note="Enter your email.">
@@ -188,7 +173,7 @@ export default function GiftCardsPage() {
                 value={purchaserEmail}
                 onChange={(e) => setPurchaserEmail(e.target.value)}
                 placeholder="Your email (we'll send you a receipt)"
-                className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+                className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
               />
 </Need>
             </div>
@@ -213,7 +198,7 @@ export default function GiftCardsPage() {
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
                   placeholder="Recipient's name"
-                  className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
                 />
 </Need>
                 <Need className="flex flex-col" missing={miss(recipientEmail)} note="Enter the recipient's email.">
@@ -222,7 +207,7 @@ export default function GiftCardsPage() {
                   value={recipientEmail}
                   onChange={(e) => setRecipientEmail(e.target.value)}
                   placeholder="Recipient's email"
-                  className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
                 />
 </Need>
                 <textarea
@@ -230,7 +215,7 @@ export default function GiftCardsPage() {
                   onChange={(e) => setPersonalMessage(e.target.value)}
                   placeholder="Personal message (optional)"
                   rows={3}
-                  className="h-12 w-full rounded-none border-2 border-ink bg-panel px-3 text-base text-ink shadow-[inset_0_3px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] h-auto py-2.5 resize-none"
+                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] h-auto py-2.5 resize-none"
                 />
               </div>
             )}
@@ -243,7 +228,7 @@ export default function GiftCardsPage() {
             type="button"
             onClick={handleCheckout}
             disabled={loading}
-            className="px-btn h-14 w-full text-lg disabled:opacity-60"
+            className="px-btn h-12 w-full text-base disabled:opacity-60"
           >
             {loading
               ? "Redirecting..."
@@ -255,8 +240,7 @@ export default function GiftCardsPage() {
           <MissingNote show={showMissing && !isValid} />
           </div>
 
-          <p className="flex items-start gap-2 bg-muted px-3 py-2.5 text-xs leading-relaxed text-ink-soft">
-            <span aria-hidden className="font-pixel text-coral-deep">▶</span>
+          <p className="flex items-start gap-2 text-xs leading-relaxed text-ink-soft">
             <span>
             The gift card code will be emailed immediately after purchase.
             Gift cards never expire and can be used on any restoration order.

@@ -5,9 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * The Card Doc Clinic: a soft pixel healing center (GBA / DS era).
- * Muted pastels, ink outlines, hard one-tone pixel shadows, stepped corners,
- * steps() motion. DESIGN.md is the written source of truth for these tokens.
+ * The Card Doc Clinic: a calm, professional card clinic with a retro pixel
+ * accent (revision 2). Muted pastels, plain cream surfaces, 2px outlines,
+ * small soft pixel shadows, stepped corners, quick restrained motion.
+ * DESIGN.md is the written source of truth for these tokens.
  */
 
 @theme inline {
@@ -364,7 +365,7 @@
 }
 
 :root {
-  /* --font-heading (Jersey 10), --font-sans (Atkinson Hyperlegible Next)
+  /* --font-heading (Bricolage Grotesque), --font-sans (Atkinson Hyperlegible Next)
      and --font-pixel (Silkscreen) are set by next/font in app/layout.tsx. */
 
   /* Clinic palette. Contrast ratios are WCAG 2 against the named surface. */
@@ -389,8 +390,11 @@
   --ink-soft: #5e5162;     /* secondary text: 6.2:1 floor, 4.8:1 wall */
   --night: #2e2a3d;        /* dusk bands */
   --night-raise: #3a3550;
-  --px-shadow: color-mix(in srgb, var(--ink) 24%, transparent);
-  --px: 3px;               /* one "pixel" of UI chrome */
+  --px-shadow: color-mix(in srgb, var(--ink) 13%, transparent); /* soft, one tone */
+  --px: 2px;               /* one "pixel" of UI chrome: every outline is 2px */
+  --px-drop: 3px;          /* how far shadows fall beyond the outline */
+  --window-inner: color-mix(in srgb, var(--powder) 45%, var(--panel)); /* quiet inner line */
+  --window-line: color-mix(in srgb, var(--frame) 80%, var(--panel));  /* softer frame blue */
 
   /* Legacy names the pages already use, pointed at the clinic palette. */
   --paper: var(--floor);
@@ -500,13 +504,13 @@
 
 /* Rx-label rows fade up once, in sequence (index set via --i). */
 .rx-reveal {
-  animation: rx-in 420ms steps(4, end) both;
+  animation: rx-in 360ms var(--ease-out) both;
   animation-delay: calc(180ms + var(--i, 0) * 70ms);
 }
 
 /* Hero entrance: headline and subline settle in on first paint, in frames. */
 .hero-in {
-  animation: rx-in 480ms steps(4, end) both;
+  animation: rx-in 420ms var(--ease-out) both;
   animation-delay: calc(var(--d, 0) * 1ms);
 }
 
@@ -516,7 +520,7 @@
   to   { transform: translateY(0); }
 }
 .split-word {
-  animation: word-rise 360ms steps(3, end) both;
+  animation: word-rise 420ms var(--ease-out) both;
   animation-delay: calc(var(--d, 0) * 1ms);
 }
 
@@ -628,7 +632,7 @@
   z-index: -1;
   pointer-events: none;
   /* A tiled star field: a few square stars and one plus-twinkle per tile. */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' shape-rendering='crispEdges'><g fill='%23fffbef'><rect x='36' y='24' width='3' height='3' opacity='.22'/><rect x='120' y='96' width='3' height='3' opacity='.14'/><rect x='72' y='150' width='3' height='3' opacity='.18'/><rect x='165' y='45' width='3' height='3' opacity='.12'/><g opacity='.2'><rect x='150' y='138' width='3' height='9'/><rect x='147' y='141' width='9' height='3'/></g></g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' shape-rendering='crispEdges'><g fill='%23fffbef'><rect x='36' y='24' width='2' height='2' opacity='.12'/><rect x='120' y='96' width='2' height='2' opacity='.08'/><rect x='72' y='150' width='2' height='2' opacity='.1'/><rect x='165' y='45' width='2' height='2' opacity='.07'/></g></svg>");
   background-size: 192px 192px;
 }
 .stage ::selection {
@@ -663,7 +667,7 @@
     animation-range: 0 60px;
   }
   @keyframes nav-elevate {
-    to { box-shadow: 0 4px 0 var(--px-shadow); }
+    to { box-shadow: 0 2px 0 var(--px-shadow); }
   }
 }
 
@@ -695,7 +699,7 @@
     0 0 0 calc(var(--px) * 2) var(--panel);
 }
 .ba-handle {
-  box-shadow: var(--px) var(--px) 0 var(--px-shadow);
+  box-shadow: 2px 2px 0 var(--px-shadow);
 }
 .ba-label {
   position: absolute;
@@ -721,15 +725,14 @@
   to { opacity: 0; }
 }
 @keyframes page-in {
-  0%   { opacity: 0; filter: brightness(1.35) saturate(0.4); }
-  40%  { opacity: 1; filter: brightness(1.25) saturate(0.6); }
+  0%   { opacity: 0; filter: brightness(1.12); }
   100% { opacity: 1; filter: none; }
 }
 ::view-transition-old(.page-out) {
   animation: page-out 160ms steps(2, end) both;
 }
 ::view-transition-new(.page-in) {
-  animation: page-in 360ms steps(4, end) 100ms both;
+  animation: page-in 240ms var(--ease-out) 80ms both;
 }
 /* The loading skeleton blinks into the page that replaces it. */
 ::view-transition-old(.skeleton-out) {
@@ -772,13 +775,13 @@ html:active-view-transition .vt-header header {
 [data-reveal][data-armed]:not([data-reveal="stagger"]):not([data-reveal="rise"]),
 [data-reveal="stagger"][data-armed] > * {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(10px);
   transition:
-    opacity 360ms steps(3, end),
-    transform 360ms steps(3, end);
+    opacity 420ms var(--ease-out),
+    transform 420ms var(--ease-out);
 }
 [data-reveal="stagger"][data-armed] > * {
-  transition-delay: calc(var(--i, 0) * 70ms);
+  transition-delay: calc(var(--i, 0) * 50ms);
 }
 [data-reveal][data-armed][data-revealed]:not([data-reveal="stagger"]):not([data-reveal="rise"]),
 [data-reveal="stagger"][data-armed][data-revealed] > * {
@@ -811,8 +814,8 @@ html:active-view-transition .vt-header header {
     transition: transform 100ms steps(2, end), box-shadow 100ms steps(2, end);
   }
   .lift:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--px-shadow);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--px-shadow);
   }
   .nudge-arrow .arrow {
     display: inline-block;
@@ -869,21 +872,18 @@ html:active-view-transition .vt-header header {
   inset-inline: 0;
   top: 0;
   z-index: 80;
-  height: 6px;
-  background:
-    repeating-linear-gradient(90deg, var(--mint) 0 10px, var(--mint-deep) 10px 12px);
-  box-shadow: 0 2px 0 var(--ink);
+  height: 3px;
+  background: var(--mint-deep);
   transform-origin: left;
   animation: route-progress 2.4s steps(1, end) infinite;
 }
 @keyframes skeleton-sheen {
-  0%, 49% { background-color: var(--muted); }
-  50%, 100% { background-color: var(--tile); }
+  from { background-color: var(--muted); }
+  to { background-color: color-mix(in srgb, var(--tile) 70%, var(--muted)); }
 }
 .skeleton {
   background-color: var(--muted);
-  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ink) 10%, transparent);
-  animation: skeleton-sheen 1.2s steps(1, end) infinite;
+  animation: skeleton-sheen 1s ease-in-out infinite alternate;
 }
 
 /* ── Phone platform layer (mobile-native skill) ───────────────────────────── */
@@ -929,10 +929,8 @@ button, [role="button"], summary, nav a, .btn-depth {
     font-family: var(--font-sans);
     font-size-adjust: none;
     caret-color: var(--coral-deep);
-    /* The clinic floor: soft cream tiles with grout lines. */
+    /* Plain cream: the tile floor is retired (revision 2). */
     background-color: var(--floor);
-    background-image: var(--floor-tile);
-    background-size: 48px 48px;
   }
   ::selection {
     background: var(--butter);
@@ -940,15 +938,17 @@ button, [role="button"], summary, nav a, .btn-depth {
   }
   h1, h2, h3, h4 {
     font-family: var(--font-heading);
-  font-size-adjust: ex-height 0.53;
-    font-weight: 600;
+    font-weight: 650;
     text-wrap: balance;
   }
   h1, h2, h3, h4, .font-heading {
     font-feature-settings: "lnum" 1;
   }
   :where(.font-heading) {
-    font-weight: 700;
+    font-weight: 650;
+  }
+  :where(h1, h2, h3, h4, .font-heading) {
+    letter-spacing: -0.015em;
   }
   a {
     text-underline-offset: 3px;
@@ -956,7 +956,7 @@ button, [role="button"], summary, nav a, .btn-depth {
   }
   /* Pixel focus: a hard two-tone ring (frame blue outside, panel inside). */
   :focus-visible {
-    outline: var(--px) solid var(--frame-deep);
+    outline: 3px solid var(--frame-deep);
     outline-offset: 2px;
   }
   table, [data-numeric] {
@@ -973,13 +973,25 @@ button, [role="button"], summary, nav a, .btn-depth {
   }
 }
 
-/* Pixel faces never take negative tracking: the glyphs sit on a grid.
-   Jersey 10 runs small for its size; font-size-adjust matches its x-height
-   to the body face so existing text-* sizes keep their weight on the page. */
-.font-heading,
-h1, h2, h3, h4 {
-  letter-spacing: 0.02em;
-  font-size-adjust: ex-height 0.53;
+/* Headings (revision 2): Bricolage Grotesque in the case the source is
+   written in. These rules are deliberately unlayered so they win over the
+   page-level `uppercase`, wide tracking and hard pixel text-shadows left
+   from the first pass: headings never shout in all caps and never carry a
+   pixel drop shadow. Pixel-font labels (.font-pixel, .rx-label) keep their
+   own uppercase. Big headlines tighten slightly; the pixel face never does. */
+:is(h1, h2, h3, h4, .font-heading):not(.font-pixel):not(.rx-label) {
+  text-transform: none;
+  text-shadow: none;
+}
+/* Wide positive tracking (0.0xem) was a pixel-face habit; on the sans it
+   reads loose, so it falls back to the gentle default below. */
+:is(h1, h2, h3, h4, .font-heading):not(.font-pixel):not(.rx-label)[class*="tracking-[0.0"] {
+  letter-spacing: -0.01em;
+}
+/* Sub-1 leadings were tuned for the condensed pixel face; a sans needs a
+   little air between lines. */
+:is(h1, h2, h3, .font-heading):not(.font-pixel):is([class*="leading-[0."], [class*="leading-none"]) {
+  line-height: 1.06;
 }
 .font-pixel {
   font-family: var(--font-pixel);
@@ -998,7 +1010,7 @@ html [data-sonner-toaster][data-sonner-theme="light"] {
 }
 html [data-sonner-toaster] [data-sonner-toast] {
   border-width: var(--px) !important;
-  box-shadow: 4px 4px 0 var(--px-shadow) !important;
+  box-shadow: 3px 3px 0 var(--px-shadow) !important;
 }
 
 /* "Trusted by" marquee: two copies of the list slide one width left, forever,
@@ -1034,35 +1046,36 @@ html [data-sonner-toaster] [data-sonner-toast] {
     0 var(--px) 0 0 var(--ink),
     calc(var(--px) * -1) 0 0 0 var(--ink),
     var(--px) 0 0 0 var(--ink),
-    calc(var(--px) + 4px) calc(var(--px) + 4px) 0 0 var(--px-shadow);
+    calc(var(--px) + var(--px-drop)) calc(var(--px) + var(--px-drop)) 0 0 var(--px-shadow);
 }
 
-/* Window: panel fill, frame-blue outline with stepped corners, a powder inner
-   line, and the hard floor shadow. The core container. */
+/* Window: panel fill, a soft frame-blue outline with stepped corners, a quiet
+   powder inner line, and a small soft shadow. The core container. */
 .px-window {
   position: relative;
   background-color: var(--panel);
   color: var(--ink);
   box-shadow:
-    0 calc(var(--px) * -1) 0 0 var(--frame),
-    0 var(--px) 0 0 var(--frame),
-    calc(var(--px) * -1) 0 0 0 var(--frame),
-    var(--px) 0 0 0 var(--frame),
-    inset 0 0 0 var(--px) var(--powder),
-    calc(var(--px) + 4px) calc(var(--px) + 4px) 0 0 var(--px-shadow);
+    0 calc(var(--px) * -1) 0 0 var(--window-line),
+    0 var(--px) 0 0 var(--window-line),
+    calc(var(--px) * -1) 0 0 0 var(--window-line),
+    var(--px) 0 0 0 var(--window-line),
+    inset 0 0 0 var(--px) var(--window-inner),
+    calc(var(--px) + var(--px-drop)) calc(var(--px) + var(--px-drop)) 0 0 var(--px-shadow);
 }
-/* Ink-outlined window: for cards and tiles that sit on busy floors. */
+/* Ink-outlined window: cards and tiles. The outline is ink softened toward
+   the panel so a grid of cards does not read as heavy black boxes. */
 .px-window-ink {
+  --ink-line: color-mix(in srgb, var(--ink) 78%, var(--panel));
   position: relative;
   background-color: var(--panel);
   color: var(--ink);
   box-shadow:
-    0 calc(var(--px) * -1) 0 0 var(--ink),
-    0 var(--px) 0 0 var(--ink),
-    calc(var(--px) * -1) 0 0 0 var(--ink),
-    var(--px) 0 0 0 var(--ink),
-    inset 0 0 0 var(--px) var(--tile-alt),
-    calc(var(--px) + 4px) calc(var(--px) + 4px) 0 0 var(--px-shadow);
+    0 calc(var(--px) * -1) 0 0 var(--ink-line),
+    0 var(--px) 0 0 var(--ink-line),
+    calc(var(--px) * -1) 0 0 0 var(--ink-line),
+    var(--px) 0 0 0 var(--ink-line),
+    calc(var(--px) + var(--px-drop)) calc(var(--px) + var(--px-drop)) 0 0 var(--px-shadow);
 }
 /* Night window: dusk fill for menus and panels on the stage. */
 .px-window-night {
@@ -1076,7 +1089,9 @@ html [data-sonner-toaster] [data-sonner-toast] {
     var(--px) 0 0 0 var(--frame),
     inset 0 0 0 var(--px) var(--night);
 }
-/* Dialog box: a window that talks. A blinking ▼ waits in the corner. */
+/* Dialog box: a window that talks. The ▼ prompt is opt-in (revision 2): it
+   sits still in the corner and only blinks where a page asks for
+   .px-dialog-next-blink (the home hero at most). */
 .px-dialog {
   position: relative;
 }
@@ -1088,8 +1103,10 @@ html [data-sonner-toaster] [data-sonner-toast] {
   font-size: 0.75rem;
   line-height: 1;
   color: var(--coral-deep);
-  animation: px-blink 1s steps(1, end) infinite;
   pointer-events: none;
+}
+.px-dialog-next.px-dialog-next-blink {
+  animation: px-blink 1s steps(1, end) infinite;
 }
 
 /* Stepped corners by clipping, for solid fills with no outer outline
@@ -1121,23 +1138,21 @@ html [data-sonner-toaster] [data-sonner-toast] {
   background-color: var(--btn-bg);
   color: var(--btn-fg);
   font-family: var(--font-heading);
-  font-size-adjust: ex-height 0.53;
   font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   white-space: nowrap;
   box-shadow:
     0 calc(var(--px) * -1) 0 0 var(--btn-line),
     0 var(--px) 0 0 var(--btn-line),
     calc(var(--px) * -1) 0 0 0 var(--btn-line),
     var(--px) 0 0 0 var(--btn-line),
-    inset 0 -4px 0 0 var(--btn-edge),
-    inset 0 2px 0 0 var(--btn-hi);
-  transition: transform 60ms steps(1, end), box-shadow 60ms steps(1, end), background-color 80ms steps(1, end);
+    inset 0 -3px 0 0 var(--btn-edge);
+  transition: transform 60ms steps(1, end), box-shadow 60ms steps(1, end), background-color 100ms ease-out;
 }
 .px-btn:focus-visible {
   outline: 2px dashed var(--btn-fg);
-  outline-offset: -7px;
+  outline-offset: -6px;
 }
 .px-btn:active:not(:disabled) {
   transform: translateY(2px);
@@ -1146,8 +1161,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
     0 var(--px) 0 0 var(--btn-line),
     calc(var(--px) * -1) 0 0 0 var(--btn-line),
     var(--px) 0 0 0 var(--btn-line),
-    inset 0 -2px 0 0 var(--btn-edge),
-    inset 0 2px 0 0 var(--btn-edge);
+    inset 0 -1px 0 0 var(--btn-edge);
 }
 @media (hover: hover) and (pointer: fine) {
   .px-btn:hover:not(:disabled) {
@@ -1162,40 +1176,32 @@ html [data-sonner-toaster] [data-sonner-toast] {
 .px-btn-danger { --btn-bg: var(--destructive); --btn-fg: var(--panel); --btn-edge: #7d2c2a; --btn-hi: #c25b55; --btn-hover: #b44a46; }
 .stage .px-btn-ink, .px-btn-ink.on-night { --btn-line: var(--panel); }
 
-/* Tile floor and wall band. */
-/* The floor tile is the art file /pixel/tile-floor.svg (16x16, the same tile
-   as the clinic scene): a bevelled cream tile with a grout dot. Always drawn
-   at a whole multiple: 3x (48px) for the page, 2x (32px) for the small one. */
-.tile-floor {
-  background-color: var(--floor);
-  background-image: var(--floor-tile);
-  background-size: 48px 48px;
-}
-/* Small-tile variant (closer to a handheld floor). */
+/* Floors (revision 2): the tile art is retired. .tile-floor and
+   .tile-floor-sm are plain cream now. For the one or two places a page wants
+   texture, .faint-grid draws a barely-there 48px grid. */
+.tile-floor,
 .tile-floor-sm {
   background-color: var(--floor);
-  background-image: var(--floor-tile);
-  background-size: 32px 32px;
 }
-/* Wall band: peach wall with a wainscot trim stripe and a skirting line. */
+.faint-grid {
+  background-color: var(--floor);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--ink) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--ink) 4%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+/* Wall band: a calm peach wash with a thin trim stripe at the foot. */
 .wall-band {
   position: relative;
-  background-color: var(--wall);
-  /* Ink skirting line, the wainscot trim art (/pixel/wall-trim.svg at 2x),
-     and faint wallpaper seams above it. */
-  background-image:
-    linear-gradient(to top, var(--ink) 0 var(--px), transparent var(--px)),
-    var(--wall-trim),
-    repeating-linear-gradient(90deg, transparent 0 46px, color-mix(in srgb, var(--trim) 30%, transparent) 46px 48px);
-  background-size: auto, 32px 24px, auto;
-  background-position: 0 0, 0 calc(100% - var(--px)), 0 0;
-  background-repeat: no-repeat, repeat-x, repeat;
-  padding-bottom: calc(var(--px) + 24px);
+  background-color: color-mix(in srgb, var(--wall) 55%, var(--floor));
+  background-image: linear-gradient(to top, color-mix(in srgb, var(--trim) 70%, var(--wall)) 0 4px, transparent 4px);
+  background-repeat: no-repeat;
+  padding-bottom: 4px;
 }
-/* The trim strip alone (footer top, nav underline). 24px tall. */
+/* The trim strip alone (footer top, nav underline). 4px tall. */
 .wall-trim {
-  height: 24px;
-  background: var(--wall) var(--wall-trim) 0 0 / 32px 24px repeat-x;
+  height: 4px;
+  background: var(--trim);
 }
 /* A night band: dusk with the star tile, for contrast sections. */
 .night-band {
@@ -1230,23 +1236,22 @@ html [data-sonner-toaster] [data-sonner-toast] {
   font-size: 0.7em;
   line-height: 1;
   color: var(--coral-deep);
-  animation: px-nudge 0.8s steps(1, end) infinite;
 }
 .stage .menu-cursor { color: var(--rx-bright); }
 
 /* HP / condition bar (decorative). */
 .hp-bar {
   position: relative;
-  height: 12px;
-  background: var(--night);
-  box-shadow: 0 0 0 2px var(--ink), inset 0 0 0 2px var(--panel);
-  padding: 4px;
+  height: 10px;
+  background: color-mix(in srgb, var(--ink) 12%, var(--panel));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ink) 70%, var(--panel));
+  padding: 2px;
 }
 .hp-bar-fill {
   display: block;
   height: 100%;
   transform-origin: left;
-  background-image: repeating-linear-gradient(90deg, transparent 0 6px, color-mix(in srgb, var(--ink) 18%, transparent) 6px 8px);
+  background-image: repeating-linear-gradient(90deg, transparent 0 6px, color-mix(in srgb, var(--ink) 12%, transparent) 6px 8px);
 }
 
 /* Heal sparkles: pixel plus-signs rising. */
@@ -1287,15 +1292,15 @@ html [data-sonner-toaster] [data-sonner-toast] {
 }
 
 .comic-shadow {
-  box-shadow: 6px 6px 0 var(--px-shadow);
+  box-shadow: 3px 3px 0 var(--px-shadow);
 }
 
 .comic-shadow-sm {
-  box-shadow: 4px 4px 0 var(--px-shadow);
+  box-shadow: 2px 2px 0 var(--px-shadow);
 }
 
 .comic-shadow-rx {
-  box-shadow: 6px 6px 0 color-mix(in srgb, var(--coral) 55%, transparent);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--coral) 35%, transparent);
 }
 
 /* The old comic button is now the pixel button (same sizes). */
@@ -1310,32 +1315,29 @@ html [data-sonner-toaster] [data-sonner-toast] {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 3.5rem;
-  padding: 0 1.6rem;
+  height: 3.25rem;
+  padding: 0 1.5rem;
   border: 0;
   border-radius: 0;
   background: var(--btn-bg);
   color: var(--btn-fg);
   font-family: var(--font-heading);
-  font-size-adjust: ex-height 0.53;
   font-weight: 600;
   font-size: 1.0625rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   white-space: nowrap;
   box-shadow:
     0 calc(var(--px) * -1) 0 0 var(--btn-line),
     0 var(--px) 0 0 var(--btn-line),
     calc(var(--px) * -1) 0 0 0 var(--btn-line),
     var(--px) 0 0 0 var(--btn-line),
-    inset 0 -5px 0 0 var(--btn-edge),
-    inset 0 3px 0 0 var(--btn-hi),
-    calc(var(--px) + 3px) calc(var(--px) + 3px) 0 0 var(--px-shadow);
-  transition: transform 60ms steps(1, end), box-shadow 60ms steps(1, end), background-color 80ms steps(1, end);
+    inset 0 -3px 0 0 var(--btn-edge);
+  transition: transform 60ms steps(1, end), box-shadow 60ms steps(1, end), background-color 100ms ease-out;
 }
 .comic-btn:focus-visible {
   outline: 2px dashed var(--btn-fg);
-  outline-offset: -8px;
+  outline-offset: -6px;
 }
 
 .comic-btn-light {
@@ -1362,8 +1364,8 @@ html [data-sonner-toaster] [data-sonner-toast] {
     transition: transform 100ms steps(2, end), box-shadow 100ms steps(2, end);
   }
   .comic-lift:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0 var(--px-shadow);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--px-shadow);
   }
 }
 
@@ -1374,23 +1376,20 @@ html [data-sonner-toaster] [data-sonner-toast] {
     0 var(--px) 0 0 var(--btn-line),
     calc(var(--px) * -1) 0 0 0 var(--btn-line),
     var(--px) 0 0 0 var(--btn-line),
-    inset 0 -2px 0 0 var(--btn-edge),
-    inset 0 2px 0 0 var(--btn-edge),
-    calc(var(--px) + 1px) calc(var(--px) + 1px) 0 0 var(--px-shadow);
+    inset 0 -1px 0 0 var(--btn-edge);
 }
 
 .comic-btn.comic-btn-sm {
   height: 2.5rem;
   padding: 0 1rem;
-  font-size: 0.875rem;
-  letter-spacing: 0.04em;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
   box-shadow:
     0 calc(var(--px) * -1) 0 0 var(--btn-line),
     0 var(--px) 0 0 var(--btn-line),
     calc(var(--px) * -1) 0 0 0 var(--btn-line),
     var(--px) 0 0 0 var(--btn-line),
-    inset 0 -4px 0 0 var(--btn-edge),
-    inset 0 2px 0 0 var(--btn-hi);
+    inset 0 -3px 0 0 var(--btn-edge);
 }
 .comic-btn.comic-btn-sm:focus-visible {
   outline-offset: -6px;
@@ -1402,8 +1401,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
     0 var(--px) 0 0 var(--btn-line),
     calc(var(--px) * -1) 0 0 0 var(--btn-line),
     var(--px) 0 0 0 var(--btn-line),
-    inset 0 -2px 0 0 var(--btn-edge),
-    inset 0 2px 0 0 var(--btn-edge);
+    inset 0 -1px 0 0 var(--btn-edge);
 }
 
 /* Halftone dots became a pixel dither. */
@@ -1443,7 +1441,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
   background: var(--panel);
   border: var(--px) solid var(--frame);
   border-radius: 0 !important;
-  box-shadow: inset 0 0 0 var(--px) var(--powder), 5px 5px 0 var(--px-shadow);
+  box-shadow: inset 0 0 0 var(--px) var(--window-inner), 3px 3px 0 var(--px-shadow);
 }
 
 .speech::before,
@@ -1484,7 +1482,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
     0 var(--px) 0 0 var(--ink),
     calc(var(--px) * -1) 0 0 0 var(--ink),
     var(--px) 0 0 0 var(--ink),
-    calc(var(--px) + 3px) calc(var(--px) + 3px) 0 0 var(--px-shadow);
+    calc(var(--px) + 2px) calc(var(--px) + 2px) 0 0 var(--px-shadow);
   text-align: center;
 }
 
@@ -1509,10 +1507,8 @@ html [data-sonner-toaster] [data-sonner-toast] {
 
 .ticker-word {
   font-family: var(--font-heading);
-  font-size-adjust: ex-height 0.53;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-weight: 650;
+  letter-spacing: -0.015em;
   line-height: 1;
 }
 
@@ -1534,7 +1530,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
     0 var(--px) 0 0 var(--ink),
     calc(var(--px) * -1) 0 0 0 var(--ink),
     var(--px) 0 0 0 var(--ink),
-    inset 0 -4px 0 0 color-mix(in srgb, var(--ink) 28%, transparent);
+    inset 0 -3px 0 0 color-mix(in srgb, var(--ink) 20%, transparent);
   transition: transform 60ms steps(1, end), box-shadow 60ms steps(1, end), background-color 80ms steps(1, end);
 }
 
@@ -1545,16 +1541,14 @@ html [data-sonner-toaster] [data-sonner-toast] {
     0 var(--px) 0 0 var(--ink),
     calc(var(--px) * -1) 0 0 0 var(--ink),
     var(--px) 0 0 0 var(--ink),
-    inset 0 -2px 0 0 color-mix(in srgb, var(--ink) 28%, transparent);
+    inset 0 -1px 0 0 color-mix(in srgb, var(--ink) 20%, transparent);
 }
 
-/* Page wash: the clinic floor (pages that set their own background). */
+/* Page wash: plain floor cream (pages that set their own background). */
 .page-glow {
   position: relative;
   isolation: isolate;
   background-color: var(--floor);
-  background-image: var(--floor-tile);
-  background-size: 48px 48px;
 }
 
 /* Card slot: a card waiting in a treatment bay. It hops up on hover. */
@@ -1568,8 +1562,8 @@ html [data-sonner-toaster] [data-sonner-toast] {
 
 @media (hover: hover) and (pointer: fine) {
   .card-slot:hover {
-    translate: 0 -6px;
-    box-shadow: 8px 10px 0 var(--px-shadow);
+    translate: 0 -3px;
+    box-shadow: 3px 6px 0 var(--px-shadow);
   }
 }
 
@@ -1605,6 +1599,7 @@ html [data-sonner-toaster] [data-sonner-toast] {
   .px-bob,
   .px-nudge,
   .px-dialog-next,
+  .px-dialog-next-blink,
   .menu-cursor,
   .nudge-arrow:hover .arrow,
   .slot-dash,

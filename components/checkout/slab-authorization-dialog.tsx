@@ -2,7 +2,6 @@
 
 import { useId, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CardSprite } from "@/components/pixel/sprites";
 import { LegalDocument } from "@/components/legal/legal-document";
 import { SLAB_FEE_CENTS, SLAB_TITLE, cardTitle, slabAuthorization } from "@/lib/legal/agreements-v1";
 import { signSlab, slabSignature, slabSigned, type SigningState, type SlabCard } from "./signing-section";
@@ -62,7 +61,7 @@ function SlabDialog({ card, state, onChange, onClose }: {
     <Dialog open onOpenChange={(open) => { if (!open) onClose(slabSigned(state, card)); }}>
       <DialogContent ref={setBox} className="sm:max-w-xl max-h-[92dvh] overflow-y-auto p-5 md:p-6 gap-5">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-3 pr-8 font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink"><span aria-hidden className="grid size-12 shrink-0 place-items-center bg-powder px-frame"><CardSprite variant="slab" scale={1} animate={false} /></span>{SLAB_TITLE}</DialogTitle>
+          <DialogTitle className="pr-8 font-heading text-2xl leading-tight text-ink">{SLAB_TITLE}</DialogTitle>
           <DialogDescription className="text-[15px] text-ink-soft">
             {cardTitle(d) || "This card"}: slab cracking is ${(SLAB_FEE_CENTS / 100).toFixed(0)}. We only open this holder once you sign below.
           </DialogDescription>
@@ -79,7 +78,7 @@ function SlabDialog({ card, state, onChange, onClose }: {
           </label>
         </Need>
         <Need missing={tried && name.trim().length < 2} note="Type your full legal name to sign." className="flex flex-col gap-1.5">
-          <label htmlFor={`${id}-name`} className="font-pixel text-xs uppercase tracking-[0.04em] text-ink">Full legal name<Req /></label>
+          <label htmlFor={`${id}-name`} className="text-sm font-semibold text-ink">Full legal name<Req /></label>
           <input id={`${id}-name`} className={FIELD} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
           <p className="text-[13px] leading-relaxed text-ink-soft">Typing your name signs this authorization for this card only. The date and time come from our server when you place the order.</p>
         </Need>

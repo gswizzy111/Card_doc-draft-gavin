@@ -1,7 +1,7 @@
 import { CountUp } from "@/components/motion/count-up";
 import { ScrollLitText } from "@/components/motion/scroll-lit-text";
 import { CASE_STUDY, FEATURED_REVIEW, REVIEWS } from "@/lib/reviews";
-import { PixelIcon, StatusChip } from "@/components/pixel";
+import { StatusChip } from "@/components/pixel";
 
 // Phones show the first few quotes so the page stays short.
 const PHONE_LIMIT = 6;
@@ -27,7 +27,7 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
     <div className="max-w-6xl mx-auto">
       <div className="grid gap-12 lg:gap-16 lg:grid-cols-12 lg:items-center">
         <figure className="lg:col-span-7">
-          <blockquote className="font-heading text-[2rem] sm:text-[2.5rem] lg:text-[3rem] leading-[1.05] text-stage-fg [text-wrap:pretty]">
+          <blockquote className="font-heading font-semibold text-[1.75rem] sm:text-[2.125rem] lg:text-[2.5rem] leading-[1.2] tracking-[-0.015em] text-stage-fg [text-wrap:pretty]">
             <p className="-indent-[0.42em]">
               <ScrollLitText
                 segments={[
@@ -38,9 +38,6 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
             </p>
           </blockquote>
           <figcaption data-reveal className="mt-7 flex items-center gap-3">
-            <span aria-hidden className="grid size-10 place-items-center bg-butter px-frame">
-              <PixelIcon name="user" size={32} />
-            </span>
             <span className="font-pixel text-xs uppercase text-stage-fg">{FEATURED_REVIEW.from}</span>
           </figcaption>
         </figure>
@@ -55,18 +52,18 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
             <span className="font-pixel text-xs text-rx-bright">▶</span>
             <StatusChip status="discharged" />
           </div>
-          <h3 className="font-heading text-[2rem] uppercase leading-none text-stage-fg">
+          <h3 className="font-heading text-2xl font-bold leading-tight tracking-[-0.01em] text-stage-fg md:text-[1.75rem]">
             The {CASE_STUDY.paid} {CASE_STUDY.card}
           </h3>
           <p className="mt-2 text-[15px] leading-relaxed text-stage-muted">
             Bought “damaged” with an edge lift. Sent it in. Got back a {CASE_STUDY.grade}.
           </p>
-          <dl className="mt-7 border-t-[3px] border-dashed border-stage-muted/30">
+          <dl className="mt-7 border-t border-stage-muted/25">
             {steps.map((s) => (
-              <div key={s.label} className="flex items-baseline justify-between gap-4 border-b-[3px] border-dashed border-stage-muted/30 py-4">
+              <div key={s.label} className="flex items-baseline justify-between gap-4 border-b border-stage-muted/25 py-4">
                 <dt className="rx-label text-stage-muted">{s.label}</dt>
                 <dd
-                  className={`font-heading text-[2.75rem] md:text-[3.25rem] leading-none [font-feature-settings:'lnum'_1,'tnum'_1] ${s.muted ? "text-stage-muted line-through decoration-coral decoration-[3px]" : "text-stage-fg"}`}
+                  className={`font-heading font-bold text-[2.25rem] md:text-[2.75rem] leading-none tracking-[-0.02em] [font-feature-settings:'lnum'_1,'tnum'_1] ${s.muted ? "text-stage-muted line-through decoration-coral decoration-2" : "text-stage-fg"}`}
                 >
                   <CountUp value={s.value} />
                 </dd>
@@ -93,13 +90,12 @@ export function CustomerReviews({ compact = false }: { compact?: boolean }) {
           >
             <figure className="flex h-full flex-col">
               {r.card && (
-                <p className="inline-flex h-7 items-center self-start bg-butter px-2.5 font-pixel text-xs uppercase leading-none text-ink">{r.card}</p>
+                <p className="font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.04em] text-butter">{r.card}</p>
               )}
               <blockquote className="mt-3 text-base md:text-[17px] leading-relaxed text-stage-fg">
                 <p>“{r.quote}”</p>
               </blockquote>
-              <figcaption className="mt-auto flex items-center gap-2 pt-4 font-pixel text-xs uppercase text-stage-muted">
-                <PixelIcon name="user" size={16} />
+              <figcaption className="mt-auto pt-4 text-sm font-semibold text-stage-muted">
                 {r.from}
               </figcaption>
             </figure>

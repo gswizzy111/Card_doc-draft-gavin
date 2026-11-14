@@ -1,31 +1,24 @@
 import Link from "next/link";
-import { CardSprite, DocPortrait } from "@/components/pixel";
 
 /**
  * The check-in slot: a coral intake box with a dashed card-shaped opening.
- * A hurt card hovers over it and drops in a frame on hover. Links to /start.
+ * Lifts a little on hover. Links to /start.
  */
 export function CardSlot({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/start"
       aria-label="Place card here. The Doc will see you now. Start your order."
-      className={`card-slot group relative block aspect-[5/7] text-ink shadow-[7px_7px_0_var(--px-shadow)] ${className}`}
+      className={`card-slot group relative block aspect-[5/7] text-ink shadow-[5px_5px_0_var(--px-shadow)] ${className}`}
     >
       <span aria-hidden className="absolute inset-0 bg-coral-fill px-frame" />
-      <span aria-hidden className="absolute inset-2.5 border-[3px] border-dashed border-ink/55 bg-rx-soft/45 group-hover:bg-butter/60" />
-      <span className="relative grid h-full grid-rows-[auto_1fr_auto] justify-items-center px-3 pt-5 pb-4 text-center sm:px-5 sm:pt-6">
-        <span className="flex items-end gap-2">
-          <DocPortrait size="xs" alt="" />
-          <span aria-hidden className="transition-transform duration-150 [transition-timing-function:steps(2,end)] group-hover:translate-y-1.5">
-            <CardSprite variant="hurt" scale={2} animate={false} />
-          </span>
-        </span>
+      <span aria-hidden className="absolute inset-2.5 border-2 border-dashed border-ink/45 bg-rx-soft/45 group-hover:bg-butter/60" />
+      <span className="relative grid h-full grid-rows-[1fr_auto] justify-items-center px-4 pt-5 pb-4 text-center sm:px-6">
         <span className="self-center">
-          <span className="block font-heading uppercase leading-[0.92] text-[clamp(1.6rem,7vw,2.25rem)] lg:text-[2.25rem]">
+          <span className="block font-heading font-bold leading-[1.05] tracking-[-0.02em] text-[clamp(1.5rem,6vw,2rem)] lg:text-[2rem]">
             Place card here.
           </span>
-          <span className="mt-2.5 block font-pixel text-xs uppercase leading-snug text-ink">
+          <span className="mt-3 block font-pixel text-[0.6875rem] uppercase leading-snug tracking-[0.04em] text-ink">
             The Doc will see you now.
           </span>
         </span>

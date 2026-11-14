@@ -6,7 +6,7 @@ export const FACT_ROW =
 
 // The action plate a sold-out or closed ward shows instead of its button.
 export const CLOSED_ACTION =
-  "flex h-12 w-full cursor-not-allowed items-center justify-center bg-muted font-heading text-base uppercase tracking-[0.04em] text-ink-soft px-frame [background-image:repeating-linear-gradient(135deg,transparent_0_6px,color-mix(in_srgb,var(--ink)_7%,transparent)_6px_9px)]";
+  "flex h-12 w-full cursor-not-allowed items-center justify-center bg-muted font-heading text-base text-ink-soft px-frame [background-image:repeating-linear-gradient(135deg,transparent_0_6px,color-mix(in_srgb,var(--ink)_7%,transparent)_6px_9px)]";
 
 // The "*" hover note on a tier's card value: a tiny ink window.
 export const TOOLTIP =

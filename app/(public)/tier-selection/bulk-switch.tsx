@@ -49,14 +49,13 @@ export function BulkSwitch({ children, note, stacked = false }: { children: Reac
                 tabIndex={active ? 0 : -1}
                 onClick={() => setPlan(p.id)}
                 onKeyDown={(e) => onKeyDown(e, i)}
-                className={`press relative flex h-14 flex-col items-center justify-center gap-1 px-2 outline-offset-[-6px] focus-visible:outline-2 focus-visible:outline-dashed md:px-6 ${
+                className={`press relative flex h-12 flex-col items-center justify-center gap-1 px-2 outline-offset-[-6px] focus-visible:outline-2 focus-visible:outline-dashed md:px-6 ${
                   active
                     ? "bg-butter text-ink shadow-[inset_0_-4px_0_#d4b552,inset_0_2px_0_#f8e9ad] focus-visible:outline-ink"
                     : "bg-night-raise text-stage-fg hover:bg-[#463f60] focus-visible:outline-butter"
                 }`}
               >
-                <span className="flex items-center gap-1.5 font-heading text-[1.05rem] uppercase leading-none tracking-[0.03em]">
-                  <span aria-hidden className={`font-pixel text-[0.7rem] text-coral-deep ${active ? "" : "hidden"}`}>▶</span>
+                <span className="flex items-center gap-1.5 font-heading text-[1.05rem] leading-none">
                   {p.label}
                 </span>
                 <span className={`font-pixel text-xs uppercase leading-none tracking-[0.04em] ${
@@ -68,7 +67,7 @@ export function BulkSwitch({ children, note, stacked = false }: { children: Reac
             );
           })}
         </div>
-        <p className={`bg-panel px-4 py-3 text-sm leading-relaxed text-ink-soft px-frame${stacked ? "" : " md:max-w-md"}`}>
+        <p className={`text-sm leading-relaxed text-ink-soft${stacked ? "" : " md:max-w-md"}`}>
           {note ?? <>Bulk pricing is applied automatically at checkout for every tier except Diamond. Discounts don&apos;t combine: you get the biggest one.</>}
         </p>
       </div>

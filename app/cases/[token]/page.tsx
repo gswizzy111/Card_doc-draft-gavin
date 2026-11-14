@@ -23,14 +23,14 @@ export default async function CustomerComplaintPage({ params }: { params: Promis
       <div className="w-full max-w-lg">
 
         <div className="text-center mb-8">
-          <p className="font-heading text-3xl tracking-[0.02em] text-ink">The Card Doc</p>
+          <p className="font-heading text-3xl text-ink">The Card Doc</p>
           <p className="text-sm text-gray-500 mt-1">Customer Support</p>
         </div>
 
         <div className="bg-panel border border-gray-200 overflow-hidden">
           <div className="px-6 py-5 border-b border-gray-100 bg-gray-50">
             <p className="rx-label text-rx mb-1">Support Case</p>
-            <h1 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink">{c.title}</h1>
+            <h1 className="font-heading text-2xl leading-tight text-ink">{c.title}</h1>
             {c.customer_name && (
               <p className="text-sm text-gray-500 mt-0.5">Hi {c.customer_name.split(" ")[0]},</p>
             )}
@@ -39,7 +39,7 @@ export default async function CustomerComplaintPage({ params }: { params: Promis
           {alreadySubmitted ? (
             <div className="px-6 py-8 text-center">
               <div className="text-4xl mb-3">✅</div>
-              <p className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-2">We received your complaint</p>
+              <p className="font-heading text-2xl leading-tight text-ink mb-2">We received your complaint</p>
               <p className="text-sm text-gray-500 leading-relaxed">
                 Thank you for reaching out. Our team will review your case and respond within <strong>3 business days</strong>.
                 We&apos;ll be in touch by email.

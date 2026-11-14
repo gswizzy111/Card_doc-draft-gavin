@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { PixelIcon } from "@/components/pixel";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — The Card Doc",
@@ -16,18 +15,15 @@ export default function PrivacyPage() {
   const CONTACT_EMAIL = "thecarddoc1@gmail.com";
 
   return (
-    <div className="min-h-screen page-glow pt-12 pb-20 md:pt-20">
+    <div className="min-h-screen pt-14 pb-24 md:pt-24">
       <div className="max-w-4xl mx-auto px-4 md:px-10">
-        <p aria-hidden className="mb-5 inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame md:text-[13px]">
-          <span className="text-coral-deep">▶</span>Legal
+        <p aria-hidden className="mb-5 inline-flex items-center gap-2 font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-coral-deep md:text-xs">
+          <span className="size-1.5 bg-coral-deep" />Legal
         </p>
-        <div className="flex items-end justify-between gap-6">
-          <h1 className="font-heading uppercase leading-[0.95] tracking-[0.01em] text-ink text-[clamp(2.5rem,11vw,4.75rem)] [text-shadow:3px_3px_0_var(--wall)]">
-            Privacy Policy
-          </h1>
-          <span aria-hidden className="hidden shrink-0 md:block"><PixelIcon name="shield" size={96} /></span>
-        </div>
-        <div className="px-window px-dialog mt-7 mb-10 max-w-2xl p-4 pr-9 md:p-5 md:pr-10">
+        <h1 className="font-heading font-bold leading-[1.04] tracking-[-0.02em] text-ink text-[clamp(2.25rem,8vw,3rem)] md:text-[3.5rem]">
+          Privacy Policy
+        </h1>
+        <div className="mt-6 mb-12 max-w-2xl">
         <p className="text-sm text-ink mb-2">
           <span className="font-semibold">Effective Date: {EFFECTIVE_DATE}</span>
         </p>
@@ -35,10 +31,9 @@ export default function PrivacyPage() {
           Published by <strong>The Card Doc LLC</strong>, a New Jersey limited liability company
           doing business as &ldquo;The Card Doc&rdquo;
         </p>
-        <span aria-hidden className="px-dialog-next">▼</span>
         </div>
 
-        <div className="px-window p-5 sm:p-8 md:p-10 lg:p-12 font-sans text-[15px] md:text-base leading-relaxed text-ink space-y-6 [&_p+p]:mt-3 [&_p+ul]:mt-3 [&_ul+p]:mt-3 [&_section>h2]:mt-10 [&_section>h2]:border-t-2 [&_section>h2]:border-dashed [&_section>h2]:border-ink/25 [&_section>h2]:pt-7 [&_section:first-child>h2]:mt-0 [&_section:first-child>h2]:border-0 [&_section:first-child>h2]:pt-0 [&_h2]:font-normal [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:leading-[1.05] [&_h2]:tracking-[0.02em] [&_h2]:text-ink [&_h3]:font-heading [&_h3]:font-normal [&_h3]:text-xl [&_h3]:md:text-2xl [&_h3]:tracking-[0.02em] [&_h3]:text-ink [&_ul]:text-[15px] [&_ol]:text-[15px] [&_ul]:list-[square] [&_li]:marker:text-coral-deep [&_strong]:text-ink [&_a]:font-semibold [&_a]:text-coral-deep [&_a:hover]:text-ink [&_p]:max-w-[70ch] [&_li]:max-w-[68ch]">
+        <div className="px-window p-5 sm:p-8 md:p-10 lg:p-12 font-sans text-[15px] md:text-base leading-relaxed text-ink space-y-6 [&_p+p]:mt-3 [&_p+ul]:mt-3 [&_ul+p]:mt-3 [&_section>h2]:mt-10 [&_section>h2]:border-t-2 [&_section>h2]:border-tile [&_section>h2]:pt-7 [&_section:first-child>h2]:mt-0 [&_section:first-child>h2]:border-0 [&_section:first-child>h2]:pt-0 [&_h2]:font-bold [&_h2]:text-2xl [&_h2]:md:text-3xl [&_h2]:leading-tight [&_h2]:tracking-[-0.02em] [&_h2]:text-ink [&_h3]:font-heading [&_h3]:font-semibold [&_h3]:text-lg [&_h3]:md:text-xl [&_h3]:tracking-[-0.01em] [&_h3]:text-ink [&_ul]:text-[15px] [&_ol]:text-[15px] [&_ul]:list-[square] [&_li]:marker:text-coral-deep [&_strong]:text-ink [&_a]:font-semibold [&_a]:text-coral-deep [&_a:hover]:text-ink [&_p]:max-w-[70ch] [&_li]:max-w-[68ch]">
 
           {/* ─── Overview ──────────────────────────────────────────────────────── */}
           <section>
@@ -686,9 +681,8 @@ export default function PrivacyPage() {
             </ul>
           </section>
 
-          <div className="mt-12 bg-[color-mix(in_srgb,var(--powder)_35%,var(--panel))] p-5 md:p-6 px-frame">
-            <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink mb-3 flex items-center gap-2">
-              <PixelIcon name="shield" size={16} />
+          <div className="mt-12 border-l-2 border-frame-deep bg-powder/30 p-5 md:p-6">
+            <p className="font-pixel text-xs uppercase tracking-[0.04em] text-ink mb-3">
               QUICK REFERENCE — DATA DELETION
             </p>
             <p className="text-sm text-ink">

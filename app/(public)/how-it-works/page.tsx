@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { canonical } from "@/lib/seo";
 import { PageHero } from "@/components/marketing/page-hero";
 import { StepWalkthrough } from "@/components/motion/step-walkthrough";
-import { CardSprite, DocSprite, HpBar, PixelIcon, StatusChip, pixelButton, type ClinicStatus, type PixelIconName } from "@/components/pixel";
+import { CardSprite, HpBar, PixelIcon, StatusChip, pixelButton, type ClinicStatus, type PixelIconName } from "@/components/pixel";
 
 export const metadata: Metadata = {
   alternates: canonical("/how-it-works"),
@@ -134,78 +134,76 @@ const POLICIES: { icon: PixelIconName; title: string; body: string }[] = [
 
 // The clinic journey strip: four stations a card passes through (decorative).
 const JOURNEY: { status: ClinicStatus; level: number; art: React.ReactNode }[] = [
-  { status: "check-in", level: 0.15, art: <CardSprite variant="hurt" scale={3} /> },
-  { status: "triage", level: 0.4, art: <PixelIcon name="magnifier" size={48} /> },
-  { status: "treatment", level: 0.7, art: <PixelIcon name="brush" size={48} /> },
-  { status: "discharged", level: 1, art: <CardSprite variant="healed" scale={3} /> },
+  { status: "check-in", level: 0.15, art: <CardSprite variant="hurt" scale={2} animate={false} /> },
+  { status: "triage", level: 0.4, art: <PixelIcon name="magnifier" size={32} /> },
+  { status: "treatment", level: 0.7, art: <PixelIcon name="brush" size={32} /> },
+  { status: "discharged", level: 1, art: <CardSprite variant="healed" scale={2} animate={false} /> },
 ];
 
-// Each tracking status's chart color and condition, rising as the card heals.
-const STATUS_LOOK: { dot: string; level: number }[] = [
-  { dot: "bg-powder", level: 0.12 },
-  { dot: "bg-powder", level: 0.3 },
-  { dot: "bg-rx-soft", level: 0.55 },
-  { dot: "bg-mint", level: 0.8 },
-  { dot: "bg-mint", level: 0.92 },
-  { dot: "bg-mint", level: 1 },
+// Each tracking status's number color, warming to mint as the card heals.
+const STATUS_LOOK: { dot: string }[] = [
+  { dot: "text-frame-deep" },
+  { dot: "text-frame-deep" },
+  { dot: "text-coral-deep" },
+  { dot: "text-mint-deep" },
+  { dot: "text-mint-deep" },
+  { dot: "text-mint-deep" },
 ];
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen page-glow">
-      <div className="max-w-5xl mx-auto px-4 md:px-10 py-12 md:py-20">
+    <div className="min-h-screen">
+      <div className="max-w-5xl mx-auto px-4 md:px-10 py-14 md:py-24">
         <PageHero
           className="mb-12 md:mb-14"
           eyebrow="How It Works"
           title="How It Works"
-          sprite={<DocSprite scale={4} />}
           lead="The Card Doc is a trading card restoration and grading-prep shop in Ridgewood, New Jersey. Mail us your cards from anywhere in the US, we do the work by hand in our shop, and we ship them back ready for grading or your personal collection."
         />
 
         {/* The clinic journey: check-in, triage, treatment, discharge */}
-        <ol aria-hidden className="hero-in mb-14 grid grid-cols-2 gap-x-5 gap-y-6 md:mb-20 md:grid-cols-4 md:gap-x-8" style={{ ["--d" as string]: 420 }}>
+        <ol aria-hidden className="hero-in mb-16 grid grid-cols-2 gap-x-5 gap-y-6 md:mb-24 md:grid-cols-4 md:gap-x-8" style={{ ["--d" as string]: 420 }}>
           {JOURNEY.map((j, i) => (
             <li key={j.status} className="relative">
-              <div className="px-window-ink flex h-full flex-col items-center gap-4 px-3 pt-5 pb-4">
-                <div className="grid h-[72px] place-items-end">{j.art}</div>
+              <div className="px-window-ink flex h-full flex-col items-center gap-3.5 px-3 pt-5 pb-4">
+                <div className="grid h-12 place-items-end">{j.art}</div>
                 <StatusChip status={j.status} className="max-[420px]:px-2" />
                 <HpBar level={j.level} className="w-full" />
               </div>
               {i < JOURNEY.length - 1 && (
-                <span className={`absolute top-1/2 -right-[17px] z-[1] -translate-y-1/2 font-pixel text-sm text-coral-deep px-nudge md:-right-[23px] ${i === 1 ? "hidden md:block" : "block"}`}>▶</span>
+                <span className={`absolute top-1/2 -right-[17px] z-[1] -translate-y-1/2 font-pixel text-xs text-coral-deep md:-right-[22px] ${i === 1 ? "hidden md:block" : "block"}`}>▶</span>
               )}
             </li>
           ))}
         </ol>
 
         {/* The step-by-step process: sticky scroll walkthrough, on the chart */}
-        <section className="px-window-ink p-5 pt-8 sm:p-8 md:p-12">
+        <section className="border-y-2 border-tile py-12 md:py-16">
           <StepWalkthrough title="The Step-by-Step Process" steps={STEPS} />
         </section>
 
         {/* Statuses and policies */}
         <section className="mt-20 md:mt-28" data-reveal>
-          <h2 className="mb-8 font-heading text-4xl uppercase leading-[0.95] tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:mb-10 md:text-6xl">
+          <h2 className="mb-8 font-heading text-[2.125rem] font-bold leading-[1.05] tracking-[-0.02em] text-ink md:mb-10 md:text-5xl [text-wrap:balance]">
             Tracking Statuses &amp; Key Policies
           </h2>
 
           <div className="px-window overflow-hidden p-0 md:p-0">
             <table className="w-full text-left">
-              <thead className="border-b-[3px] border-ink bg-muted">
+              <thead className="border-b-2 border-tile bg-muted/60">
                 <tr>
                   <th scope="col" className="w-[44%] px-4 py-3.5 font-pixel text-xs font-normal uppercase tracking-[0.04em] text-ink-soft md:w-[34%] md:px-7">Order Status</th>
                   <th scope="col" className="px-4 py-3.5 font-pixel text-xs font-normal uppercase tracking-[0.04em] text-ink-soft md:px-7">What It Means</th>
                 </tr>
               </thead>
-              <tbody className="divide-y-2 divide-dashed divide-ink/20">
+              <tbody className="divide-y-2 divide-tile">
                 {STATUSES.map(([status, meaning], i) => (
                   <tr key={status}>
                     <td className="px-4 py-4 align-top md:px-7">
                       <span className="flex items-start gap-2.5 font-semibold text-ink">
-                        <span aria-hidden className={`mt-0.5 grid h-6 min-w-8 shrink-0 place-items-center px-1 font-pixel text-xs text-ink tabular-nums px-frame ${STATUS_LOOK[i]?.dot ?? "bg-muted"}`}>{String(i + 1).padStart(2, "0")}</span>
+                        <span aria-hidden className={`mt-1 shrink-0 font-pixel text-xs tabular-nums ${STATUS_LOOK[i]?.dot ?? "text-ink-soft"}`}>{String(i + 1).padStart(2, "0")}</span>
                         {status}
                       </span>
-                      <HpBar level={STATUS_LOOK[i]?.level ?? 1} label={null} className="mt-3 hidden max-w-[11rem] md:flex" />
                     </td>
                     <td className="px-4 py-4 text-[15px] leading-relaxed text-ink-soft md:px-7">{meaning}</td>
                   </tr>
@@ -214,14 +212,14 @@ export default function HowItWorksPage() {
             </table>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-7">
+          <div className="mt-14 grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2">
             {POLICIES.map((p) => (
-              <div key={p.title} className="px-window-ink flex items-start gap-4 p-5">
-                <span aria-hidden className="grid size-14 shrink-0 place-items-center bg-butter px-frame">
-                  <PixelIcon name={p.icon} size={32} />
+              <div key={p.title} className="flex items-start gap-4 border-t-2 border-tile pt-6">
+                <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-butter/70">
+                  <PixelIcon name={p.icon} size={24} />
                 </span>
                 <div>
-                  <h3 className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">{p.title}</h3>
+                  <h3 className="font-heading text-lg font-semibold leading-snug text-ink">{p.title}</h3>
                   <p className="text-sm text-ink-soft mt-1 leading-relaxed">{p.body}</p>
                 </div>
               </div>
@@ -231,10 +229,9 @@ export default function HowItWorksPage() {
 
         {/* CTA: the night desk */}
         <section data-reveal className="stage stage-light mt-20 px-frame-shadow p-7 md:mt-28 md:flex md:items-center md:justify-between md:gap-10 md:p-12">
-          <div className="mb-8 flex items-end gap-5 md:mb-0">
-            <DocSprite scale={3} className="hidden shrink-0 sm:block" />
+          <div className="mb-8 md:mb-0">
             <div>
-              <h3 className="mb-3 font-heading text-4xl uppercase leading-[0.95] tracking-[0.02em] text-stage-fg md:text-5xl">Ready to restore your collection?</h3>
+              <h3 className="mb-3 font-heading text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-stage-fg md:text-4xl [text-wrap:balance]">Ready to restore your collection?</h3>
               <p className="max-w-xl text-stage-muted">
                 Submit your cards for restoration and see the difference professional care can make.
               </p>

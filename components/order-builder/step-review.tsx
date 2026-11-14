@@ -227,7 +227,7 @@ export function StepReview({
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">Review your order.</h2>
+        <h2 className="mb-2 font-heading text-[2.25rem] leading-none text-ink md:text-5xl">Review your order.</h2>
       </div>
 
       {/* Bulk discount banner (it replaces a smaller code or loyalty discount) */}
@@ -246,7 +246,7 @@ export function StepReview({
       {/* Shipping */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-xl uppercase tracking-[0.02em] text-ink">Shipping</h3>
+          <h3 className="font-heading text-xl text-ink">Shipping</h3>
           <button
             type="button"
             onClick={() => onEditStep(4)}
@@ -296,7 +296,7 @@ export function StepReview({
           purchaseMissing={!(insurance.declaredValueCents > 0 && insurance.type !== "none")}
         >
           <div className="flex flex-col gap-1.5">
-            <label className="font-pixel text-xs uppercase tracking-[0.04em] text-ink" htmlFor="insurance-amount">Amount to insure<Req /></label>
+            <label className="text-sm font-semibold text-ink" htmlFor="insurance-amount">Amount to insure<Req /></label>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">$</span>
               <input
@@ -309,7 +309,7 @@ export function StepReview({
                 onChange={(e) => setInsuranceDollars(e.target.value)}
                 onBlur={handleDeclaredValueBlur}
                 placeholder="e.g. 500"
-                className="h-11 w-40 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+                className="h-11 w-40 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
               />
               {quotingInsurance && <span className="text-xs text-muted-foreground">Getting rate...</span>}
             </div>
@@ -357,7 +357,7 @@ export function StepReview({
             className="mt-0.5 size-5 shrink-0 cursor-pointer accent-primary"
           />
           <div>
-            <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">
+            <p className="font-heading text-xl leading-tight text-ink">
               Feature my card in an Instagram video{" "}
               <span className="text-coral-deep">+{formatCurrency(INSTAGRAM_FEATURE_CENTS)}</span>
             </p>
@@ -372,7 +372,7 @@ export function StepReview({
 
       {/* Tip */}
       <div className="px-window-ink p-5">
-        <p className="mb-1 font-heading text-xl uppercase tracking-[0.02em] text-ink">Add a tip <span className="font-sans text-xs normal-case tracking-normal text-ink-soft">(optional)</span></p>
+        <p className="mb-1 font-heading text-xl text-ink">Add a tip <span className="font-sans text-xs normal-case tracking-normal text-ink-soft">(optional)</span></p>
         <p className="text-sm text-muted-foreground mb-3">100% goes to the technician working on your cards. Thank you!</p>
         <div className="mb-4 flex flex-wrap gap-3">
           {[0, ...TIP_PRESETS_CENTS].map((cents) => (
@@ -411,7 +411,7 @@ export function StepReview({
               setCustomTip(v > MAX_TIP_CENTS ? String(MAX_TIP_CENTS / 100) : e.target.value);
               onTipCentsChange(Math.min(Math.max(v, 0), MAX_TIP_CENTS));
             }}
-            className="h-11 w-full rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] pl-7"
+            className="h-11 w-full rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] pl-7"
           />
         </div>
       </div>
@@ -443,7 +443,7 @@ export function StepReview({
               onDiscountChange(0);
             }}
             placeholder="CREATOR123"
-            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
           />
           <button
             type="button"
@@ -480,7 +480,7 @@ export function StepReview({
               onGiftCardAmountChange(0);
             }}
             placeholder="GIFT-XXXX-XXXX"
-            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_3px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
           />
           <button
             type="button"

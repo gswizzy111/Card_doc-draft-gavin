@@ -6,7 +6,7 @@ import { PurchasePixel } from "@/components/purchase-pixel";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { stripe } from "@/lib/stripe";
 import { CHECKOUT_SESSION_COOKIE, CHECKOUT_SESSION_ID } from "@/lib/tracking-guard";
-import { CardSprite, DocSprite, HealSparkles, PixelIcon, StatusChip, pixelButton } from "@/components/pixel";
+import { CardSprite, HealSparkles, PixelIcon, pixelButton } from "@/components/pixel";
 
 export default async function CheckoutSuccessPage({
   searchParams,
@@ -81,18 +81,16 @@ export default async function CheckoutSuccessPage({
       <PurchasePixel sessionId={session_id} amountCents={amountTotal} currency={currency} orderId={order?.id} />
       {/* Admitted: the order's chart is open at the front desk */}
       <div className="px-window w-full max-w-md p-0 md:p-0 text-center">
-        <div aria-hidden className="relative flex h-40 items-end justify-center gap-5 overflow-hidden border-b-[3px] border-frame bg-mint/45 pb-5">
-          <HealSparkles count={6} />
-          <span className="relative"><DocSprite scale={3} /></span>
+        <div aria-hidden className="relative flex h-32 items-end justify-center overflow-hidden border-b-2 border-frame/30 bg-[color-mix(in_srgb,var(--mint)_35%,var(--panel))] pb-5">
+          <HealSparkles />
           <span className="relative"><CardSprite variant="healed" scale={3} /></span>
         </div>
         <div className="flex flex-col items-center gap-6 p-6 md:p-8">
-          <StatusChip status="check-in">ADMITTED</StatusChip>
           <div>
-            <h1 className="font-heading uppercase text-[2.5rem] md:text-5xl leading-[0.95] tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] mb-3">Order Confirmed!</h1>
+            <h1 className="font-heading text-[2.5rem] md:text-5xl leading-tight text-ink mb-3">Order Confirmed!</h1>
             {order?.order_number ? (
               <p className="text-ink-soft text-sm">
-                Order <span className="inline-flex items-center bg-butter px-2 py-0.5 font-pixel text-xs text-ink px-frame">#{order.order_number}</span>
+                Order <span className="font-pixel text-xs text-ink">#{order.order_number}</span>
               </p>
             ) : (
               <p className="text-ink-soft text-sm">Your payment was received successfully.</p>

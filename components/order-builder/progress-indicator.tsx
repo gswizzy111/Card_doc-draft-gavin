@@ -8,16 +8,16 @@ const STEPS = [
 
 /**
  * The check-in track: four stops on a segmented bar that fills in mint as
- * each step is done. The current stop is coral with a ▼ over it.
+ * each step is done. The current stop is coral.
  */
 export function ProgressIndicator({ currentStep }: { currentStep: number }) {
   const done = Math.max(0, Math.min(STEPS.length - 1, currentStep - 1));
   return (
     <div className="relative w-full px-1 pt-1">
       {/* Track: night rail with a mint fill, drawn between the first and last stop */}
-      <div aria-hidden className="absolute top-[22px] right-[12.5%] left-[12.5%] h-3 bg-night shadow-[0_0_0_2px_var(--ink),inset_0_0_0_2px_var(--panel)]">
+      <div aria-hidden className="absolute top-[23px] right-[12.5%] left-[12.5%] h-0.5 bg-ink/15">
         <span
-          className="block h-full bg-mint bg-[repeating-linear-gradient(90deg,transparent_0_6px,color-mix(in_srgb,var(--ink)_18%,transparent)_6px_8px)] transition-[width] duration-300 ease-[steps(4,end)] motion-reduce:transition-none"
+          className="block h-full bg-mint-deep transition-[width] duration-300 ease-out motion-reduce:transition-none"
           style={{ width: `${(done / (STEPS.length - 1)) * 100}%` }}
         />
       </div>
@@ -31,14 +31,11 @@ export function ProgressIndicator({ currentStep }: { currentStep: number }) {
                   state === "done" ? "bg-mint" : state === "current" ? "bg-coral-fill" : "bg-panel"
                 }`}
               >
-                {state === "current" && (
-                  <span aria-hidden className="absolute -top-5 left-1/2 -translate-x-1/2 font-pixel text-xs leading-none text-coral-deep px-bob">▼</span>
-                )}
                 {state === "done" ? <Check className="h-4 w-4" strokeWidth={3} /> : step.n}
               </span>
               <span
-                className={`max-w-[8ch] text-center sm:max-w-none font-pixel text-xs uppercase leading-tight tracking-normal ${
-                  state === "current" ? "text-ink" : "text-ink-soft"
+                className={`max-w-[8ch] text-center sm:max-w-none text-sm leading-tight ${
+                  state === "current" ? "font-semibold text-ink" : "text-ink-soft"
                 }`}
               >
                 {step.label}

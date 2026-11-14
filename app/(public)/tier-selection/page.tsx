@@ -19,7 +19,7 @@ import { BULK_PLANS, bulkPriceCents, isBulkEligible } from "@/lib/bulk-pricing";
 import { SnapDeck } from "@/components/motion/snap-deck";
 import { PixelViewContent } from "@/components/pixel-view-content";
 import { PageHero } from "@/components/marketing/page-hero";
-import { CardSprite, DocSprite, PixelIcon, Window, pixelButton, type PixelIconName } from "@/components/pixel";
+import { PixelIcon, Window, pixelButton, type PixelIconName } from "@/components/pixel";
 
 export const dynamic = "force-dynamic";
 
@@ -51,17 +51,6 @@ const SWATCH: Record<string, string> = {
 function formatTurnaround(tier: RestorationTier): string {
   if (tier.turnaround_label) return tier.turnaround_label;
   return `${tier.turnaround_min_days}–${tier.turnaround_max_days} days`;
-}
-
-/** The hero's patient: a hurt card, the ▶ cursor, the same card healed. */
-function HealPair() {
-  return (
-    <div className="flex items-end gap-3 pb-1">
-      <CardSprite variant="hurt" scale={4} />
-      <span className="mb-11 font-pixel text-sm text-coral-deep px-nudge">▶</span>
-      <CardSprite variant="healed" scale={4} />
-    </div>
-  );
 }
 
 function TierCard({
@@ -122,7 +111,7 @@ function TierCard({
   );
 
   const facts = (
-    <dl className="@container divide-y-2 divide-dashed divide-ink/20 border-t-[3px] border-ink">
+    <dl className="@container divide-y-2 divide-dashed divide-ink/20 border-t-2 border-ink">
       <div className={FACT_ROW}>
         <dt className="rx-label @min-[16.5rem]:self-center">Turnaround</dt>
         <dd className="font-medium text-ink @min-[16.5rem]:text-right">
@@ -167,7 +156,7 @@ function TierCard({
     <article className="comic-lift px-window-ink flex h-full flex-col">
       {/* Ward plate: the tier's metal band, its chart icon and the corner chip.
           Fixed height, so a card with a chip lines up with one without. */}
-      <div className={`metal ${swatch} flex h-16 shrink-0 items-center justify-between gap-3 border-b-[3px] border-ink px-4 ${closed ? "grayscale-[0.75]" : ""}`}>
+      <div className={`metal ${swatch} flex h-16 shrink-0 items-center justify-between gap-3 border-b-2 border-ink px-4 ${closed ? "grayscale-[0.75]" : ""}`}>
         <span aria-hidden className="grid size-11 shrink-0 place-items-center bg-panel px-frame">
           <PixelIcon name={icon} size={32} />
         </span>
@@ -179,7 +168,7 @@ function TierCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5 md:p-6">
-        <h3 className="font-heading text-[1.85rem] uppercase leading-none tracking-[0.02em] text-ink">{tier.name}</h3>
+        <h3 className="font-heading text-[1.85rem] leading-none text-ink">{tier.name}</h3>
         {/* Two lines reserved, so prices line up across a row */}
         <p className="mt-1.5 mb-5 min-h-10 text-sm text-ink-soft">{tier.description}</p>
 
@@ -297,11 +286,10 @@ export default async function TierSelectionPage() {
       <PixelViewContent contentName="Restoration Tiers" contentCategory="Restoration" />
       {/* Closed: the front desk's notice, under the night sign */}
       {!restorationsOpen && (
-        <div className="stage stage-light border-b-[3px] border-ink">
+        <div className="stage stage-light border-b-2 border-ink">
           <div className="mx-auto flex max-w-5xl items-end gap-4 px-4 pt-5 pb-7 md:gap-6 md:px-6">
-            <DocSprite scale={2} className="mb-1 hidden shrink-0 sm:block" />
-            <Window variant="dialog" title="Front desk" className="flex-1 pr-10 md:pr-12">
-              <p className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink md:text-[1.75rem]">Restorations are currently closed.</p>
+            <Window className="flex-1">
+              <p className="font-heading text-2xl leading-tight text-ink md:text-[1.75rem]">Restorations are currently closed.</p>
               <p className="mt-1.5 text-[15px] font-semibold leading-relaxed text-ink-soft">
                 We&apos;re not accepting new restoration orders right now — but you can still browse our pricing below.
               </p>
@@ -315,7 +303,6 @@ export default async function TierSelectionPage() {
           className="mb-8"
           title="Choose Your Restoration Level"
           lines={["Choose Your", "Restoration Level"]}
-          sprite={<HealPair />}
           lead={restorationsOpen
             ? "Select the tier that best fits your cards' needs."
             : "We're temporarily closed. Browse our pricing below and join the waitlist to be notified when we reopen."}
@@ -358,14 +345,11 @@ export default async function TierSelectionPage() {
 
         {/* Turnaround disclaimer: the chart's fine print, folded */}
         <details className="group mt-10 px-window-ink md:mt-12">
-          <summary className="flex min-h-14 cursor-pointer list-none select-none items-center justify-between gap-3 bg-butter px-4 py-3 md:px-5 [&::-webkit-details-marker]:hidden">
-            <span className="flex items-center gap-3">
-              <PixelIcon name="clipboard" size={32} className="shrink-0" />
-              <span className="font-heading text-lg leading-tight tracking-[0.02em] text-ink md:text-xl">About our turnaround time estimates</span>
-            </span>
+          <summary className="flex min-h-14 cursor-pointer list-none select-none items-center justify-between gap-3 bg-panel px-4 py-3 md:px-5 [&::-webkit-details-marker]:hidden">
+            <span className="font-heading text-lg leading-tight text-ink md:text-xl">About our turnaround time estimates</span>
             <ChevronDown className="h-5 w-5 shrink-0 text-ink group-open:rotate-180" strokeWidth={2} />
           </summary>
-          <div className="space-y-2 border-t-[3px] border-ink px-4 pt-4 pb-5 text-sm leading-relaxed text-ink md:px-5">
+          <div className="space-y-2 border-t-2 border-ink px-4 pt-4 pb-5 text-sm leading-relaxed text-ink md:px-5">
             <p>
               All turnaround times shown are <strong>rough estimates only</strong> and are not a guarantee or promise of completion within any specific timeframe.
             </p>
@@ -383,9 +367,7 @@ export default async function TierSelectionPage() {
         {!restorationsOpen && <WaitlistModal />}
 
         {/* Footer info: the doc's pointer to the symptoms chart */}
-        <div className="mt-10 flex items-end gap-3 md:mt-12 md:gap-5">
-          <DocSprite scale={2} className="mb-1 shrink-0" />
-          <Window variant="dialog" className="flex-1 py-4 pr-10 md:py-5">
+        <div className="mt-10 border-t-2 border-ink/15 pt-8 md:mt-12">
             <p className="text-ink">
               Not sure which tier fits?{" "}
               <Link href="/how-it-works" className="font-semibold text-coral-deep underline decoration-2 underline-offset-4 hover:text-ink">
@@ -393,7 +375,6 @@ export default async function TierSelectionPage() {
               </Link>
               .
             </p>
-          </Window>
         </div>
 
       </div>

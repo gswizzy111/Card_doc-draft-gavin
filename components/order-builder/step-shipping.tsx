@@ -203,7 +203,7 @@ export function StepShipping({
     return (
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">
+          <h2 className="mb-2 font-heading text-[2.25rem] leading-none text-ink md:text-5xl">
             Shipping for international orders
           </h2>
           <p className="text-muted-foreground text-sm mt-1">
@@ -213,7 +213,7 @@ export function StepShipping({
 
         {/* Inbound — customer ships themselves */}
         <div className="px-window p-5">
-          <p className="mb-1.5 font-heading text-xl uppercase tracking-[0.02em] text-ink">Sending your cards to us</p>
+          <p className="mb-1.5 font-heading text-xl text-ink">Sending your cards to us</p>
           <p className="text-sm text-muted-foreground">
             Use FedEx, DHL, or your local postal service to ship to our US address. You&apos;ll receive the full address after checkout. Use a tracked, insured method.
           </p>
@@ -221,7 +221,7 @@ export function StepShipping({
 
         {/* Return shipping — we ship back, they pay now */}
         <div className="px-window p-5">
-          <p className="mb-1.5 font-heading text-xl uppercase tracking-[0.02em] text-ink">Return shipping — we ship your cards back</p>
+          <p className="mb-1.5 font-heading text-xl text-ink">Return shipping — we ship your cards back</p>
           <p className="text-sm text-muted-foreground mb-4">
             Select a return shipping option below. This is paid now so we can ship your restored cards back to you.
           </p>
@@ -267,7 +267,7 @@ export function StepShipping({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="mb-2 font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-5xl">
+        <h2 className="mb-2 font-heading text-[2.25rem] leading-none text-ink md:text-5xl">
           How will you send your cards to us?<Req />
         </h2>
       </div>
@@ -291,7 +291,7 @@ export function StepShipping({
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">Buy a prepaid shipping label</p>
+                <p className="font-heading text-xl leading-tight text-ink">Buy a prepaid shipping label</p>
                 <span className="inline-flex h-6 items-center bg-mint px-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
                   Recommended
                 </span>
@@ -325,7 +325,7 @@ export function StepShipping({
               {shippingMethod === "self_ship" && <div className="size-2 bg-panel" />}
             </div>
             <div className="flex-1">
-              <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">I&apos;ll ship them myself</p>
+              <p className="font-heading text-xl leading-tight text-ink">I&apos;ll ship them myself</p>
               <p className="text-sm text-muted-foreground mt-1">
                 Use your own carrier and packaging. We&apos;ll send you our shipping address after checkout. Be sure to use a tracked, insured method.
               </p>

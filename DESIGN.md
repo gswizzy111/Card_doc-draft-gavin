@@ -1,6 +1,6 @@
 ---
 name: The Card Doc Clinic
-description: Card restoration, grading prep and DIY kits presented as a cozy handheld-RPG (GBA / DS era) healing center. Muted pastel floor, wall and counter colors, chunky Jersey 10 pixel headings over a readable Atkinson Hyperlegible body, pixel windows and dialog boxes with stepped corners, hard one-tone pixel shadows, steps() motion, and real before and after photos framed in pixel UI.
+description: Card restoration, grading prep and DIY kits presented as a calm, trustworthy card clinic with a retro pixel accent. Muted pastel cream, peach, coral and mint, sentence-case Bricolage Grotesque headings over a readable Atkinson Hyperlegible body, Silkscreen only for small labels, plain cream surfaces, 2px stepped-corner windows with small soft shadows, quick restrained motion, and real before and after photos framed in light pixel UI.
 colors:
   floor: "#F3EAC8"
   tile: "#E6D8A8"
@@ -30,33 +30,30 @@ colors:
   rx-bright: "#EE9A8E"
 typography:
   display:
-    fontFamily: "Jersey 10, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.25rem, 9.5vw, 4.75rem)"
-    fontWeight: 400
-    lineHeight: 0.95
-    letterSpacing: "0.01em"
-    textTransform: "uppercase"
-    fontSizeAdjust: "ex-height 0.53"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.25rem, 8vw, 4rem)"
+    fontWeight: 700
+    lineHeight: 1.04
+    letterSpacing: "-0.02em"
+    textTransform: "none (sentence or title case, as written)"
   section:
-    fontFamily: "Jersey 10, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2rem, 5vw, 3.5rem)"
-    fontWeight: 400
-    lineHeight: 1
-    letterSpacing: "0.02em"
-    fontSizeAdjust: "ex-height 0.53"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2rem, 5vw, 3rem)"
+    fontWeight: 650
+    lineHeight: 1.08
+    letterSpacing: "-0.015em"
   title:
-    fontFamily: "Jersey 10, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.5rem"
-    fontWeight: 400
-    lineHeight: 1.15
-    letterSpacing: "0.02em"
-    fontSizeAdjust: "ex-height 0.53"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.25-1.5rem"
+    fontWeight: 650
+    lineHeight: 1.2
+    letterSpacing: "-0.01em"
   button:
-    fontFamily: "Jersey 10, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.0625rem"
-    fontWeight: 400
-    letterSpacing: "0.04em"
-    textTransform: "uppercase"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.9375-1.0625rem"
+    fontWeight: 600
+    letterSpacing: "0"
+    textTransform: "none"
   body:
     fontFamily: "Atkinson Hyperlegible Next, ui-sans-serif, system-ui, sans-serif"
     fontSize: "16px"
@@ -68,8 +65,8 @@ typography:
     fontWeight: 500
     lineHeight: 1.6
   label:
-    fontFamily: "Silkscreen, ui-monospace, monospace"
-    fontSize: "0.75rem"
+    fontFamily: "Silkscreen, ui-monospace, monospace (accent only)"
+    fontSize: "0.6875-0.75rem"
     fontWeight: 400
     lineHeight: 1rem
     letterSpacing: "0.04em"
@@ -78,7 +75,8 @@ rounded:
   everything: "0px"
   pill: "9999px (legacy only; do not add new pills)"
 spacing:
-  pixel: "3px"
+  pixel: "2px (--px; every outline)"
+  shadow-drop: "3px (--px-drop; beyond the outline)"
   row: "10px"
   panel: "20px"
   gutter-phone: "16px"
@@ -89,23 +87,24 @@ components:
   window:
     className: "px-window (or <Window/>)"
     backgroundColor: "{colors.panel}"
-    outline: "3px {colors.frame}, stepped corners"
-    innerLine: "3px {colors.powder}"
-    shadow: "7px 7px 0 ink @ 24%"
+    outline: "2px frame @ 80% on panel, stepped corners"
+    innerLine: "2px powder @ 45% on panel"
+    shadow: "5px 5px 0 ink @ 13% (2px outline + 3px drop)"
   dialog:
-    className: "px-window px-dialog + .px-dialog-next (▼)"
+    className: "px-window px-dialog (+ .px-dialog-next ▼ opt-in, .px-dialog-next-blink home hero only)"
     backgroundColor: "{colors.panel}"
     textColor: "{colors.ink}"
   card:
     className: "px-window-ink (ui/card)"
     backgroundColor: "{colors.panel}"
-    outline: "3px {colors.ink}, stepped corners"
+    outline: "2px ink @ 78% on panel, stepped corners, no inner line"
   button-primary:
     className: "px-btn / comic-btn / ui Button default"
     backgroundColor: "{colors.coral-fill}"
     textColor: "{colors.ink}"
-    bottomEdge: "#C4665A"
-    height: "36-56px"
+    bottomEdge: "3px #C4665A"
+    textTransform: "none"
+    height: "40-48px"
   button-secondary:
     className: "px-btn px-btn-mint / ui Button secondary"
     backgroundColor: "{colors.mint}"
@@ -123,6 +122,8 @@ components:
   status-chip:
     labels: "CHECK-IN / TRIAGE / IN TREATMENT / DISCHARGED"
     typography: "{typography.label}"
+    surface: "pale tint + 1px ink @ 22% hairline, 24px tall"
+    use: "process explanations only (how it works, before/after)"
   night-band:
     className: "stage stage-light"
     backgroundColor: "{colors.night}"
@@ -130,12 +131,51 @@ components:
   nav-bar:
     backgroundColor: "{colors.panel}"
     textColor: "{colors.ink}"
-    height: "64px + 6px trim"
+    height: "64px, 2px ink @ 80% bottom rule"
 ---
 
 # Design System: The Card Doc Clinic
 
-## Direction (November 2026): the pixel healing center
+## Revision 2 (November 14, 2026): professional first, pixel as accent
+
+The owner liked the clinic but found it a little too cartoony. The site now
+reads as a trustworthy, premium card service with a retro pixel accent, not
+a game. These rules override anything older below that disagrees.
+
+- **Type.** Headings, nav and buttons use **Bricolage Grotesque**
+  (`--font-heading`), in the case the source is written in: sentence or
+  title case, never all caps. `globals.css` enforces this (unlayered): h1-h4
+  and `.font-heading` drop `uppercase`, pixel text-shadows and wide tracking
+  left on old call sites. **Silkscreen** (`--font-pixel`) is an accent only:
+  eyebrow tags, status chips, tiny HUD labels, price hints, the big 404.
+  Never a heading, never body copy, never a form label. Jersey 10 is gone.
+- **Surfaces.** Plain floor cream and panel white. The tile floor art is
+  retired (`.tile-floor`, `.page-glow`, `<TileFloor/>` are plain now); use
+  `.faint-grid` in one or two places at most. Wall bands are a pale peach
+  wash with a 4px trim line. Fewer boxes inside boxes; more whitespace.
+- **Chrome.** Every outline is 2px (`--px`). Shadows are one soft tone (ink
+  13%) falling 3px beyond the outline (`--px-drop`). Window frames are
+  softened toward the panel. Buttons keep stepped corners and a 3px bottom
+  edge but no top highlight, no caps and no wide tracking.
+- **Props budget per page.** At most **one** small pixel illustration per
+  page, and only where it earns its place (404, a success screen, the
+  footer if a page opts in). No repeated Doc mascot, hopping hurt cards,
+  "!" blinks or scattered sparkles. Pixel icons only where they label
+  something (services, steps), at 32px or less beside text.
+- **Gimmicks off by default.** No blinking ▼ (`<Window next>` is opt-in;
+  `next="blink"` only on the home hero, if anywhere). Typewriter is off
+  unless `animate`. Status chips and HP bars only where they explain the
+  process (how it works, before/after). Decorative labels like "THE DOC",
+  "FRONT DESK", "TREATMENT MENU" mostly go.
+- **Motion.** Subtle and quick: reveals and entrances use a smooth ease-out
+  (about 400ms, 10px), page changes a 240ms fade with a faint brightness
+  lift. Stepped pixel motion only on small accents (the before/after sweep,
+  HP fill). No idle loops on chrome (the ▶ cursor no longer nudges).
+- **Keep:** the palette, the clinic idea, the home before/after card slider
+  (PatientCard), the symptoms ticker under the hero, the Trusted by section,
+  every word of the owner's copy, AA contrast, reduced motion, phone first.
+
+## Direction (November 2026): the pixel healing center (first pass)
 
 The site is a clinic for trading cards, drawn like a cozy handheld RPG from
 the GBA / DS era. Hurt cards check in, get triaged, go into treatment and are
@@ -206,51 +246,62 @@ night (use stage-muted).
 
 ## Typography
 
-- **Jersey 10** (`--font-heading`, `.font-heading`, h1-h4, buttons, nav,
-  prices): chunky, condensed pixel face whose C never reads as an O. One
-  weight; `font-size-adjust: ex-height 0.53` sizes it to match the body.
-  Tracking is never negative (glyphs sit on a grid), uppercase for display.
-- **Atkinson Hyperlegible Next** (`--font-sans`): all body copy, forms, FAQs
-  and legal text. Long text is never set in a pixel face.
+- **Bricolage Grotesque** (`--font-heading`, `.font-heading`, h1-h4,
+  buttons, nav, prices): a confident grotesque with ink traps and optical
+  sizes (the `opsz` axis is loaded, so big headlines tighten on their own).
+  Weights 600-700; headings default to 650. Tracking -0.015em by default,
+  -0.02em on display. Sentence or title case as written; never uppercase.
+  Sub-1 `leading-*` on headings is lifted to 1.06 globally.
+- **Atkinson Hyperlegible Next** (`--font-sans`): all body copy, forms, FAQs,
+  form labels and legal text. Long text is never set in a pixel face.
 - **Silkscreen** (`--font-pixel`, `font-pixel`, `.rx-label`, `font-mono`):
-  tiny labels only: chips, HUD text, table headers, price hints. 11-13px.
+  the accent. Eyebrow tags, status chips, HUD text, table headers, price
+  hints. 11-12px, uppercase, +0.04em. The only large use is the 404 numeral.
 - Prices use lining figures (`lnum`), tables use tabular figures.
 
 ## Layout and surfaces
 
-- **Floor:** the body carries the art tile `/pixel/tile-floor.svg` (the
-  same bevelled cream tile as the clinic scene) at 3x, 48px (`.tile-floor`,
-  `.page-glow`, token `--floor-tile`). `.tile-floor-sm` draws it at 2x,
-  32px. Always whole multiples of 16px.
-- **Wall band:** `.wall-band` / `<WallBand/>`: peach wall with faint seams,
-  the wainscot trim art `/pixel/wall-trim.svg` at 2x (32x24, token
-  `--wall-trim`) and an ink skirting line. Section header device; `sprite`
-  slot on the trim. `.wall-trim` is the 24px trim strip alone (footer top).
-- **Night band:** `.stage .stage-light`: dusk with a sparse square-star tile.
+- **Floor:** plain `--floor` cream on `body`. `.tile-floor`,
+  `.tile-floor-sm`, `.page-glow` and `<TileFloor/>` are plain cream (kept so
+  old call sites work). `.faint-grid` is the opt-in texture: a 48px grid of
+  ink at 4%. One or two places per site, not per page.
+- **Wall band:** `.wall-band` / `<WallBand/>`: peach at 55% over the floor
+  with a 4px trim line at the foot. Section header device; its `sprite` slot
+  is opt-in and should usually stay empty. `.wall-trim` is the 4px trim
+  line alone (footer top).
+- **Night band:** `.stage .stage-light`: dusk with a very sparse, faint star
+  tile.
 - Square corners everywhere (`--radius: 0`). Stepped corners come from four
   offset box-shadows (`.px-frame`, `.px-window*`, `.px-btn`), so focus rings
   and overflow still work. `.px-corners` clips a solid fill instead.
+- Prefer one container per idea: a window holding a list, not a window
+  holding windows.
 
 ## Elevation
 
-One-tone hard pixel shadows only: `--px-shadow` (ink at 24%) offset down
-right (4-7px). No blur, no glow, no glossy gradients, no film grain.
-`.comic-shadow*` now draw this shadow.
+One soft shadow tone, `--px-shadow` (ink at 13%), offset down right by the
+2px outline plus `--px-drop` (3px). No blur, no glow, no glossy gradients,
+no film grain. `.comic-shadow*` draw 2-3px versions. Hover lifts are 2px.
 
 ## Components
 
-- **Window** (`<Window/>`, `.px-window`): panel fill, 3px frame-blue outline
-  with stepped corners, powder inner line, hard shadow. `tone="ink"` for
-  cards on busy floors (`.px-window-ink`, used by `ui/card`), `tone="night"`
-  for menus on the stage. `title` adds a butter tab on the top edge.
-- **Dialog** (`variant="dialog"`, `.px-dialog` + `.px-dialog-next`): a window
-  that talks, ▼ blinking bottom right. Pair with `<DocPortrait/>` for NPC
-  lines (PageHero lead, 404, footer sign-off).
+- **Window** (`<Window/>`, `.px-window`): panel fill, 2px softened
+  frame-blue outline with stepped corners, a quiet powder inner line, small
+  soft shadow. `tone="ink"` for cards (`.px-window-ink`, used by
+  `ui/card`; softened ink, no inner line), `tone="night"` for menus on the
+  stage. `title` adds a small butter Silkscreen tab on the top edge; use it
+  for labels that name something, not for decoration.
+- **Dialog** (`variant="dialog"`, `.px-dialog`): a window that talks. The ▼
+  is opt-in: `next` shows it still, `next="blink"` blinks it (home hero
+  only). Pair with `<DocPortrait/>` only where the doc truly speaks
+  (`<PageHero portrait>` on one page at most).
 - **Pixel button** (`.px-btn`, tones `-mint -panel -butter -powder -ink
   -danger`; `pixelButton()` for links; `ui/button` variants map to tones;
   legacy `.comic-btn`, `.comic-btn-light`, `.comic-btn-ink`, `.btn-depth`):
-  stepped ink outline, 4px darker bottom edge, 2px light top edge; hover
-  lightens instantly; presses down 2px. Focus is a dashed ring drawn inside.
+  2px stepped ink outline, 3px darker bottom edge, Bricolage 600 in the
+  label's own case; hover lightens in 100ms; presses down 2px. Sizes 40 /
+  44 / 48px (`pixelButton` sm / md / lg; `.comic-btn` 52px, `-sm` 40px).
+  Focus is a dashed ring drawn inside.
 - **Inputs** (`ui/input`, `textarea`, `select`): panel fill, 2px ink border,
   inset top shade; focus turns the border frame-blue, adds a soft blue ring
   and a faint butter tint. Checkbox and radio are square; checked radio is a
@@ -258,39 +309,47 @@ right (4-7px). No blur, no glow, no glossy gradients, no film grain.
 - **Menus** (`ui/select`, `ui/dropdown-menu`, nav Explore): blue-framed
   windows; the highlighted row shows the ▶ cursor and a butter fill.
 - **Status chip** (`<StatusChip/>`): CHECK-IN (powder), TRIAGE (butter), IN
-  TREATMENT (coral wash), DISCHARGED (mint). Decorative labels.
+  TREATMENT (coral wash), DISCHARGED (mint) as pale tints with a hairline,
+  24px tall. Only where they explain the process (how it works,
+  before/after).
 - **HP / condition bar** (`<HpBar/>`): coral (low), butter (mid), mint (full)
-  inside a night track. Never shows a number. `animate` fills it in frames.
+  in a pale track with a 2px soft outline. Never shows a number. `animate`
+  fills it in frames. Only beside before/after or process steps.
 - **Menu cursor** (`<MenuCursor/>` in a `.menu-cursor-item`): ▶ shows on
-  hover, focus, highlighted menu rows and the current page.
+  hover, focus, highlighted menu rows and the current page. It holds still.
 - **Doc portrait** (`<DocPortrait/>`, xs-xl): the logo photo in a powder and
-  frame-blue portrait box, optional butter nameplate.
-- **Heal sparkles** (`<HealSparkles/>`): the art's mint sparkle sprite,
+  frame-blue portrait box, optional small butter nameplate. The nav logo and
+  footer use it; elsewhere, sparingly.
+- **Heal sparkles** (`<HealSparkles/>`, 3 by default; success moments
+  only): the art's mint sparkle sprite,
   twinkling through its frames while it rises in steps; a static scatter of
   full stars under reduced motion. It covers its `relative` parent and
   paints over in-flow content, so give it an empty decorative area (or put
   the content in a `relative z-[1]` box).
-- **Typewriter** (`<Typewriter/>`): short NPC lines only; reduced motion and
-  screen readers get the full text at once.
-- **Badges** (`ui/badge`): square, 2px ink border, Silkscreen label.
+- **Typewriter** (`<Typewriter/>`): off by default (full text at once);
+  `animate` opts one short line back in. Reduced motion and screen readers
+  always get the full text at once.
+- **Badges** (`ui/badge`): square, 2px softened ink border, 11px Silkscreen.
+- **Form labels** (`ui/label`): Atkinson 14px semibold, not pixel caps.
 - **Tabs** (`ui/tabs`): the active tab is a panel window in a muted tray.
 - **Tables** (`ui/table`): muted header row with Silkscreen labels, ink rule.
-- **Nav:** panel-white command bar with a 6px trim stripe under it; logo is
-  `<DocPortrait size="xs"/>` + Jersey wordmark; tabs get the ▶ cursor and a
-  3px coral-deep underline when active. Phone menu is a full-screen night
-  window with RPG-style lists. `sprite` prop: slot beside the logo.
-- **Footer:** night band after hours under the wainscot trim art; the doc's
-  portrait and a dialog box carry the sign-off; a faint giant wordmark rises
-  in frames. `sprite` prop defaults to `<DocSprite scale={2}/>` beside the
-  name (md and up); `sprite={null}` hides it.
-- **Page hero** (`<PageHero/>`): butter eyebrow tab with ▶, uppercase Jersey
-  headline with a wall-peach pixel shadow, and the lead in a dialog box with
-  the doc's portrait. `sprite` and `portrait` props.
-- **404** (`<NotFoundPanel/>`): big 404 with a hurt card sprite (`sprite`
-  prop, default `<CardSprite variant="hurt" scale={4}/>`), Next's words in a
-  dialog box. `/not-available` and the route skeleton use the same dialog
-  with `<DocSprite scale={2}/>`.
-- **Preview banner:** butter strip with the 16px heart-plus icon.
+- **Nav:** panel-white bar with a 2px soft ink rule under it; logo is
+  `<DocPortrait size="xs"/>` + Bricolage wordmark; tabs get the ▶ cursor and
+  a 2px coral-deep underline when active. Phone menu is a full-screen night
+  panel with plain lists. `sprite` prop: opt-in slot beside the logo (empty).
+- **Footer:** calm night band under a 4px trim line; portrait, name and the
+  sign-off as plain text; a faint giant wordmark rises once. `sprite` is an
+  opt-in slot for one small illustration (default none).
+- **Page hero** (`<PageHero/>`): a small Silkscreen eyebrow in coral-deep
+  with a square bullet, a sentence-case Bricolage headline, and the lead as
+  a plain paragraph. `portrait` (opt-in) puts the lead in a window beside
+  the doc's portrait; `sprite` (opt-in, desktop only) stands beside the
+  headline. Most pages pass neither.
+- **404** (`<NotFoundPanel/>`): big Silkscreen 404 with one hurt card sprite
+  (`sprite`, default `<CardSprite variant="hurt" scale={3}/>`) and Next's
+  words as a plain heading. The route skeleton has no sprite.
+- **Preview banner:** a thin muted strip, ink-soft text, a small coral
+  square.
 
 ## Pixel art (`components/pixel/sprites.tsx`)
 
@@ -328,21 +387,21 @@ overwritten by a regeneration, so note any change in the generator too.
 
 ## Motion
 
-Pixel-honest: `steps()` easing everywhere, two-frame idle loops
-(`.px-bob`, `.px-blink`, `.px-nudge`), the blinking ▼, sparkles rising in 8
-frames, reveals and hero entrances in 3-4 frames, a short stepped heal flash
-(brightness) as each page arrives (`::view-transition-new(.page-in)`), a
-stepped HP bar as the route progress indicator, a two-frame skeleton blink.
-Interaction feedback is instant (< 150ms). Under `prefers-reduced-motion`
-every loop stops and pages cross-fade in two frames; everything still looks
-finished. Motion (`motion/react`) is used with a frame-snapping ease
-(`FRAMES(n)` in the nav). No GSAP.
+Revision 2: subtle and quick. Entrances, scroll reveals and the headline
+word rise use `--ease-out` (about 400ms, 10px of travel, 50ms stagger).
+Page changes fade out in 160ms and in over 240ms with a faint brightness
+lift. Stepped `steps()` motion stays only on small accents: the before/after
+sweep, the HP fill, button press (one frame), the opt-in ▼ blink and sprite
+loops. Chrome has no idle loops. The route indicator is a 3px mint-deep bar;
+the skeleton pulses softly. Interaction feedback is instant (< 150ms). Under
+`prefers-reduced-motion` every loop stops and pages cross-fade; everything
+still looks finished. No GSAP.
 
 ## Accessibility
 
 - WCAG AA for every text pair listed above; non-text frames are 3:1+.
-- Focus: 3px frame-deep outline with 2px offset; pixel buttons draw a dashed
-  ring inside themselves.
+- Focus: 3px frame-deep outline with 2px offset (kept at 3px even though
+  chrome outlines are 2px); pixel buttons draw a dashed ring inside.
 - Touch targets 40-56px; footer links have 44px rows.
 - No horizontal scroll at 390px.
 
@@ -350,20 +409,25 @@ finished. Motion (`motion/react`) is used with a frame-snapping ease
 
 ### Do
 
-- Put content in windows and dialog boxes; let the floor show between them.
+- Lead with the photos and the words; let pixel details be the accent.
+- Use plain cream and panel surfaces with generous whitespace; one
+  container per idea.
 - Use ink text on every pastel fill; coral-deep or mint-deep for colored text.
-- Use the ▶ cursor, ▼ prompt, HP bar and status chips as the clinic's
-  vocabulary for check-in, triage, treatment and discharge.
-- Keep photos as photos, framed by pixel UI.
+- Use the ▶ cursor, HP bar and status chips only where they explain check-in,
+  triage, treatment and discharge.
+- Keep photos as photos, framed by light pixel UI.
 - Give every new graphic a reduced-motion state and a lightweight fallback.
 
 ### Don't
 
 - Don't use Pokémon IP of any kind, or a red cross on white.
-- Don't add rounded corners, blur shadows, gradients that read as gloss,
-  neon or pure black / pure white.
-- Don't set body copy, FAQs or legal text in a pixel face.
-- Don't use negative letter-spacing on pixel faces.
-- Don't animate with smooth springs or long glides on marketing chrome; use
-  frames.
+- Don't set headings, buttons or nav in all caps, or headings in a pixel face.
+- Don't put more than one pixel illustration on a page, or scatter sprites,
+  sparkles and "!" blinks around sections.
+- Don't add blinking ▼ prompts, typewriter text or decorative labels
+  ("THE DOC", "FRONT DESK") as default decoration.
+- Don't use 3px+ outlines, hard dark shadows over 3px, rounded corners, blur
+  shadows, gloss gradients, neon, or pure black / pure white.
+- Don't set body copy, FAQs, form labels or legal text in a pixel face.
+- Don't use negative letter-spacing on the pixel face.
 - Don't change the owner's wording, prices, policies or flows.

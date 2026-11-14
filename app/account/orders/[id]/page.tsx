@@ -141,7 +141,7 @@ export default async function AccountOrderPage({
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <p className="rx-label text-rx mb-1">Restoration Order</p>
-            <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)]">{orderLabel}</h1>
+            <h1 className="font-heading text-4xl leading-none text-ink">{orderLabel}</h1>
             <p className="text-sm text-muted-foreground mt-1">
               Placed {new Date(order.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
             </p>
@@ -270,7 +270,7 @@ export default async function AccountOrderPage({
             {/* Restoration results */}
             {(order.restoration_photos?.length > 0 || order.completion_notes) && (
               <div className="px-window-ink p-5">
-                <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">Restoration Results</h2>
+                <h2 className="font-heading text-2xl leading-tight text-ink mb-4">Restoration Results</h2>
                 {order.completion_notes && (
                   <div className="mb-4 p-4 bg-secondary/40">
                     <p className="rx-label text-rx mb-2">Notes from The Card Doc</p>
@@ -292,7 +292,7 @@ export default async function AccountOrderPage({
 
             {/* Card editor */}
             <div className="px-window-ink p-5">
-              <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">
+              <h2 className="font-heading text-2xl leading-tight text-ink mb-4">
                 Your Cards ({cards.length})
               </h2>
               <CardEditor

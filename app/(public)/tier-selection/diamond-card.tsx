@@ -33,7 +33,7 @@ export function DiamondCard({
   return (
     <article className="comic-lift px-window flex h-full flex-col">
       {/* Ward plate: Diamond is the one tier printed on holo stock */}
-      <div className={`holo-bands flex h-16 shrink-0 items-center justify-between gap-3 border-b-[3px] border-frame px-4 [box-shadow:inset_0_3px_0_color-mix(in_srgb,var(--panel)_55%,transparent)] ${closed ? "grayscale-[0.75]" : ""}`}>
+      <div className={`holo-bands flex h-16 shrink-0 items-center justify-between gap-3 border-b-2 border-frame px-4 [box-shadow:inset_0_3px_0_color-mix(in_srgb,var(--panel)_55%,transparent)] ${closed ? "grayscale-[0.75]" : ""}`}>
         <span aria-hidden className="grid size-11 shrink-0 place-items-center bg-panel px-frame">
           <PixelIcon name="sparkle" size={32} />
         </span>
@@ -43,7 +43,7 @@ export function DiamondCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5 md:p-6">
-        <h3 className="font-heading text-[1.85rem] uppercase leading-none tracking-[0.02em] text-ink">Diamond</h3>
+        <h3 className="font-heading text-[1.85rem] leading-none text-ink">Diamond</h3>
         <p className="mt-1.5 mb-5 min-h-10 text-sm text-ink-soft">White-glove service for high-value cards</p>
 
         {/* Dynamic price display */}
@@ -60,7 +60,7 @@ export function DiamondCard({
 
         {/* Facts, then the value field as one more row of them */}
         <div className="@container">
-          <dl className="divide-y-2 divide-dashed divide-ink/20 border-t-[3px] border-ink">
+          <dl className="divide-y-2 divide-dashed divide-ink/20 border-t-2 border-ink">
             <div className={FACT_ROW}>
               <dt className="rx-label @min-[16.5rem]:self-center">Turnaround</dt>
               <dd className="font-medium text-ink @min-[16.5rem]:text-right">5–10 business days <span className="text-xs text-muted-foreground">(est.)</span></dd>
@@ -102,7 +102,7 @@ export function DiamondCard({
                   placeholder="e.g. 6000"
                   value={rawValue}
                   onChange={(e) => setRawValue(e.target.value)}
-                  className="h-11 w-full border-2 border-ink bg-panel pl-7 pr-2.5 text-base tabular-nums shadow-[inset_0_3px_0_var(--muted)] outline-none [appearance:textfield] placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  className="h-11 w-full border-2 border-input bg-panel pl-7 pr-2.5 text-base tabular-nums shadow-[inset_0_2px_0_var(--muted)] outline-none [appearance:textfield] placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
               </div>
             </div>

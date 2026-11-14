@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { formatCurrency } from "@/lib/utils";
 import { AddToCartButton } from "./add-to-cart-button";
 import { isSoldOut } from "@/lib/site-config";
-import { CardSprite, DocSprite, MenuCursor, PixelIcon, WallBand, Window, type PixelIconName } from "@/components/pixel";
+import { PixelIcon, WallBand } from "@/components/pixel";
 
 export const dynamic = "force-dynamic";
 
@@ -43,21 +43,21 @@ function ProductCard({ product }: { product: Product }) {
         className="block p-2.5 pb-0 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep sm:p-3 sm:pb-0"
       >
         {/* The item, on a little display tray */}
-        <div className="relative aspect-square overflow-hidden bg-muted shadow-[inset_0_0_0_3px_var(--ink)]">
+        <div className="relative aspect-square overflow-hidden bg-muted shadow-[inset_0_0_0_2px_color-mix(in_srgb,var(--ink)_20%,transparent)]">
           {product.images?.[0] ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={product.images[0]}
               alt={product.name}
-              className="h-full w-full object-cover p-[3px]"
+              className="h-full w-full object-cover p-[2px]"
             />
           ) : (
-            <div aria-hidden className="grid h-full w-full place-items-center px-dither">
+            <div aria-hidden className="grid h-full w-full place-items-center">
               <PixelIcon name="kit" size={48} />
             </div>
           )}
           {isSoldOut() && (
-            <div className="absolute inset-[3px] flex items-center justify-center bg-floor/75">
+            <div className="absolute inset-[2px] flex items-center justify-center bg-floor/75">
               <span className="inline-flex h-7 items-center bg-ink px-2.5 font-pixel text-xs uppercase tracking-[0.06em] text-panel">
                 Sold Out
               </span>
@@ -70,13 +70,11 @@ function ProductCard({ product }: { product: Product }) {
           href={`/shop/${product.slug}`}
           className="menu-cursor-item block flex-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep"
         >
-          <MenuCursor className="absolute -left-3.5 top-1 max-sm:hidden" />
-          <p className="font-heading text-lg uppercase leading-[1.05] tracking-[0.02em] text-ink sm:text-xl">{product.name}</p>
+          <p className="font-heading text-lg leading-[1.05] text-ink sm:text-xl">{product.name}</p>
         </a>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Pixel price tag */}
-          <span className="inline-flex h-8 items-center gap-2 self-start bg-butter pr-2.5 pl-2 font-heading text-xl leading-none text-ink tabular-nums px-frame sm:self-auto">
-            <span aria-hidden className="size-1.5 bg-ink" />
+          <span className="self-start font-heading text-xl leading-none text-ink tabular-nums sm:self-auto">
             {formatCurrency(product.price_cents)}
           </span>
           {isSoldOut() || product.inventory_count === 0 ? (
@@ -115,35 +113,24 @@ function getSectionGridClass(count: number): string {
   return SECTION_GRID[count] ?? "grid-cols-2 md:grid-cols-4";
 }
 
-const SECTION_ICON: Record<string, PixelIconName> = { Kits: "kit", Tools: "brush", Supplies: "box" };
-
 function ProductSection({ title, products, review }: { title: string; products: Product[]; review?: Review }) {
   if (products.length === 0) return null;
   return (
     <section>
       {/* Shelf sign */}
-      <div className="mb-8 flex items-center gap-3 md:mb-10">
-        <span aria-hidden className="grid size-12 shrink-0 place-items-center bg-panel px-frame">
-          <PixelIcon name={SECTION_ICON[title] ?? "kit"} size={32} />
-        </span>
-        <h2 className="font-heading text-[2.25rem] uppercase leading-none tracking-[0.02em] text-ink md:text-5xl">{title}</h2>
-        <span aria-hidden className="ml-1 h-[3px] flex-1 bg-[repeating-linear-gradient(90deg,var(--ink)_0_6px,transparent_6px_12px)] opacity-35" />
+      <div className="mb-8 flex items-center gap-4 md:mb-10">
+        <h2 className="font-heading text-[2rem] leading-none text-ink md:text-[2.5rem]">{title}</h2>
+        <span aria-hidden className="h-0.5 flex-1 bg-ink/15" />
       </div>
       <div data-reveal="stagger" className={`grid ${getSectionGridClass(products.length)} gap-x-4 gap-y-8 sm:gap-x-6 md:gap-8`}>
         {products.map((p) => <ProductCard key={p.id} product={p} />)}
       </div>
       {review && (
-        <figure data-reveal className="mt-10 flex max-w-2xl items-end gap-3 md:gap-4">
-          <span aria-hidden className="mb-1 shrink-0">
-            <CardSprite variant="healed" scale={2} />
-          </span>
-          <div className="px-window px-dialog flex-1 p-4 pr-9 md:p-5 md:pr-10">
-            <blockquote className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink md:text-3xl">
-              <p>“{review.quote}”</p>
-            </blockquote>
-            <figcaption className="mt-2 font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">{review.from}</figcaption>
-            <span aria-hidden className="px-dialog-next">▼</span>
-          </div>
+        <figure data-reveal className="mt-12 max-w-2xl border-l-4 border-coral-fill pl-5 md:pl-6">
+          <blockquote className="font-heading text-2xl leading-snug text-ink md:text-[1.75rem]">
+            <p>“{review.quote}”</p>
+          </blockquote>
+          <figcaption className="mt-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">{review.from}</figcaption>
         </figure>
       )}
     </section>
@@ -187,29 +174,9 @@ export default async function ShopPage() {
         as="header"
         className="pt-10 md:pt-14"
         innerClassName="pb-10 md:pb-14"
-        sprite={
-          <div className="flex items-end gap-10 pb-1">
-            {/* A wall shelf of supplies */}
-            <div className="mb-20 hidden lg:block">
-              <div className="flex items-end gap-3 px-2">
-                <PixelIcon name="box" size={32} />
-                <PixelIcon name="kit" size={48} />
-                <PixelIcon name="bandage" size={32} />
-              </div>
-              <div className="h-3.5 border-[3px] border-ink bg-trim" />
-            </div>
-            <DocSprite scale={4} />
-          </div>
-        }
       >
-        <div className="flex items-end justify-between gap-4">
-          <PageHero eyebrow="The Card Doc" title="Shop" />
-          <div aria-hidden className="shrink-0 md:hidden">
-            <DocSprite scale={2} />
-          </div>
-        </div>
+        <PageHero eyebrow="The Card Doc" title="Shop" />
       </WallBand>
-      <div aria-hidden className="h-4 border-b-[3px] border-ink bg-coral-fill shadow-[inset_0_3px_0_#f3ab9f,inset_0_-4px_0_#c4665a]" />
 
       <div className="mx-auto max-w-7xl px-4 pt-14 md:px-10 md:pt-20">
         {products.length === 0 && (
@@ -218,19 +185,14 @@ export default async function ShopPage() {
             <div aria-hidden className="w-full max-w-md">
               <div className="grid grid-cols-3 gap-4 px-3">
                 {(["kit", "brush", "box"] as const).map((icon) => (
-                  <span key={icon} className="grid aspect-square place-items-center border-[3px] border-dashed border-ink/30 bg-panel/50">
+                  <span key={icon} className="grid aspect-square place-items-center border-2 border-dashed border-ink/30 bg-panel/50">
                     <span className="opacity-30 grayscale"><PixelIcon name={icon} size={32} /></span>
                   </span>
                 ))}
               </div>
-              <div className="mt-1 h-5 border-[3px] border-ink bg-trim shadow-[5px_5px_0_var(--px-shadow)]" />
+              <div className="mt-1 h-3 border-2 border-ink/70 bg-trim" />
             </div>
-            <div className="flex w-full items-end gap-3 md:gap-4">
-              <span aria-hidden className="mb-1 shrink-0"><CardSprite variant="sleeve" scale={3} /></span>
-              <Window variant="dialog" className="flex-1 py-6 pr-10 md:py-7">
-                <p className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink md:text-3xl">Products coming soon.</p>
-              </Window>
-            </div>
+            <p className="text-center font-heading text-2xl leading-tight text-ink md:text-3xl">Products coming soon.</p>
           </div>
         )}
 

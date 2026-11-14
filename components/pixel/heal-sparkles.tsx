@@ -14,10 +14,11 @@ const SPOTS = [
  * Healing sparkles: the art's mint sparkle sprite (12x12, drawn at 2x) twinkling
  * through its frames while it rises in stepped frames. Server-safe. Under
  * reduced motion they hold still as a static scatter of full stars. Place
- * inside a `relative` parent. Each spot is clamped so the 24px sprite always
+ * inside a `relative` parent. Revision 2: an accent for success moments only
+ * (discharge, order confirmed), three sparkles by default. Each spot is clamped so the 24px sprite always
  * fits inside short containers.
  */
-export function HealSparkles({ count = 6, className }: { count?: number; className?: string }) {
+export function HealSparkles({ count = 3, className }: { count?: number; className?: string }) {
   return (
     <span aria-hidden className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>
       {SPOTS.slice(0, Math.min(count, SPOTS.length)).map((s, i) => (

@@ -296,7 +296,7 @@ function CheckoutInner() {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-xl px-4 py-24">
-        <Window variant="dialog" className="flex flex-col items-center gap-5 px-6 py-8 text-center">
+        <Window className="flex flex-col items-center gap-5 px-6 py-8 text-center">
           <PixelIcon name="cart" size={48} />
           <p className="text-[15px] text-ink">Your cart is empty.</p>
           <Link href="/shop" className={pixelButton({ size: "md" })}>Browse Shop</Link>
@@ -307,11 +307,8 @@ function CheckoutInner() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 md:px-8 md:py-16">
-      <p aria-hidden className="mb-5 inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
-        <span className="text-coral-deep">▶</span>CHECK-OUT
-      </p>
       <div className="mb-10 flex flex-wrap items-center gap-4">
-        <h1 className="font-heading text-[2.75rem] uppercase leading-none tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl">Checkout</h1>
+        <h1 className="font-heading text-[2.5rem] leading-tight text-ink md:text-5xl">Checkout</h1>
         {isInternational && (
           <span className="inline-flex h-7 items-center gap-2 bg-powder px-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
             <span aria-hidden className="size-2 bg-frame-deep" />International
@@ -325,7 +322,7 @@ function CheckoutInner() {
 
           {/* Contact */}
           <div className="px-window p-5 sm:p-6">
-            <h2 className="mb-5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="user" size={16} /></span>Contact</h2>
+            <h2 className="mb-5 font-heading text-2xl leading-tight text-ink">Contact</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Need missing={miss(form.name)} className="sm:col-span-2 flex flex-col gap-1.5">
                 <Label>Full Name<Req /></Label>
@@ -344,7 +341,7 @@ function CheckoutInner() {
 
           {/* Shipping Address */}
           <div className="px-window p-5 sm:p-6">
-            <h2 className="mb-5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="box" size={16} /></span>Shipping Address</h2>
+            <h2 className="mb-5 font-heading text-2xl leading-tight text-ink">Shipping Address</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {isInternational && (
                 <Need missing={miss(form.country)} className="sm:col-span-2 flex flex-col gap-1.5">
@@ -411,7 +408,7 @@ function CheckoutInner() {
             )}
 
             {/* Shipping options: live prices for this address, by speed */}
-            <Need missing={showMissing && isAddressValid() && !(rateStatus === "done" && chosenRate)} note="See shipping options and choose one." className="mt-6 border-t-[3px] border-dashed border-rule pt-5">
+            <Need missing={showMissing && isAddressValid() && !(rateStatus === "done" && chosenRate)} note="See shipping options and choose one." className="mt-6 border-t-2 border-dashed border-rule pt-5">
               <h3 className="mb-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink">Shipping speed<Req /></h3>
               {rateStatus !== "done" && (
                 <button
@@ -472,7 +469,7 @@ function CheckoutInner() {
 
           {/* Creator Code */}
           <div className="px-window p-5 sm:p-6">
-            <h2 className="mb-1.5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="star" size={16} /></span>Creator Code</h2>
+            <h2 className="mb-1.5 font-heading text-2xl leading-tight text-ink">Creator Code</h2>
             <p className="mb-4 text-sm text-ink-soft">Have a creator code? Enter it here.</p>
             <div className="flex gap-3">
               <Input
@@ -495,7 +492,7 @@ function CheckoutInner() {
 
           {/* Gift Card */}
           <div className="px-window p-5 sm:p-6">
-            <h2 className="mb-1.5 flex items-center gap-3 font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink"><span aria-hidden className="grid size-9 shrink-0 place-items-center bg-butter px-frame"><PixelIcon name="gift" size={16} /></span>Gift Card</h2>
+            <h2 className="mb-1.5 font-heading text-2xl leading-tight text-ink">Gift Card</h2>
             <p className="mb-4 text-sm text-ink-soft">Have a gift card code? Enter it here.</p>
             <div className="flex gap-3">
               <Input
@@ -516,8 +513,8 @@ function CheckoutInner() {
 
         {/* Order summary */}
         <div className="lg:col-span-2">
-          <Window title="▶ RECEIPT" className="sticky top-24 pt-7">
-            <h2 className="mb-5 font-heading text-2xl uppercase tracking-[0.02em] text-ink">Order Summary</h2>
+          <Window className="sticky top-24">
+            <h2 className="mb-5 font-heading text-2xl text-ink">Order Summary</h2>
             <div className="flex flex-col gap-3 mb-4">
               {items.map((item) => (
                 <div key={item.id} className="flex justify-between gap-3 text-sm">
@@ -549,7 +546,7 @@ function CheckoutInner() {
                   <span>−{formatCurrency(gcApplied)}</span>
                 </div>
               )}
-              <div className="mt-1 flex items-baseline justify-between border-t-[3px] border-dashed border-ink/40 pt-3 font-heading text-2xl uppercase text-ink">
+              <div className="mt-1 flex items-baseline justify-between border-t-2 border-dashed border-ink/40 pt-3 font-heading text-2xl text-ink">
                 <span>Total</span>
                 <span className="tabular-nums">{formatCurrency(finalTotal)}</span>
               </div>

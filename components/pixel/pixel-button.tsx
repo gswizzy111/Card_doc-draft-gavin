@@ -12,13 +12,13 @@ const TONE: Record<PixelTone, string> = {
 };
 
 const SIZE = {
-  sm: "h-10 gap-1.5 px-3.5 text-sm",
-  md: "h-12 gap-2 px-5 text-base",
-  lg: "h-14 gap-2.5 px-7 text-lg",
+  sm: "h-10 gap-1.5 px-4 text-[0.9375rem]",
+  md: "h-11 gap-2 px-5 text-base",
+  lg: "h-12 gap-2.5 px-6 text-[1.0625rem]",
 } as const;
 
 /**
- * Class string for a chunky pixel button, for links and other elements that
+ * Class string for a pixel-cornered button, for links and other elements that
  * should look like one: `<Link className={pixelButton({ tone: "mint" })}>`.
  * (components/ui/button covers real buttons.)
  */

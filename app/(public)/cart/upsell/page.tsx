@@ -5,8 +5,6 @@ import { useCart } from "@/lib/cart-context";
 import { formatCurrency } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { pixelButton } from "@/components/pixel/pixel-button";
-import { DocSprite } from "@/components/pixel/sprites";
-import { WindowTab } from "@/components/pixel/window";
 
 const SIZES = ["Small", "Medium", "Large", "XL"] as const;
 
@@ -65,7 +63,7 @@ function UpsellInner() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <DocSprite scale={3} label="Loading" />
+        <p role="status" className="rx-label animate-pulse">Loading</p>
       </div>
     );
   }
@@ -78,18 +76,11 @@ function UpsellInner() {
 
         {/* Header */}
         <div className="mb-10 md:mb-12">
-          <p className="mb-5 inline-flex h-8 items-center gap-2 bg-butter px-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
-            <span aria-hidden className="text-coral-deep">▶</span>
+          <p className="rx-label mb-4 text-coral-deep">
             Pre-Checkout
           </p>
-          <h1 className="font-heading text-[2.5rem] uppercase leading-[0.95] tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl">Want to add anything else?</h1>
-          <div className="mt-6 flex max-w-xl items-end gap-3">
-            <span aria-hidden className="mb-1 shrink-0"><DocSprite scale={2} /></span>
-            <div className="px-window px-dialog flex-1 p-4 pr-9">
-              <p className="text-[15px] leading-relaxed text-ink">These pair great with your order.</p>
-              <span aria-hidden className="px-dialog-next">▼</span>
-            </div>
-          </div>
+          <h1 className="font-heading text-[2.5rem] leading-tight text-ink md:text-5xl">Want to add anything else?</h1>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">These pair great with your order.</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -108,23 +99,22 @@ function UpsellInner() {
                   }`}
                 >
                   {/* Image */}
-                  <div className="size-20 shrink-0 overflow-hidden bg-muted p-[3px] px-frame">
+                  <div className="size-20 shrink-0 overflow-hidden bg-muted p-[2px] px-frame">
                     {product.images?.[0] ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                     ) : (
-                      <div aria-hidden className="h-full w-full px-dither" />
+                      <div aria-hidden className="h-full w-full" />
                     )}
                   </div>
 
                   {/* Info + size */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-heading text-xl uppercase leading-tight tracking-[0.02em] text-ink">{product.name}</p>
+                    <p className="font-heading text-xl leading-tight text-ink">{product.name}</p>
                     {product.description && (
                       <p className="mt-1 line-clamp-2 text-sm text-ink-soft">{product.description}</p>
                     )}
-                    <p className="mt-2 inline-flex h-7 items-center gap-2 bg-butter pr-2 pl-1.5 font-heading text-lg leading-none tabular-nums text-ink px-frame">
-                      <span aria-hidden className="size-1.5 bg-ink" />
+                    <p className="mt-2 font-heading text-lg leading-none tabular-nums text-ink">
                       {formatCurrency(product.price_cents)}
                     </p>
 
@@ -180,9 +170,8 @@ function UpsellInner() {
 
           {/* Right — order summary + continue */}
           <div className="w-full shrink-0 lg:sticky lg:top-24 lg:w-80">
-            <div className="px-window mt-4 p-6">
-              <WindowTab aria-hidden cursor>BAG</WindowTab>
-              <h2 className="mb-4 font-heading text-2xl uppercase tracking-[0.02em] text-ink">Your Cart</h2>
+            <div className="px-window p-6">
+              <h2 className="mb-4 font-heading text-2xl text-ink">Your Cart</h2>
               <div className="flex flex-col gap-2 mb-4">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
@@ -198,7 +187,7 @@ function UpsellInner() {
                   <span className="text-ink-soft">Shipping</span>
                   <span className="text-ink-soft">At checkout</span>
                 </div>
-                <div className="mt-1 flex items-baseline justify-between border-t-[3px] border-dashed border-ink/40 pt-3 font-heading text-2xl uppercase text-ink">
+                <div className="mt-1 flex items-baseline justify-between border-t-2 border-dashed border-ink/40 pt-3 font-heading text-2xl text-ink">
                   <span>Total</span>
                   <span className="tabular-nums">{formatCurrency(totalCents + Math.round(totalCents * 0.06625))}</span>
                 </div>

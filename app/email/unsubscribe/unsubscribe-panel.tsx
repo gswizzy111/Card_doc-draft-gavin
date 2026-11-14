@@ -40,7 +40,7 @@ export function UnsubscribePanel({ token, email, alreadyUnsubscribed }: { token:
       <span className="mb-6 flex size-12 items-center justify-center bg-rx-soft text-coral-deep px-frame">
         <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
       </span>
-      <h1 className="mb-4 font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink md:text-4xl">
+      <h1 className="mb-4 font-heading text-3xl leading-tight text-ink md:text-4xl">
         {done ? "You're unsubscribed" : "Unsubscribe from marketing emails"}
       </h1>
       <p className="mb-8 text-[17px] leading-relaxed text-ink-soft">

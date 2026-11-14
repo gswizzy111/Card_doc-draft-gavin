@@ -1,5 +1,4 @@
 import { ViewTransition } from "react";
-import { DocSprite } from "@/components/pixel/sprites";
 
 export default function Loading() {
   return (
@@ -10,15 +9,12 @@ export default function Loading() {
         <span className="sr-only">Loading</span>
         <div className="route-progress" aria-hidden />
         <div className="max-w-6xl mx-auto px-4 md:px-10 py-12 md:py-20" aria-hidden>
-          <div className="skeleton h-8 w-28 mb-6" />
+          <div className="skeleton h-4 w-24 mb-6" />
           <div className="skeleton h-12 md:h-16 w-[80%] md:w-[55%] mb-3" />
           <div className="skeleton h-12 md:h-16 w-[60%] md:w-[40%] mb-8" />
-          <div className="px-window flex max-w-2xl items-center gap-4 p-5 mb-12">
-            <DocSprite scale={2} className="shrink-0" />
-            <div className="flex-1 space-y-3">
-              <div className="skeleton h-4 w-[90%]" />
-              <div className="skeleton h-4 w-[60%]" />
-            </div>
+          <div className="max-w-2xl space-y-3 mb-12">
+            <div className="skeleton h-4 w-[90%]" />
+            <div className="skeleton h-4 w-[60%]" />
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {[0, 1, 2].map((i) => (

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { canonical } from "@/lib/seo";
 import { ArrowDown, Check, X } from "lucide-react";
 import { PageHero } from "@/components/marketing/page-hero";
-import { CardSprite, DocSprite, pixelButton } from "@/components/pixel";
+import { CardSprite, pixelButton } from "@/components/pixel";
 
 export const metadata: Metadata = {
   alternates: canonical("/what-we-can-fix"),
@@ -86,27 +86,23 @@ function FixList({ kind, items }: { kind: "can" | "cannot"; items: Item[] }) {
   return (
     <div className="px-window-ink">
       <div
-        className={`flex items-center justify-between gap-4 border-b-[3px] border-ink px-5 py-4 md:px-6 ${
-          can ? "bg-mint" : "bg-rx-soft"
+        className={`flex items-center gap-3 border-b-2 border-tile px-5 py-4 md:px-6 ${
+          can ? "bg-mint/45" : "bg-rx-soft/60"
         }`}
       >
-        <div>
-          <h3 className="font-heading text-2xl uppercase leading-none tracking-[0.02em] text-ink md:text-[1.75rem]">
-            {can ? "Things We CAN Work on" : "Things we CANNOT fix"}
-          </h3>
-        </div>
-        <span aria-hidden className="grid size-16 shrink-0 place-items-center bg-panel px-frame">
-          <CardSprite variant={can ? "healed" : "hurt"} scale={2} />
-        </span>
+        <span aria-hidden className={`size-2 shrink-0 ${can ? "bg-mint-deep" : "bg-coral-deep"}`} />
+        <h3 className="font-heading text-xl font-semibold leading-snug text-ink">
+          {can ? "Things We CAN Work on" : "Things we CANNOT fix"}
+        </h3>
       </div>
-      <ul className="divide-y-2 divide-dashed divide-ink/15">
+      <ul className="divide-y divide-tile">
         {items.map((item) => (
           <li key={item.text} className="flex items-start gap-3 px-5 py-3.5 text-[15px] leading-relaxed text-ink md:px-6">
             <span
               aria-hidden
-              className={`mt-[0.2rem] grid size-5 shrink-0 place-items-center px-frame ${can ? "bg-mint text-ink" : "bg-rx-soft text-coral-deep"}`}
+              className={`mt-[0.2rem] grid size-5 shrink-0 place-items-center ${can ? "text-mint-deep" : "text-coral-deep"}`}
             >
-              <Icon className="h-3.5 w-3.5" strokeWidth={3} />
+              <Icon className="h-4 w-4" strokeWidth={2.25} />
             </span>
             <ItemText item={item} />
           </li>
@@ -118,18 +114,18 @@ function FixList({ kind, items }: { kind: "can" | "cannot"; items: Item[] }) {
 
 export default function WhatWeCanFixPage() {
   return (
-    <div className="min-h-screen page-glow">
+    <div className="min-h-screen">
       {/* Hero */}
-      <div className="max-w-6xl mx-auto px-4 md:px-10 pt-12 pb-10 md:pt-20 md:pb-16">
+      <div className="max-w-6xl mx-auto px-4 md:px-10 pt-14 pb-12 md:pt-24 md:pb-20">
         <PageHero
           eyebrow="What We Can Fix"
           title="What we can (and can't) fix"
           lines={["What we can", "(and can't) fix"]}
           sprite={
             <div className="flex items-end gap-3 pb-1">
-              <CardSprite variant="hurt" scale={4} />
-              <span className="mb-11 font-pixel text-sm text-coral-deep px-nudge">▶</span>
-              <CardSprite variant="healed" scale={4} />
+              <CardSprite variant="hurt" scale={3} animate={false} />
+              <span className="mb-8 font-pixel text-xs text-coral-deep">▶</span>
+              <CardSprite variant="healed" scale={3} animate={false} />
             </div>
           }
           lead={<>Restoration has real limits. Here&apos;s an honest breakdown.</>}
@@ -142,7 +138,7 @@ export default function WhatWeCanFixPage() {
               className={pixelButton({ tone: "panel", size: "md", className: "group normal-case" })}
             >
               {c.title}
-              <ArrowDown className="h-4 w-4 text-coral-deep" strokeWidth={2.5} />
+              <ArrowDown className="h-4 w-4 text-coral-deep" strokeWidth={1.75} />
             </a>
           ))}
         </nav>
@@ -152,17 +148,17 @@ export default function WhatWeCanFixPage() {
       <div className="max-w-6xl mx-auto px-4 md:px-10 pb-20 md:pb-28 flex flex-col gap-16 md:gap-24">
         {CATEGORIES.map((c, i) => (
           <section key={c.id} id={c.id} aria-labelledby={`${c.id}-title`} className="scroll-mt-28">
-            <div data-reveal className="mb-8 flex items-start gap-4 md:mb-10 md:gap-5">
-              <span aria-hidden className="grid h-14 min-w-14 shrink-0 place-items-center bg-butter px-2 font-pixel text-base text-ink tabular-nums px-frame-shadow">
+            <div data-reveal className="mb-8 flex items-baseline gap-4 md:mb-10 md:gap-5">
+              <span aria-hidden className="shrink-0 font-pixel text-xs text-coral-deep tabular-nums">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h2
                 id={`${c.id}-title`}
-                className="min-w-0 pt-1 font-heading text-5xl uppercase leading-[0.95] tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl"
+                className="min-w-0 font-heading text-[2.125rem] font-bold leading-[1.05] tracking-[-0.02em] text-ink md:text-5xl"
               >
                 {c.title}
                 {c.subtitle && (
-                  <span className="mt-3 block w-fit bg-panel px-3 py-1.5 font-sans text-base font-medium normal-case tracking-normal leading-snug text-ink-soft [text-shadow:none] px-frame md:text-lg">
+                  <span className="mt-2 block font-sans text-base font-medium tracking-normal leading-snug text-ink-soft md:text-lg">
                     {c.subtitle}
                   </span>
                 )}
@@ -180,10 +176,9 @@ export default function WhatWeCanFixPage() {
           data-reveal
           className="stage stage-light px-frame-shadow p-7 md:p-12 md:flex md:items-center md:justify-between md:gap-10"
         >
-          <div className="mb-8 flex items-end gap-5 md:mb-0">
-            <DocSprite scale={3} className="hidden shrink-0 sm:block" />
+          <div className="mb-8 md:mb-0">
             <div>
-              <h2 className="mb-3 font-heading text-4xl uppercase leading-[0.95] tracking-[0.02em] text-stage-fg md:text-5xl">
+              <h2 className="mb-3 font-heading text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-stage-fg md:text-4xl [text-wrap:balance]">
                 Not sure if your card qualifies?
               </h2>
               <p className="text-stage-muted max-w-xl">

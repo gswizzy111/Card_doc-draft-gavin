@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { RestorationWaitlistForm } from "@/app/(public)/restoration/restoration-waitlist-form";
-import { DocSprite } from "@/components/pixel/sprites";
 
 export function WaitlistModal() {
   const [open, setOpen] = useState(false);
@@ -24,10 +23,8 @@ export function WaitlistModal() {
       />
 
       {/* Modal: the front desk's dialog box */}
-      <div className="relative z-10 w-full max-w-md animate-[rx-in_240ms_steps(3,end)_both] motion-reduce:animate-none">
-        {/* The doc leans in over the window's top edge */}
-        <DocSprite scale={2} className="absolute -top-[62px] left-6" />
-        <div className="px-window px-dialog max-h-[calc(100dvh-6rem)] overflow-y-auto p-6 pb-8 md:p-8 md:pb-9">
+      <div className="relative z-10 w-full max-w-md animate-[rx-in_200ms_ease-out_both] motion-reduce:animate-none">
+        <div className="px-window max-h-[calc(100dvh-6rem)] overflow-y-auto p-6 pb-8 md:p-8 md:pb-9">
           {/* Close button */}
           <button
             onClick={() => setOpen(false)}
@@ -38,11 +35,10 @@ export function WaitlistModal() {
           </button>
 
           <div className="mb-6 pr-8">
-            <p className="mb-3 inline-flex h-7 items-center gap-2 bg-butter px-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink px-frame">
-              <span aria-hidden className="text-coral-deep">▶</span>
+            <p className="rx-label mb-3 text-coral-deep">
               Restoration Services
             </p>
-            <h2 className="font-heading text-[2rem] uppercase leading-none tracking-[0.02em] text-ink mb-2.5">
+            <h2 className="font-heading text-[2rem] leading-none text-ink mb-2.5">
               We&apos;re Currently Closed
             </h2>
             <p className="text-[15px] leading-relaxed text-ink-soft">
@@ -58,7 +54,6 @@ export function WaitlistModal() {
           >
             No thanks, just browsing
           </button>
-          <span aria-hidden className="px-dialog-next">▼</span>
         </div>
       </div>
     </div>

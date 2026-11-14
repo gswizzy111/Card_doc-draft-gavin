@@ -1,6 +1,10 @@
 import { cn } from "@/lib/utils";
 
-/** Background wrapper: the clinic's soft cream tile floor. */
+/**
+ * Background wrapper: plain floor cream (revision 2 retired the tile art; the
+ * `size` prop is kept for old call sites and no longer changes anything).
+ * Use `.faint-grid` in a className for the one place a page wants texture.
+ */
 export function TileFloor({
   as: Tag = "div",
   size = "lg",

@@ -7,14 +7,19 @@ import { usePrefersReducedMotion } from "@/components/motion/use-reduced-motion"
  * Short dialog text that types itself out, one character per tick, like an
  * NPC line. Screen readers get the whole string at once; with reduced motion
  * (and before hydration) the full text shows. Keep it to a sentence or two.
+ *
+ * Revision 2: typing is off by default (the full text shows at once); pass
+ * `animate` to opt back in for one short line.
  */
 export function Typewriter({
   text,
   speed = 28,
   delay = 250,
   className,
+  animate = false,
 }: {
   text: string;
+  animate?: boolean;
   speed?: number;
   delay?: number;
   className?: string;
@@ -23,7 +28,7 @@ export function Typewriter({
   const [shown, setShown] = useState<number | null>(null);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !animate) return;
     let i = 0;
     let timer: ReturnType<typeof setTimeout>;
     const tick = () => {
@@ -36,9 +41,9 @@ export function Typewriter({
       tick();
     }, delay);
     return () => clearTimeout(timer);
-  }, [text, speed, delay, reduce]);
+  }, [text, speed, delay, reduce, animate]);
 
-  const count = reduce || shown === null ? text.length : shown;
+  const count = reduce || !animate || shown === null ? text.length : shown;
   return (
     <span className={className}>
       <span className="sr-only">{text}</span>

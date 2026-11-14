@@ -97,7 +97,7 @@ export default async function KitOrderPage({
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <p className="rx-label text-rx mb-1">Kit Order</p>
-            <h1 className="font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink [text-shadow:3px_3px_0_var(--wall)]">
+            <h1 className="font-heading text-4xl leading-none text-ink">
               {order.order_number ? `K${order.order_number}` : "Order"}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
@@ -169,7 +169,7 @@ export default async function KitOrderPage({
 
         {/* Order summary */}
         <div className="px-window-ink p-5">
-          <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-4">Order Summary</h2>
+          <h2 className="font-heading text-2xl leading-tight text-ink mb-4">Order Summary</h2>
           <div className="flex flex-col gap-2 text-sm">
             {items.map((item, i) => (
               <div key={i} className="flex justify-between">
@@ -187,7 +187,7 @@ export default async function KitOrderPage({
         {/* Subscription cancel */}
         {isSubscription && hasActiveSub && (
           <div className="px-window-ink p-5">
-            <h2 className="font-heading text-2xl uppercase leading-tight tracking-[0.02em] text-ink mb-2">Manage Subscription</h2>
+            <h2 className="font-heading text-2xl leading-tight text-ink mb-2">Manage Subscription</h2>
             <p className="text-sm text-muted-foreground mb-4">
               Need to cancel your Monthly Kit Club subscription? This will stop future billing immediately.
             </p>

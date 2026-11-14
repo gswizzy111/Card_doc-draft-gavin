@@ -18,35 +18,29 @@ export default function CartPage() {
     return (
       <div className="mx-auto flex max-w-xl flex-col items-center px-4 py-20 text-center md:py-28">
         {/* An empty item bag */}
-        <div aria-hidden className="relative mb-8 grid size-28 place-items-center bg-panel px-frame-shadow">
-          <span className="absolute inset-2 border-[3px] border-dashed border-ink/25" />
+        <div aria-hidden className="mb-8">
           <PixelIcon name="cart" size={48} />
         </div>
-        <Window variant="dialog" className="w-full px-6 py-7 md:px-8">
-          <h1 className="mb-3 font-heading text-4xl uppercase leading-none tracking-[0.02em] text-ink">Your cart is empty</h1>
-          <p className="mb-7 text-[15px] text-ink-soft">Browse the shop to add products.</p>
-          <Link href="/shop" className={pixelButton({ size: "md", className: "px-8" })}>Browse Shop</Link>
-        </Window>
+        <h1 className="mb-3 font-heading text-4xl leading-tight text-ink">Your cart is empty</h1>
+        <p className="mb-7 text-[15px] text-ink-soft">Browse the shop to add products.</p>
+        <Link href="/shop" className={pixelButton({ size: "md", className: "px-8" })}>Browse Shop</Link>
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 md:px-10 md:py-16">
-      <div className="mb-10 flex items-center gap-4">
-        <span aria-hidden className="grid size-14 shrink-0 place-items-center bg-butter px-frame-shadow">
-          <PixelIcon name="cart" size={32} />
-        </span>
-        <h1 className="font-heading text-[2.75rem] uppercase leading-none tracking-[0.01em] text-ink [text-shadow:3px_3px_0_var(--wall)] md:text-6xl">Your Cart</h1>
+      <div className="mb-10">
+        <h1 className="font-heading text-[2.5rem] leading-tight text-ink md:text-5xl">Your Cart</h1>
       </div>
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
         {/* Items: the bag's slots */}
-        <Window title="▶ ITEMS" className="self-start p-0 md:p-0 lg:col-span-2">
-          <ul className="divide-y-[3px] divide-dashed divide-rule pt-2">
+        <Window className="self-start p-0 md:p-0 lg:col-span-2">
+          <ul className="divide-y-2 divide-rule">
           {items.map((item) => (
             <li key={item.id} className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 p-4 sm:flex sm:gap-5 sm:p-5">
-              <div className="row-span-2 size-[4.5rem] shrink-0 self-start overflow-hidden bg-muted p-[3px] px-frame sm:self-auto">
+              <div className="row-span-2 size-[4.5rem] shrink-0 self-start overflow-hidden bg-muted p-[2px] px-frame sm:self-auto">
                 {item.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
@@ -57,7 +51,7 @@ export default function CartPage() {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-heading text-lg uppercase leading-tight tracking-[0.02em] text-ink">{item.name}</p>
+                <p className="font-heading text-lg leading-tight text-ink">{item.name}</p>
                 {item.size && (
                   <p className="mt-0.5 text-sm text-ink-soft">Size: {item.size}</p>
                 )}
@@ -102,8 +96,8 @@ export default function CartPage() {
 
         {/* Summary: the receipt */}
         <div className="lg:col-span-1">
-          <Window title="▶ RECEIPT" className="sticky top-24 pt-7">
-            <h2 className="mb-5 font-heading text-2xl uppercase tracking-[0.02em] text-ink">Order Summary</h2>
+          <Window className="sticky top-24">
+            <h2 className="mb-5 font-heading text-2xl text-ink">Order Summary</h2>
             <div className="mb-6 flex flex-col gap-2.5 text-sm">
               <div className="flex justify-between gap-3 text-ink-soft">
                 <span>Subtotal</span>
@@ -117,7 +111,7 @@ export default function CartPage() {
                 <span>Shipping</span>
                 <span className="text-right">Calculated at checkout</span>
               </div>
-              <div className="mt-1 flex items-baseline justify-between border-t-[3px] border-dashed border-ink/40 pt-3 font-heading text-2xl uppercase text-ink">
+              <div className="mt-1 flex items-baseline justify-between border-t-2 border-dashed border-ink/40 pt-3 font-heading text-2xl text-ink">
                 <span>Total</span>
                 <span className="tabular-nums">{formatCurrency(totalCents + taxCents)}</span>
               </div>

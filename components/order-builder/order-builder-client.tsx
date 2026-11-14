@@ -22,7 +22,6 @@ import { cardProblems } from "./step-cards";
 import type { Service, CardEntry, CustomerInfo, ShippingRate, InsuranceSelection } from "@/lib/types";
 import type { RestorationTier, RestorationTierId } from "@/lib/restoration-tiers";
 import { fbq } from "@/lib/pixel";
-import { WindowTab } from "@/components/pixel/window";
 
 function defaultCard(serviceId: string, tier?: RestorationTierId): CardEntry {
   return {
@@ -53,7 +52,7 @@ function InAppBrowserBanner() {
   if (!show) return null;
   return (
     <div className="mb-8 border-l-[6px] border-destructive bg-panel p-4 text-sm text-ink px-frame-shadow">
-      <p className="mb-2 flex items-center gap-2 font-heading text-xl uppercase leading-tight tracking-[0.02em] text-destructive"><AlertTriangle className="h-5 w-5 shrink-0" strokeWidth={2.25} />You must open this in Safari or Chrome</p>
+      <p className="mb-2 flex items-center gap-2 font-heading text-xl leading-tight text-destructive"><AlertTriangle className="h-5 w-5 shrink-0" strokeWidth={2.25} />You must open this in Safari or Chrome</p>
       <p className="mb-3 leading-relaxed text-ink">
         Instagram&apos;s built-in browser <strong>blocks photo uploads and payments</strong>. You won&apos;t be able to complete your order here.
       </p>
@@ -290,8 +289,7 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-10 md:py-12">
       <InAppBrowserBanner />
       <SlabAuthorizationDialog card={slabDialogCard} state={signing} onChange={changeSigning} onClose={closeSlabDialog} />
-      <div className="px-window mb-12 px-4 pt-8 pb-5 sm:px-8">
-        <WindowTab aria-hidden cursor>CHECK-IN</WindowTab>
+      <div className="mb-12 border-b-2 border-ink/10 px-1 pt-2 pb-6 sm:px-6">
         <ProgressIndicator currentStep={step} />
       </div>
 
@@ -381,7 +379,7 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
               <div className="flex gap-3">
                 <AlertTriangle className="h-6 w-6 shrink-0 text-destructive" strokeWidth={2} />
                 <div className="flex-1 min-w-0">
-                  <p className="mb-1 font-heading text-2xl uppercase tracking-[0.02em] text-destructive">Checkout failed</p>
+                  <p className="mb-1 font-heading text-2xl text-destructive">Checkout failed</p>
                   <p className="mb-4 text-sm leading-relaxed text-ink">{checkoutError.message}</p>
 
                   <div className="mb-4 bg-rx-soft px-3 py-3 px-frame">
@@ -427,7 +425,7 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
             </Need>
           )}
 
-          <div className="mt-10 flex justify-between gap-3 border-t-[3px] border-dashed border-ink/30 pt-6">
+          <div className="mt-10 flex justify-between gap-3 border-t-2 border-dashed border-ink/30 pt-6">
             <Button
               variant="outline"
               size="lg"

@@ -14,14 +14,9 @@ import { SERVICE_CARDS } from "@/lib/service-cards";
 import { CardSlot } from "@/components/marketing/card-slot";
 import { HERO, PROCESS, REASONS, RESULTS } from "@/lib/about";
 import {
-  CardSprite,
-  DocPortrait,
   DocSprite,
-  HealSparkles,
   HpBar,
-  MenuCursor,
   PixelIcon,
-  SparkleSprite,
   StatusChip,
   Window,
   pixelButton,
@@ -146,25 +141,21 @@ function structuredData() {
   };
 }
 
-/** A room sign: the butter ▶ tab that names a section. */
-function Eyebrow({ children, tone = "floor" }: { children: React.ReactNode; tone?: "floor" | "night" }) {
+/** A small pixel eyebrow: a square bullet and a pixel-font label. */
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p
-      className={`inline-flex h-8 items-center gap-2 px-3 font-pixel text-xs uppercase leading-none px-frame ${
-        tone === "night" ? "bg-night-raise text-butter" : "bg-butter text-ink"
-      }`}
-    >
-      <span aria-hidden className="text-coral-deep">▶</span>
+    <p className="inline-flex items-center gap-2 font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-coral-deep md:text-xs">
+      <span aria-hidden className="size-1.5 bg-coral-deep" />
       {children}
     </p>
   );
 }
 
-/** Section headline: chunky Jersey with a hard wall-peach pixel shadow. */
+/** Section headline: the heading sans, bold, sentence case. */
 const H2 =
-  "font-heading uppercase leading-[0.92] text-ink text-[clamp(2.5rem,9vw,4.75rem)] [text-shadow:4px_4px_0_var(--wall)]";
+  "font-heading font-bold leading-[1.05] tracking-[-0.02em] text-ink text-[clamp(2.125rem,6vw,3.25rem)] [text-wrap:balance]";
 
-/** A photo in a pixel window, with its name on a butter tab. */
+/** A photo in a quiet window, with its name and detail underneath. */
 function PhotoWindow({
   children,
   label,
@@ -177,14 +168,12 @@ function PhotoWindow({
   className?: string;
 }) {
   return (
-    <Window as="figure" tone="ink" title={label} className={`p-0 md:p-0 ${className}`}>
-      <div className="p-2.5 pt-5 md:p-3 md:pt-5">{children}</div>
-      {detail && (
-        <figcaption className="flex items-center gap-2 border-t-[3px] border-dashed border-tile px-4 py-3">
-          <span aria-hidden className="size-2 shrink-0 bg-mint-deep" />
-          <span className="text-sm text-ink-soft">{detail}</span>
-        </figcaption>
-      )}
+    <Window as="figure" tone="ink" className={`p-0 md:p-0 ${className}`}>
+      <div className="p-2.5 md:p-3">{children}</div>
+      <figcaption className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t-2 border-tile px-4 py-3">
+        <span className="font-heading text-lg font-semibold leading-tight text-ink">{label}</span>
+        {detail && <span className="text-sm text-ink-soft">{detail}</span>}
+      </figcaption>
     </Window>
   );
 }
@@ -195,14 +184,11 @@ function PhotoWindow({
  */
 function PatientCard({ name }: { name: string }) {
   return (
-    <figure className="relative mx-auto w-full max-w-[34rem] bg-butter p-2.5 px-frame-shadow md:p-3">
+    <figure className="relative mx-auto w-full max-w-[34rem] bg-butter p-2 px-frame-shadow md:p-2.5">
       <div className="flex items-center justify-between gap-2 bg-panel px-3 py-2 px-frame">
-        <span className="font-heading text-xl uppercase leading-none text-ink md:text-2xl">{name}</span>
-        <span aria-hidden className="flex items-center gap-1.5">
-          <PixelIcon name="heart-plus" size={20} />
-        </span>
+        <span className="font-heading text-lg font-semibold leading-none text-ink md:text-xl">{name}</span>
       </div>
-      <div className="relative mt-2.5 px-frame">
+      <div className="relative mt-2 px-frame">
         <BeforeAfter
           before={mantleBefore}
           after={mantleAfter}
@@ -212,7 +198,7 @@ function PatientCard({ name }: { name: string }) {
           priority
         />
       </div>
-      <figcaption className="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-2 bg-panel px-3 py-3 px-frame">
+      <figcaption className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 bg-panel px-3 py-3 px-frame">
         <div className="flex flex-col gap-2">
           <StatusChip status="discharged" className="self-start" />
           <HpBar level={1} animate />
@@ -235,30 +221,26 @@ export default async function HomePage() {
       <JsonLd data={structuredData()} />
 
       {/* ── Front desk ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b-[3px] border-ink">
-        <TrustPills cardsRestored={cardsRestored} className="hero-in relative z-20 mx-auto max-w-7xl px-4 pt-4 md:px-10 md:pt-6" />
+      <section className="relative overflow-hidden">
+        <TrustPills cardsRestored={cardsRestored} className="hero-in relative z-20 mx-auto max-w-7xl px-4 pt-5 md:px-10 md:pt-7" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-x-10 px-4 pt-4 pb-14 md:px-10 md:pt-8 lg:pb-20 xl:grid-cols-[minmax(0,1fr)_auto] xl:grid-rows-[auto_auto] xl:gap-y-8">
+        <div className="relative mx-auto grid max-w-7xl gap-x-16 px-4 pt-8 pb-16 md:px-10 md:pt-12 lg:pb-24 xl:grid-cols-[minmax(0,1fr)_auto] xl:grid-rows-[auto_auto] xl:gap-y-8">
           {/* The patient chart: drag to compare */}
-          <div className="hero-in order-2 mt-10 xl:order-none xl:col-start-2 xl:row-start-1 xl:mt-0 xl:w-[32rem] xl:self-end" style={{ ["--d" as string]: 80 }}>
+          <div className="hero-in order-2 mt-12 xl:order-none xl:col-start-2 xl:row-start-1 xl:mt-0 xl:w-[30rem] xl:self-end" style={{ ["--d" as string]: 80 }}>
             <PatientCard name={mantle?.card ?? "Mickey Mantle"} />
           </div>
 
-          {/* The Doc greets the visitor */}
-          <div className="relative z-10 order-1 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:mt-0 xl:self-center">
-            <Window variant="dialog" className="hero-in px-5 pt-6 pb-9 md:px-8 md:pt-8 md:pb-10" style={{ ["--d" as string]: 180 }}>
-              <div className="flex items-center gap-3">
-                <DocPortrait size="sm" nameplate="The Doc" alt="" />
-                <StatusChip status="check-in" />
-              </div>
-              <h1 className="mt-4 font-heading uppercase leading-[0.9] text-[clamp(2.5rem,11vw,4.6rem)] md:mt-5 xl:text-[clamp(3rem,4.2vw,4.25rem)]">
+          {/* The headline */}
+          <div className="relative z-10 order-1 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:self-center">
+            <div className="hero-in" style={{ ["--d" as string]: 180 }}>
+              <h1 className="font-heading font-bold leading-[1.02] tracking-[-0.03em] text-[clamp(2.5rem,10vw,4rem)] xl:text-[clamp(3.25rem,4.6vw,4.5rem)] [text-wrap:balance]">
                 <span className="block text-ink">{HERO.headline[0]}</span>
                 <span className="block text-coral-deep">{HERO.headline[1]}</span>
               </h1>
-              <p className="mt-4 max-w-[34rem] text-lg font-medium leading-relaxed text-ink-soft md:text-xl [text-wrap:pretty]">
+              <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-ink-soft md:text-xl [text-wrap:pretty]">
                 {TAGLINE}
               </p>
-              <div className="mt-7 flex flex-col gap-4 sm:flex-row">
+              <div className="mt-9 flex flex-col gap-4 sm:flex-row">
                 <Link href="/tier-selection" className={pixelButton({ size: "lg" })}>
                   Restoration Pricing
                 </Link>
@@ -266,41 +248,37 @@ export default async function HomePage() {
                   PSA Prep Pricing
                 </Link>
               </div>
-            </Window>
+            </div>
           </div>
 
           <div className="order-3 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:col-start-2 xl:row-start-2 xl:mx-0 xl:max-w-none xl:self-start">
-            <Window tone="ink" title="We never" className="hero-in mt-8 p-0 md:p-0 xl:mt-4" style={{ ["--d" as string]: 300 }}>
-              <ul className="grid pt-3 sm:grid-cols-3 sm:pt-2">
-                {PROCESS.never.map((item, i) => (
-                  <li
-                    key={item}
-                    className={`flex items-center gap-2.5 px-4 py-3 ${i > 0 ? "border-t-2 border-dashed border-tile sm:border-t-0 sm:border-l-2" : ""}`}
-                  >
-                    <span aria-hidden className="grid size-6 shrink-0 place-items-center bg-rx-soft font-pixel text-xs leading-none text-coral-deep px-frame">
-                      ×
-                    </span>
+            <div className="hero-in mt-8 xl:mt-2" style={{ ["--d" as string]: 300 }}>
+              <p className="font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-ink-soft">We never</p>
+              <ul className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-3">
+                {PROCESS.never.map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <span aria-hidden className="font-pixel text-xs leading-none text-coral-deep">×</span>
                     <span className="text-sm font-semibold leading-tight text-ink">{item}</span>
                   </li>
                 ))}
               </ul>
-            </Window>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── Symptoms ticker ────────────────────────────────────────────── */}
-      <section aria-label="What we can fix" className="overflow-hidden border-y-[3px] border-ink bg-night py-5 md:py-7">
+      <section aria-label="What we can fix" className="overflow-hidden bg-night py-5 md:py-6">
         <VelocityMarquee>
           {[0, 1].map((copy) => (
             <ul key={copy} aria-hidden={copy === 1 || undefined} className={`flex items-center ${copy === 1 ? "marquee-dupe" : ""}`}>
               {FIXES.map((word, i) => (
                 <li key={word} className="flex items-center">
-                  <span className={`whitespace-nowrap font-heading uppercase leading-none text-[clamp(2.5rem,7vw,5.5rem)] motion-reduce:text-[clamp(2rem,7vw,5.5rem)] ${i % 2 ? "text-mint" : "text-panel"}`}>
+                  <span className={`whitespace-nowrap font-heading font-semibold leading-none tracking-[-0.02em] text-[clamp(1.875rem,5vw,3.5rem)] motion-reduce:text-[clamp(1.5rem,5vw,3.5rem)] ${i % 2 ? "text-mint" : "text-panel"}`}>
                     {word}
                   </span>
-                  <span aria-hidden className="mx-6 shrink-0 motion-reduce:mx-3 md:mx-10 md:motion-reduce:mx-8">
-                    <PixelIcon name="heart-plus" size={32} />
+                  <span aria-hidden className="mx-6 shrink-0 opacity-80 motion-reduce:mx-3 md:mx-10 md:motion-reduce:mx-8">
+                    <PixelIcon name="heart-plus" size={20} />
                   </span>
                 </li>
               ))}
@@ -313,19 +291,14 @@ export default async function HomePage() {
 
       {/* ── Intake: the slot for your card ─────────────────────────────── */}
       <div className="wall-band">
-        <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-4 pt-10 pb-10 md:px-10 md:pt-12 md:pb-12 lg:place-items-center">
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] mx-auto w-full max-w-xl items-end gap-5 sm:gap-8">
+        <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-4 py-14 md:px-10 md:py-20 lg:place-items-center">
+          <div className="mx-auto grid w-full max-w-xl grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] items-center gap-6 sm:gap-10">
             <CardSlot className="w-full max-w-[16rem]" />
 
-            <div className="flex flex-col items-center gap-4 pb-2">
-              <div className="relative grid size-32 place-items-center bg-butter px-frame-shadow sm:size-36">
-                <span className="px-3 text-center font-heading text-2xl uppercase leading-[1.02] text-ink sm:text-[1.7rem]">
-                  Free<br />Photo<br />Review
-                </span>
-                <span aria-hidden className="absolute -top-5 -right-5"><SparkleSprite scale={2} /></span>
-                <span aria-hidden className="absolute -bottom-4 -left-5"><SparkleSprite scale={2} delay={0.4} /></span>
-              </div>
-              <CardSprite variant="healed" scale={3} className="mt-2" />
+            <div className="grid size-32 place-items-center justify-self-center bg-panel px-frame-shadow sm:size-36">
+              <span className="px-3 text-center font-heading text-xl font-bold leading-[1.1] text-ink sm:text-2xl">
+                Free<br />Photo<br />Review
+              </span>
             </div>
           </div>
         </div>
@@ -336,23 +309,23 @@ export default async function HomePage() {
 
       {/* ── Results: admitted vs discharged ────────────────────────────── */}
       <section aria-labelledby="results-heading" className="relative">
-        <div className="relative mx-auto max-w-7xl px-4 py-20 md:px-10 md:py-28">
+        <div className="relative mx-auto max-w-7xl px-4 py-20 md:px-10 md:py-32">
           <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
             <div data-reveal className="lg:col-span-7">
               <Eyebrow>Why Collectors Trust Us</Eyebrow>
-              <h2 id="results-heading" className={`mt-5 ${H2}`}>
+              <h2 id="results-heading" className={`mt-4 ${H2}`}>
                 Proven Results
               </h2>
             </div>
-            <Window data-reveal variant="dialog" className="lg:col-span-5">
-              <p className="text-lg font-medium leading-relaxed text-ink">
+            <div data-reveal className="lg:col-span-5">
+              <p className="text-lg leading-relaxed text-ink-soft">
                 Hundreds of cards restored and prepped. We don&apos;t just claim results, we show them.
               </p>
-              <Link href="/tier-selection" className={pixelButton({ className: "mt-5" })}>See Our Services</Link>
-            </Window>
+              <Link href="/tier-selection" className={pixelButton({ tone: "panel", className: "mt-5" })}>See Our Services</Link>
+            </div>
           </div>
 
-          <div className="mt-14 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-12">
+          <div className="mt-14 grid gap-10 md:mt-16 lg:grid-cols-12 lg:gap-10">
             <div data-reveal className="lg:col-span-7">
               <PhotoWindow label={mantle?.card ?? "Mickey Mantle"} detail={mantle?.detail}>
                 <div className="relative">
@@ -365,22 +338,16 @@ export default async function HomePage() {
                   <StatusChip status="treatment" className="absolute bottom-2 left-2">ADMITTED</StatusChip>
                   <StatusChip status="discharged" className="absolute right-2 bottom-2" />
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-3">
-                  <HpBar level={0.18} />
-                  <HpBar level={1} label={null} animate />
-                </div>
               </PhotoWindow>
               {mantle && (
-                <Window variant="dialog" className="mt-8 max-w-2xl">
-                  <p className="text-[15px] leading-relaxed text-ink-soft">{mantle.caption}</p>
-                </Window>
+                <p className="mt-6 max-w-2xl border-l-2 border-mint-deep pl-4 text-[15px] leading-relaxed text-ink-soft">{mantle.caption}</p>
               )}
             </div>
 
-            <div className="grid gap-12 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
+            <div className="grid gap-10 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
               <div data-reveal style={{ transitionDelay: "100ms" }}>
                 <PhotoWindow label={charmanderCase?.card ?? "Charmander"} detail={charmanderCase?.detail}>
-                  <div className="bg-wall px-6 py-5">
+                  <div className="bg-wall/60 px-6 py-5">
                     <Image src={charmander} alt="A Charmander card before and after restoration" sizes="(min-width: 1024px) 420px, 45vw" className="mx-auto h-auto w-full max-w-[22rem]" />
                   </div>
                 </PhotoWindow>
@@ -395,50 +362,41 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <dl className="mt-16 grid gap-8 sm:grid-cols-2 md:mt-20">
+          <dl className="mt-16 grid border-y-2 border-tile sm:grid-cols-2 md:mt-24">
             {[
-              { stat: cardsRestored, label: "Cards Restored", icon: "heart-plus" as PixelIconName, tone: "night" as const },
-              { stat: "Free", label: "Photo Review", icon: "camera" as PixelIconName, tone: "frame" as const },
+              { stat: cardsRestored, label: "Cards Restored" },
+              { stat: "Free", label: "Photo Review" },
             ].map((s, i) => (
-              <Window
+              <div
                 key={s.label}
                 data-reveal
-                tone={s.tone}
                 style={{ transitionDelay: `${i * 90}ms` }}
-                className={`flex items-center gap-5 px-6 py-6 md:px-8 md:py-8 ${s.tone === "night" ? "text-stage-fg" : "text-ink"}`}
+                className={`flex flex-col-reverse gap-3 py-8 md:py-10 ${i > 0 ? "border-t-2 border-tile sm:border-t-0 sm:border-l-2 sm:pl-10" : ""}`}
               >
-                <span aria-hidden className={`grid size-16 shrink-0 place-items-center px-frame md:size-20 ${s.tone === "night" ? "bg-night-raise" : "bg-butter"}`}>
-                  <PixelIcon name={s.icon} size={48} />
-                </span>
-                <div className="flex min-w-0 flex-col-reverse gap-2">
-                  <dt className={`font-pixel text-xs uppercase md:text-sm ${s.tone === "night" ? "text-stage-muted" : "text-ink-soft"}`}>{s.label}</dt>
-                  <dd className="font-heading text-[clamp(3.25rem,9vw,6rem)] leading-[0.85] tabular-nums">
-                    <CountUp value={s.stat} />
-                  </dd>
-                </div>
-              </Window>
+                <dt className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">{s.label}</dt>
+                <dd className="font-heading text-[clamp(3rem,8vw,4.75rem)] font-bold leading-[0.9] tracking-[-0.03em] text-ink tabular-nums">
+                  <CountUp value={s.stat} />
+                </dd>
+              </div>
             ))}
           </dl>
         </div>
       </section>
 
-      {/* ── Why collectors choose us: the clinic's notice board ────────── */}
-      <section aria-labelledby="reasons-heading" className="wall-band border-t-[3px] border-ink">
-        <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-14 md:px-10 md:pt-24 md:pb-20">
-          <div className="flex items-end justify-between gap-6">
-            <h2 id="reasons-heading" data-reveal className="max-w-3xl font-heading uppercase leading-[0.92] text-ink text-[clamp(2.3rem,6vw,4rem)] [text-shadow:4px_4px_0_var(--panel)]">
-              {REASONS.title}
-            </h2>
-            <DocSprite scale={3} className="hidden shrink-0 md:block" />
-          </div>
-          <ul data-reveal="stagger" className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+      {/* ── Why collectors choose us ───────────────────────────────────── */}
+      <section aria-labelledby="reasons-heading" className="wall-band">
+        <div className="relative mx-auto max-w-7xl px-4 pt-20 pb-20 md:px-10 md:pt-28 md:pb-28">
+          <h2 id="reasons-heading" data-reveal className={`max-w-3xl ${H2}`}>
+            {REASONS.title}
+          </h2>
+          <ul data-reveal="stagger" className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {REASONS.items.map((item, i) => (
               <li key={item.title} className="flex">
-                <Window tone="frame" className="flex w-full flex-col">
-                  <span aria-hidden className={`grid size-14 place-items-center px-frame ${REASON_TILE[i % REASON_TILE.length]}`}>
-                    <PixelIcon name={REASON_ICONS[i] ?? "heart-plus"} size={32} />
+                <Window tone="ink" className="flex w-full flex-col">
+                  <span aria-hidden className={`grid size-11 place-items-center ${REASON_TILE[i % REASON_TILE.length]}`}>
+                    <PixelIcon name={REASON_ICONS[i] ?? "heart-plus"} size={24} />
                   </span>
-                  <h3 className="mt-5 font-heading text-2xl uppercase leading-[1.02] text-ink">{item.title}</h3>
+                  <h3 className="mt-5 font-heading text-xl font-semibold leading-snug text-ink">{item.title}</h3>
                   <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{item.body}</p>
                 </Window>
               </li>
@@ -447,121 +405,98 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Services: the treatment menu ───────────────────────────────── */}
-      <section aria-labelledby="services-heading" className="border-t-[3px] border-ink">
-        <div className="mx-auto max-w-6xl px-4 py-20 md:px-10 md:py-28">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="services-heading" data-reveal className={H2}>
-              Services
-            </h2>
-            <div aria-hidden className="flex items-end gap-3 pb-2">
-              <CardSprite variant="hurt" scale={3} animate={false} />
-              <span className="font-pixel text-sm text-coral-deep px-nudge">▶</span>
-              <CardSprite variant="healed" scale={3} />
-            </div>
-          </div>
+      {/* ── Services ───────────────────────────────────────────────────── */}
+      <section aria-labelledby="services-heading">
+        <div className="mx-auto max-w-6xl px-4 py-20 md:px-10 md:py-32">
+          <h2 id="services-heading" data-reveal className={H2}>
+            Services
+          </h2>
 
-          <Window data-reveal tone="frame" title="Treatment menu" className="mt-10 p-2 md:mt-12 md:p-3">
-            <ul>
-              {SERVICES.map(({ href, name, line, price, action }, i) => (
-                <li key={href} className={i > 0 ? "border-t-[3px] border-dashed border-tile" : ""}>
-                  <Link
-                    href={href}
-                    className="menu-cursor-item group grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-4 px-3 py-5 transition-colors duration-100 [transition-timing-function:steps(1,end)] hover:bg-butter/35 focus-visible:bg-butter/35 md:grid-cols-[1.25rem_auto_minmax(0,1fr)_auto] md:gap-x-6 md:px-5 md:py-6"
-                  >
-                    <MenuCursor className="hidden text-lg md:inline-block" />
-                    <span aria-hidden className={`grid size-16 place-items-center px-frame md:size-20 ${SERVICE_TILE[i % SERVICE_TILE.length]}`}>
-                      <PixelIcon name={SERVICE_ICONS[href] ?? "heart-plus"} size={48} />
+          <ul data-reveal className="mt-10 border-t-2 border-tile md:mt-12">
+            {SERVICES.map(({ href, name, line, price, action }, i) => (
+              <li key={href} className="border-b-2 border-tile">
+                <Link
+                  href={href}
+                  className="group grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-4 px-1 py-7 transition-colors duration-150 hover:bg-panel/70 focus-visible:bg-panel/70 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-x-8 md:px-4 md:py-8"
+                >
+                  <span aria-hidden className={`grid size-14 place-items-center md:size-16 ${SERVICE_TILE[i % SERVICE_TILE.length]}`}>
+                    <PixelIcon name={SERVICE_ICONS[href] ?? "heart-plus"} size={32} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-heading text-2xl font-bold leading-tight tracking-[-0.01em] text-ink group-hover:text-coral-deep md:text-3xl">{name}</span>
+                    <span className="mt-1.5 block text-[15px] leading-relaxed text-ink-soft">{line}</span>
+                  </span>
+                  <span className="col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center md:col-span-1 md:flex-col md:items-end">
+                    <span className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft tabular-nums">
+                      {price}
                     </span>
-                    <span className="min-w-0">
-                      <span className="block font-heading text-[2rem] uppercase leading-none text-ink md:text-[2.5rem]">{name}</span>
-                      <span className="mt-2 block text-[15px] leading-relaxed text-ink-soft">{line}</span>
-                    </span>
-                    <span className="col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center md:col-span-1 md:flex-col md:items-end">
-                      <span className="inline-flex min-h-8 items-center self-start bg-panel px-2.5 py-1 font-pixel text-xs uppercase text-ink tabular-nums px-frame sm:self-auto">
-                        {price}
-                      </span>
-                      <span className={pixelButton({ className: "w-full sm:w-auto md:min-w-40" })}>{action}</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Window>
+                    <span className={pixelButton({ className: "w-full sm:w-auto md:min-w-40" })}>{action}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* ── FAQ: the records window ────────────────────────────────────── */}
-      <section aria-labelledby="faq-heading" className="relative border-t-[3px] border-ink bg-panel/60">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-[1fr_1.5fr] md:gap-14 md:px-10 md:py-28">
+      {/* ── FAQ ────────────────────────────────────────────────────────── */}
+      <section aria-labelledby="faq-heading" className="relative bg-panel/60">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-[1fr_1.5fr] md:gap-16 md:px-10 md:py-32">
           <div className="md:sticky md:top-32 md:self-start">
             <Eyebrow>Before You Order</Eyebrow>
-            <h2 id="faq-heading" className="mt-5 mb-7 font-heading uppercase leading-[0.92] text-ink text-[clamp(2.3rem,5vw,3.75rem)] [text-shadow:4px_4px_0_var(--wall)]">
+            <h2 id="faq-heading" className={`mt-4 mb-7 ${H2}`}>
               Frequently asked questions
             </h2>
-            <div className="flex items-end gap-5">
-              <Link href="/faq" className={pixelButton({ tone: "panel" })}>See all FAQs</Link>
-              <span aria-hidden className="hidden md:block">
-                <PixelIcon name="clipboard" size={48} />
-              </span>
-            </div>
+            <Link href="/faq" className={pixelButton({ tone: "panel" })}>See all FAQs</Link>
           </div>
-          <Window data-reveal tone="ink" className="p-0 md:p-0">
-            {FAQ.map((item, i) => (
-              <details key={item.q} className={`group ${i > 0 ? "border-t-[3px] border-dashed border-tile" : ""}`}>
-                <summary className="menu-cursor-item flex min-h-16 cursor-pointer list-none items-center gap-3 px-4 py-5 select-none hover:bg-butter/30 md:px-6 [&::-webkit-details-marker]:hidden">
-                  <MenuCursor className="hidden shrink-0 md:inline-block" />
-                  <span className="flex-1 font-heading text-xl leading-tight text-ink md:text-2xl">{item.q}</span>
+          <div data-reveal className="border-t-2 border-tile">
+            {FAQ.map((item) => (
+              <details key={item.q} className="group border-b-2 border-tile">
+                <summary className="flex min-h-16 cursor-pointer list-none items-center gap-4 py-5 select-none [&::-webkit-details-marker]:hidden">
+                  <span className="flex-1 font-heading text-lg font-semibold leading-snug text-ink group-hover:text-coral-deep md:text-xl">{item.q}</span>
                   <span
                     aria-hidden
-                    className="grid size-9 shrink-0 place-items-center bg-panel font-pixel text-base leading-none text-ink px-frame group-open:bg-mint group-hover:bg-butter group-open:group-hover:bg-mint"
+                    className="grid size-8 shrink-0 place-items-center bg-panel font-pixel text-sm leading-none text-ink px-frame group-open:bg-mint"
                   >
                     <span className="group-open:hidden">+</span>
                     <span className="hidden group-open:inline">−</span>
                   </span>
                 </summary>
-                <div className="px-4 pb-6 md:px-6 md:pl-14">
-                  <p className="max-w-[62ch] border-l-[3px] border-mint pl-4 text-base leading-relaxed text-ink-soft">{item.a}</p>
+                <div className="pb-6 pr-12">
+                  <p className="max-w-[62ch] text-base leading-relaxed text-ink-soft">{item.a}</p>
                 </div>
               </details>
             ))}
-          </Window>
+          </div>
         </div>
       </section>
 
-      {/* ── Terms: the records office ──────────────────────────────────── */}
-      <section aria-labelledby="terms-heading" className="border-t-[3px] border-ink py-20 md:py-28">
+      {/* ── Terms ──────────────────────────────────────────────────────── */}
+      <section aria-labelledby="terms-heading" className="py-20 md:py-32">
         <div className="mx-auto max-w-6xl px-4 md:px-10">
-          <div className="mb-12 grid gap-6 md:mb-14 md:grid-cols-[1fr_auto] md:items-end">
-            <div className="max-w-2xl">
-              <h2 id="terms-heading" className="mb-5 font-heading uppercase leading-[0.92] text-ink text-[clamp(2.3rem,5vw,3.75rem)] [text-shadow:4px_4px_0_var(--wall)]">
-                Terms of Service
-              </h2>
-              <Window variant="dialog" next={false} className="py-4 md:py-5">
-                <p className="text-base leading-relaxed text-ink-soft">
-                  By placing an order you agree to these terms. Key points are summarized below.{" "}
-                  <Link href="/terms" className="font-semibold text-coral-deep underline decoration-2 underline-offset-2">Read the full terms</Link>
-                </p>
-              </Window>
-            </div>
+          <div className="mb-12 max-w-2xl md:mb-14">
+            <h2 id="terms-heading" className={`mb-5 ${H2}`}>
+              Terms of Service
+            </h2>
+            <p className="text-base leading-relaxed text-ink-soft md:text-lg">
+              By placing an order you agree to these terms. Key points are summarized below.{" "}
+              <Link href="/terms" className="font-semibold text-coral-deep underline decoration-2 underline-offset-2">Read the full terms</Link>
+            </p>
           </div>
-          <div data-reveal="stagger" className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div data-reveal="stagger" className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
             {TOS_HIGHLIGHTS.map(({ title, body, icon }) => (
-              <Window key={title} tone="ink" className="flex gap-4 md:gap-5 md:p-7">
-                <span aria-hidden className="grid size-12 shrink-0 place-items-center bg-wall px-frame">
-                  <PixelIcon name={icon} size={32} />
+              <div key={title} className="flex gap-4 border-t-2 border-tile pt-6 md:gap-5">
+                <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-wall/70">
+                  <PixelIcon name={icon} size={24} />
                 </span>
                 <div className="min-w-0">
-                  <h3 className="mb-2 font-heading text-2xl uppercase leading-none text-ink">{title}</h3>
+                  <h3 className="mb-2 font-heading text-xl font-semibold leading-snug text-ink">{title}</h3>
                   <p className="text-sm leading-relaxed text-ink-soft md:text-[15px]">{body}</p>
                 </div>
-              </Window>
+              </div>
             ))}
           </div>
-          <div className="mt-10 flex gap-4 bg-butter/45 p-5 text-sm leading-relaxed text-ink px-frame-shadow md:p-6">
-            <span aria-hidden className="hidden shrink-0 sm:block">
-              <PixelIcon name="clipboard" size={32} />
-            </span>
+          <div className="mt-14 bg-butter/40 p-5 text-sm leading-relaxed text-ink px-frame md:p-6">
             <p>
               <strong>Important:</strong> All sales are final once work begins. Turnaround times are estimates only and are not guaranteed.
               The Card Doc LLC is not responsible for loss or damage during transit. Restoration results vary by card condition.
@@ -573,16 +508,17 @@ export default async function HomePage() {
       </section>
 
       {/* ── Closing: night at the clinic ───────────────────────────────── */}
-      <section aria-labelledby="close-heading" className="stage stage-light relative overflow-hidden border-t-[3px] border-ink">
-        <div className="relative z-[1] mx-auto max-w-5xl px-4 pt-20 pb-12 text-center md:px-10 md:pt-28">
-          <h2 id="close-heading" data-reveal className="font-heading uppercase leading-[0.92] text-[clamp(2.3rem,7vw,4.75rem)] [text-shadow:4px_4px_0_var(--night-raise)]">
+      <section aria-labelledby="close-heading" className="stage stage-light relative overflow-hidden">
+        <div className="relative z-[1] mx-auto max-w-4xl px-4 pt-24 pb-24 text-center md:px-10 md:pt-32 md:pb-28">
+          <DocSprite scale={2} animate={false} className="mx-auto mb-8 block" />
+          <h2 id="close-heading" data-reveal className="font-heading font-bold leading-[1.05] tracking-[-0.02em] text-[clamp(2.125rem,6vw,3.5rem)] [text-wrap:balance]">
             <span className="block text-stage-fg">Your Collection Means Something.</span>
             <span className="block text-butter">We Understand Why.</span>
           </h2>
-          <p data-reveal className="mx-auto mt-6 max-w-xl text-lg font-medium leading-relaxed text-stage-muted md:text-xl">
+          <p data-reveal className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-stage-muted md:text-xl">
             From childhood favorites to prized collectibles, every card deserves thoughtful care.
           </p>
-          <div data-reveal className="mt-10 flex flex-col justify-center gap-5 sm:flex-row">
+          <div data-reveal className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
             <Link href="/tier-selection" className={pixelButton({ size: "lg" })}>Explore Restoration Services</Link>
             <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className={pixelButton({ tone: "panel", size: "lg" })}>
               Contact Us
@@ -590,14 +526,6 @@ export default async function HomePage() {
             </a>
           </div>
         </div>
-        <div aria-hidden className="relative z-[1] mx-auto flex max-w-xs items-end justify-center gap-6 pt-16 md:gap-10">
-          <div className="absolute inset-x-0 top-0 h-14">
-            <HealSparkles count={5} />
-          </div>
-          <DocSprite scale={3} />
-          <CardSprite variant="healed" scale={3} />
-        </div>
-        <div aria-hidden className="tile-floor-sm relative z-[1] h-12 border-t-[3px] border-ink" />
       </section>
     </div>
   );

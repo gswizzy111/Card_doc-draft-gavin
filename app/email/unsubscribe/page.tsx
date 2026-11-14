@@ -38,12 +38,12 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
       <div className="max-w-7xl w-full mx-auto px-4 md:px-10 py-5">
         <Link href="/" className="inline-flex min-h-11 items-center gap-3 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep">
           <DocPortrait size="xs" alt="" />
-          <span className="font-heading text-xl tracking-[0.02em] text-ink">The Card Doc</span>
+          <span className="font-heading text-xl text-ink">The Card Doc</span>
         </Link>
       </div>
       <div className="flex flex-1 items-center">
         <div className="mx-auto w-full max-w-xl px-4 py-16 md:px-10 md:py-28">
-          <Window variant="dialog" className="px-6 py-8 md:px-8">
+          <Window className="px-6 py-8 md:px-8">
           {found ? (
             <UnsubscribePanel token={token} email={found.email} alreadyUnsubscribed={found.unsubscribed} />
           ) : (
@@ -51,7 +51,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
               <span className="mb-6 flex size-12 items-center justify-center bg-rx-soft text-coral-deep px-frame">
                 <MailWarning className="h-6 w-6" strokeWidth={1.75} aria-hidden />
               </span>
-              <h1 className="mb-4 font-heading text-3xl uppercase leading-tight tracking-[0.02em] text-ink md:text-4xl">
+              <h1 className="mb-4 font-heading text-3xl leading-tight text-ink md:text-4xl">
                 {failed ? "Something went wrong" : "This link isn't valid"}
               </h1>
               <p className="text-[17px] leading-relaxed text-ink-soft">
