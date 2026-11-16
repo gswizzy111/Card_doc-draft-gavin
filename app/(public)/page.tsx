@@ -30,14 +30,18 @@ import { SERVICE_CARDS } from "@/lib/service-cards";
 import { HERO, PROCESS, REASONS, RESULTS } from "@/lib/about";
 import { AcrylicHolder, Marquee, Print, Seamless, SectionHead, StatBlock, cta } from "@/components/brand";
 import { cn } from "@/lib/utils";
+import rayquazaCard from "@/public/home/all-cards/rayquaza.webp";
+import mantle1952Card from "@/public/home/all-cards/mantle-1952.webp";
+import jordan1986Card from "@/public/home/all-cards/jordan-1986.webp";
+import charizardPsa from "@/public/home/charizard-psa.jpg";
+import restorationKit from "@/public/shop/the-card-doc-restoration-kit.webp";
+import gyaradosProcessBefore from "@/public/home/gyarados-process-before.jpg";
+import gyaradosProcessAfter from "@/public/home/gyarados-process-after.jpg";
+import { CardStack, type StackCard } from "@/components/marketing/card-stack";
 import gyaradosBefore from "@/public/specimen-gyarados-before.jpg";
 import gyaradosAfter from "@/public/specimen-gyarados-after.jpg";
-import mantleInHand from "@/public/about/mantle-in-hand.jpg";
-import mantleDetail from "@/public/about/mantle-detail-before.jpg";
 import mantlePair from "@/public/home/mantle-pair.jpg";
 import charmanderPair from "@/public/home/charmander-pair.jpg";
-import charmanderAfter from "@/public/home/charmander-after.jpg";
-import garchomp from "@/public/home/garchomp.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +62,13 @@ const CARD_KINDS: { group?: string; items: string[] }[] = [
 
 /** The receipts the home page shows as prints before the strip. */
 const BENTO_RECEIPT = "t11";
+
+/** "We do all cards.": one Pokémon, one baseball and one basketball card. */
+const ALL_CARDS: StackCard[] = [
+  { src: mantle1952Card, alt: "A 1952 Topps Mickey Mantle baseball card" },
+  { src: rayquazaCard, alt: "A Rayquaza Gold Star Pokémon card" },
+  { src: jordan1986Card, alt: "A 1986 Fleer Michael Jordan basketball card" },
+];
 
 const FIXES = ["Creases", "Dents", "Dimples", "Edge lifts", "Corner lifts", "Minor bends", "Holo polishing", "Surface cleaning"];
 
@@ -278,54 +289,22 @@ export default function HomePage() {
 
       {/* ── We do all cards. ──────────────────────────────────────────── */}
       <section aria-labelledby="all-cards-heading" className="surface-chalk">
-        <div className="wrap grid items-start gap-x-16 gap-y-8 py-16 md:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="wrap grid items-start gap-x-16 gap-y-8 py-16 md:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch">
           <div>
             <h2 id="all-cards-heading" data-reveal className="font-display text-[clamp(4rem,15vw,6.5rem)] font-black lg:text-[clamp(5.5rem,7vw,7rem)] leading-[0.84] tracking-[-0.015em] text-ink [text-wrap:balance]">
               We do all cards.
             </h2>
-            {/* All cards, shown with real cards: a sports card and two TCG
-                cards, each cropped close so none repeats a photo below. A row
-                of three tilted prints on phones, a loose stack from lg. */}
-            <div
-              data-reveal="stagger"
-              className="relative mt-10 flex items-start gap-3 sm:gap-5 lg:mt-12 lg:block lg:h-[24rem] lg:max-w-none"
-            >
-              <Print
-                src={mantleInHand}
-                alt="A restored Mickey Mantle baseball card held in a blue glove"
-                aspect="4/5"
-                position="62% 30%"
-                zoom={1.15}
-                tilt={-6}
-                border="sm"
-                sizes="(min-width: 1024px) 256px, 31vw"
-                className="w-[31%] shrink-0 lg:absolute lg:top-6 lg:left-0 lg:w-[16rem]"
-              />
-              <Print
-                src={charmanderAfter}
-                alt="The flame corner of a Base Set Charmander card after restoration"
-                aspect="4/5"
-                position="92% 26%"
-                zoom={1.5}
-                tilt={3}
-                border="sm"
-                sizes="(min-width: 1024px) 256px, 31vw"
-                className="z-[1] mt-4 w-[31%] shrink-0 lg:absolute lg:top-0 lg:left-[calc(50%-8rem)] lg:mt-0 lg:w-[16rem]"
-              />
-              <Print
-                src={garchomp}
-                alt="The holo corner of a Garchomp card"
-                aspect="4/5"
-                position="62% 40%"
-                zoom={1.3}
-                tilt={-2}
-                border="sm"
-                sizes="(min-width: 1024px) 256px, 31vw"
-                className="w-[31%] shrink-0 lg:absolute lg:top-10 lg:right-0 lg:w-[16rem]"
-              />
-            </div>
+            {/* All cards, shown with real cards: a Pokémon, a baseball and a
+                basketball card in one loose stack. Hover, focus or tap any card
+                to bring it to the front. */}
+            <CardStack
+              cards={ALL_CARDS}
+              className="mt-10 max-w-[34rem] lg:mt-12 lg:max-w-none"
+            />
           </div>
-          <div className="lg:pt-3">
+          {/* Sits at the bottom of the row from lg, so the button's bottom
+              lines up with the bottom of the card stack. */}
+          <div className="lg:flex lg:flex-col lg:items-start lg:justify-end">
             {allCards && <p data-reveal className="lead text-ink-soft">{allCards}</p>}
             <div data-reveal="stagger" className="mt-8 grid gap-5">
               {CARD_KINDS.map(({ group, items }) => (
@@ -519,9 +498,9 @@ export default function HomePage() {
                 <span className="mt-4 max-w-[30ch] text-[17px] leading-relaxed text-[#e6ebff] md:text-lg">{restoration.line}</span>
                 <span className="relative my-8 grid min-h-[16rem] flex-1 place-items-center md:my-10">
                   <Print
-                    src={charmanderAfter}
-                    alt="A Base Set Charmander card after restoration"
-                    aspect="364/503"
+                    src={charizardPsa}
+                    alt="A Charizard Gold Star card in a PSA slab, held in a blue glove"
+                    aspect="800/1407"
                     position="50% 50%"
                     surface="dark"
                     tilt={-5}
@@ -561,14 +540,24 @@ export default function HomePage() {
             <li data-reveal style={{ transitionDelay: "160ms" }} className="lg:col-span-5">
               <Link
                 href={kits.href}
-                className="surface-sun group grid h-full gap-6 rounded-[22px] p-7 md:p-8"
+                className="surface-sun group grid h-full grid-cols-[minmax(0,1fr)_7rem] gap-x-5 gap-y-6 rounded-[22px] p-7 sm:grid-cols-[minmax(0,1fr)_10rem] md:p-8"
               >
                 <span className="flex flex-col">
                   <span className="caps font-display text-[40px] font-black leading-[0.9] md:text-[48px]">{kits.name}</span>
                   <span className="mt-3 text-[16px] leading-relaxed text-ink">{kits.line}</span>
                   <span className="mt-auto pt-6 text-[15px] font-extrabold leading-snug text-ink">{kits.price}</span>
                 </span>
-                <span className={cta({ tone: "ink", className: "justify-self-start" })}>
+                <span className="col-start-2 row-span-2 row-start-1 grid place-items-center">
+                  <Print
+                    src={restorationKit}
+                    alt="The Official Card Doc Restoration Kit"
+                    aspect="1000/892"
+                    tilt={4}
+                    sizes="(min-width: 640px) 160px, 112px"
+                    className="w-full transition-transform duration-500 ease-[var(--ease-out)] group-hover:rotate-[1deg] motion-reduce:transition-none"
+                  />
+                </span>
+                <span className={cta({ tone: "ink", className: "col-start-1 justify-self-start" })}>
                   {kits.action}
                   <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
                 </span>
@@ -595,12 +584,12 @@ export default function HomePage() {
               steps={STEPS}
               photos={{
                 list: [
-                  { src: mantleDetail, alt: "Close-up of the cracking on a Mickey Mantle card before restoration", aspect: "1" },
-                  { src: mantleInHand, alt: "The same Mickey Mantle card after restoration, held in a blue glove", aspect: "1", position: "50% 45%" },
+                  { src: gyaradosProcessBefore, alt: "A Gold Star Gyarados card before restoration, creased along the top and dull across the holo", aspect: "1200/796" },
+                  { src: gyaradosProcessAfter, alt: "The same Gold Star Gyarados card after restoration", aspect: "1200/796" },
                 ],
                 forStep: [0, 0, 0, 0, 1, 1],
               }}
-              phonePhoto={{ src: mantleDetail, alt: "", aspect: "4/3", position: "50% 45%" }}
+              phonePhoto={{ src: gyaradosProcessBefore, alt: "", aspect: "4/3" }}
             />
           </div>
         </div>

@@ -1,16 +1,16 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { catalogProduct } from "@/lib/shop-catalog";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ORG_ID, SITE, breadcrumbs, canonical } from "@/lib/seo";
 import { formatCurrency } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AddToCartButtonLarge } from "./add-to-cart-button-large";
-import { ArrowLeft, ArrowRight, Info, Package, RefreshCw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Info, Package } from "lucide-react";
 import { isSoldOut } from "@/lib/site-config";
 import { PixelViewContent } from "@/components/pixel-view-content";
-import { getSubscriptionPriceCents } from "@/lib/store-config";
 import { cta } from "@/components/brand";
 import { KIT_REVIEW } from "@/lib/reviews";
 
@@ -19,7 +19,8 @@ export const dynamic = "force-dynamic";
 const getProduct = cache(async (slug: string) => {
   const admin = createAdminClient();
   const { data } = await admin.from("products").select("*").eq("slug", slug).eq("active", true).single();
-  return data;
+  // No database product (this preview has none): fall back to the shop's listed item.
+  return data ?? catalogProduct(slug) ?? null;
 });
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -61,7 +62,7 @@ function DescriptionBlock({ text }: { text: string }) {
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [product, subscriptionPriceCents] = await Promise.all([getProduct(slug), getSubscriptionPriceCents()]);
+  const product = await getProduct(slug);
 
   if (!product) notFound();
 
@@ -177,16 +178,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   }}
                   requiresSize={product.name.toLowerCase().includes("glove")}
                 />
-              )}
-
-              {!isSoldOut() && isKit && (
-                <Link
-                  href="/subscribe"
-                  className={cta({ tone: "ink", size: "lg", className: "h-auto w-full py-3 text-center leading-tight whitespace-normal" })}
-                >
-                  <RefreshCw aria-hidden className="size-5 shrink-0" strokeWidth={1.75} />
-                  Subscribe — {formatCurrency(subscriptionPriceCents)}/mo · Save every month
-                </Link>
               )}
 
               <p className="mt-1 flex items-start gap-2.5 text-sm leading-relaxed text-ink-soft">

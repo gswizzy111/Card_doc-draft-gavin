@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Package } from "lucide-react";
+import { ArrowRight, Package, Star } from "lucide-react";
 import { PageHero } from "@/components/marketing/page-hero";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SITE, breadcrumbs, canonical } from "@/lib/seo";
 import { KIT_REVIEW, type Review } from "@/lib/reviews";
 import { SERVICE_CARDS } from "@/lib/service-cards";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { SHOP_CATALOG } from "@/lib/shop-catalog";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { AddToCartButton } from "./add-to-cart-button";
@@ -36,6 +37,7 @@ type Product = {
   images: string[] | null;
   category: string | null;
   inventory_count: number;
+  rating?: { value: string; count: number };
 };
 
 function ProductCard({ product }: { product: Product }) {
@@ -82,6 +84,20 @@ function ProductCard({ product }: { product: Product }) {
             {product.name}
           </Link>
         </h3>
+        {product.rating && (
+          <p className="-mt-2 flex items-center gap-1.5 text-sm text-ink-soft">
+            <span className="flex text-sun-deep" aria-hidden>
+              {Array.from({ length: 5 }, (_, i) => (
+                <Star key={i} className="size-3.5 fill-current" strokeWidth={0} />
+              ))}
+            </span>
+            <span className="font-bold text-ink tabular-nums">{product.rating.value}</span>
+            <span className="tabular-nums">({product.rating.count})</span>
+            <span className="sr-only">
+              Rated {product.rating.value} out of 5 from {product.rating.count} reviews
+            </span>
+          </p>
+        )}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <span className="font-heading text-[1.75rem] leading-none font-black text-ink tabular-nums">
             {formatCurrency(product.price_cents)}
@@ -164,7 +180,9 @@ export default async function ShopPage() {
     .eq("active", true)
     .order("display_order", { ascending: true });
 
-  const products: Product[] = (data ?? []) as Product[];
+  // No products from the database (this preview has none): show the shop's
+  // listed kits, tools and supplies instead.
+  const products: Product[] = data && data.length > 0 ? (data as Product[]) : SHOP_CATALOG;
 
   const kits = products.filter((p) => p.category === "Kits");
   const tools = products.filter((p) => p.category === "Tools");
@@ -197,17 +215,12 @@ export default async function ShopPage() {
               title="Shop"
               lead={KITS.line}
               actions={
-                <>
-                  <Link href="/subscribe" className={cta({ tone: "sun", size: "lg" })}>
-                    Monthly Kit Club
+                products.length > 0 ? (
+                  <a href="#shelves" className={cta({ tone: "sun", size: "lg" })}>
+                    {KITS.action}
                     <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
-                  </Link>
-                  {products.length > 0 && (
-                    <a href="#shelves" className={cta({ tone: "outline", size: "lg" })}>
-                      {KITS.action}
-                    </a>
-                  )}
-                </>
+                  </a>
+                ) : undefined
               }
             />
             <p
