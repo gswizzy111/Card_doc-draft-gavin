@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Camera, ClipboardCheck, Clock, Hammer, X } from "lucide-react";
+import { ArrowRight, ClipboardCheck, Clock, Hammer, X } from "lucide-react";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PixelViewContent } from "@/components/pixel-view-content";
@@ -11,9 +11,7 @@ import { ORG_ID, SITE, breadcrumbs, canonical } from "@/lib/seo";
 import { BulkSwitch } from "@/app/(public)/tier-selection/bulk-switch";
 import { BULK_PLANS, bulkPriceCents } from "@/lib/bulk-pricing";
 import { Print, cta } from "@/components/brand";
-import { SeamlessPrint } from "../seamless-print";
-import charmanderPair from "@/public/home/charmander-pair.jpg";
-import garchomp from "@/public/home/garchomp.jpg";
+import bulbasaurDelta from "@/public/home/prep-bulbasaur-delta.jpg";
 
 
 export const dynamic = "force-dynamic";
@@ -101,7 +99,7 @@ export default async function PrepPage() {
 
       <section aria-labelledby="prep-pricing-heading" className="surface-chalk">
         <div className="wrap pt-12 pb-16 md:pt-20 md:pb-24">
-          {/* Header, with the Garchomp corner as a print on a studio seamless */}
+          {/* Header, with the cleaning warning and the Bulbasaur Delta Species photo */}
           <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 gap-y-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
             <div>
               <PageHero
@@ -112,16 +110,23 @@ export default async function PrepPage() {
               />
               <TrustPills align="start" className="hero-in mt-8" />
             </div>
-            <SeamlessPrint
-              src={garchomp}
-              alt="A Garchomp holo card corner, before and after"
-              aspect="538/520"
-              tilt={3.5}
-              caption="Garchomp LV.X · corner"
-              priority
-              sizes="(min-width: 1024px) 384px, 80vw"
-              className="hero-in mx-auto w-full max-w-[min(100%,18rem,calc(46vh-4rem))] md:max-w-[22rem] lg:max-w-none"
-            />
+            {/* The warning, then the Ditto (Bulbasaur, EX Delta Species) photo. */}
+            <figure className="hero-in mx-auto w-full max-w-[22rem] lg:max-w-none">
+              <h2 className="caps font-display text-[clamp(1.75rem,6.5vw,2.375rem)] font-black leading-[0.95] tracking-[0.005em] text-ink [text-wrap:balance]">
+                <span className="mb-3 block h-1.5 w-14 rounded-full bg-sun" aria-hidden />
+                DONT LEAVE <span className="text-cobalt">DIRT or RESIDUE</span> on your card before Grading!
+              </h2>
+              <Print
+                src={bulbasaurDelta}
+                alt="A Ditto card (Bulbasaur, EX Delta Species) held in a black glove, with a cotton swab and cloth beside it"
+                aspect="900/1200"
+                tilt={2.5}
+                lift
+                priority
+                sizes="(min-width: 1024px) 384px, 352px"
+                className="mt-6 w-full"
+              />
+            </figure>
           </div>
 
           <div className="mt-14 grid gap-10 md:mt-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
@@ -260,40 +265,6 @@ export default async function PrepPage() {
                 </ul>
                 <p className="mt-4 text-sm text-ink-soft">Add-ons are selected during the order process.</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Questions: the Charmander pair as a print, the DM link and the order */}
-      <section aria-labelledby="prep-questions-heading" className="surface-ink">
-        <div className="wrap grid max-w-5xl items-center gap-x-14 gap-y-10 py-16 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:py-20">
-          <div data-reveal className="mx-auto w-full max-w-[18rem] md:order-last md:max-w-none">
-            <Print
-              src={charmanderPair}
-              alt="A Charmander card before and after restoration, side by side"
-              aspect="576/513"
-              tilt={-3}
-              surface="dark"
-              border="lg"
-              lift
-              sizes="(min-width: 768px) 320px, 288px"
-            />
-          </div>
-          <div data-reveal>
-            <h2 id="prep-questions-heading" className="display-md text-white">Questions?</h2>
-            <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:gap-4">
-              <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className={cta({ size: "lg" })}>
-                <Camera aria-hidden className="size-5" strokeWidth={1.75} />
-                DM us @the_card_doc
-                <span className="sr-only">on Instagram (opens in a new tab)</span>
-              </a>
-              {prices.isOpen && (
-                <Link href="/prep/order" className={cta({ tone: "outline-light", size: "lg" })}>
-                  Order Prep
-                  <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
-                </Link>
-              )}
             </div>
           </div>
         </div>

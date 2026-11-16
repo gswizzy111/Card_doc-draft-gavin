@@ -39,6 +39,7 @@ export const TRUSTED_BY: TrustedPage[] = [
     role: "NFL defensive lineman",
     platform: "Instagram",
     href: "https://www.instagram.com/jonallen93/",
+    followers: "132K",
   },
   {
     name: "Daithi De Nogla",
@@ -46,5 +47,6 @@ export const TRUSTED_BY: TrustedPage[] = [
     role: "YouTuber",
     platform: "Instagram",
     href: "https://www.instagram.com/daithiden0gla/",
+    followers: "2.7M",
   },
 ];

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Package, Star } from "lucide-react";
-import { PageHero } from "@/components/marketing/page-hero";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SITE, breadcrumbs, canonical } from "@/lib/seo";
 import { KIT_REVIEW, type Review } from "@/lib/reviews";
@@ -13,9 +12,7 @@ import { cn } from "@/lib/utils";
 import { AddToCartButton } from "./add-to-cart-button";
 import { isSoldOut } from "@/lib/site-config";
 import { CtaPanel, Print, Sticker, cta } from "@/components/brand";
-import { SeamlessPrint } from "../seamless-print";
 import mantleInHand from "@/public/about/mantle-in-hand.jpg";
-import garchomp from "@/public/home/garchomp.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -206,52 +203,12 @@ export default async function ShopPage() {
         ]}
       />
 
-      {/* Header: the kits first, the shipping fact as a plain line, a polish result on a studio sweep */}
-      <section className="surface-chalk relative overflow-hidden">
-        <div className="wrap grid items-center gap-10 py-14 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-12 md:py-20 lg:py-24">
-          <div className="min-w-0">
-            <PageHero
-              eyebrow={KITS.name}
-              title="Shop"
-              lead={KITS.line}
-              actions={
-                products.length > 0 ? (
-                  <a href="#shelves" className={cta({ tone: "sun", size: "lg" })}>
-                    {KITS.action}
-                    <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
-                  </a>
-                ) : undefined
-              }
-            />
-            <p
-              className="hero-in label-caps mt-7 inline-flex items-center gap-2.5 text-[15px] text-ink"
-              style={{ ["--d" as string]: 380 }}
-            >
-              <Package aria-hidden className="size-[18px] shrink-0 text-cobalt" strokeWidth={1.75} />
-              {KITS.price}
-            </p>
-            {products.length === 0 && (
-              <div className="hero-in mt-12 border-t-2 border-ink/10 pt-10 md:mt-14" style={{ ["--d" as string]: 460 }}>
-                <h2 className="font-heading text-[2rem] leading-[0.95] font-black text-ink md:text-[2.5rem]">Products coming soon.</h2>
-                <KitReview review={KIT_REVIEW} className="mt-8" />
-              </div>
-            )}
-          </div>
-          <SeamlessPrint
-            src={garchomp}
-            alt="A Garchomp holo card corner, before and after"
-            aspect="538/520"
-            tilt={3}
-            priority
-            sizes="(min-width: 768px) 40vw, 80vw"
-            className="mx-auto w-full max-w-[min(100%,19rem,calc(46vh-2rem))] md:max-w-[30rem]"
-          />
-        </div>
-      </section>
+      {/* No intro header: the shelves open the page, so the products show at once. */}
+      <h1 className="sr-only">Shop</h1>
 
       {/* The shelves, only once there is stock */}
       {products.length > 0 && (
-        <section id="shelves" aria-label={KITS.name} className="surface-white section-y scroll-mt-24">
+        <section id="shelves" aria-label={KITS.name} className="surface-white scroll-mt-24 pt-10 pb-[var(--section-y)] md:pt-14">
           <div className="wrap flex flex-col gap-20 md:gap-28">
             <ProductSection title="Kits" products={kits} review={KIT_REVIEW} />
             <ProductSection title="Tools" products={tools} />

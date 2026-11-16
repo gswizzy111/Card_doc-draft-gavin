@@ -78,7 +78,7 @@ export function TrustMarquee({
   const item = ({ text, figure, rest }: Pill) =>
     figure ? (
       <span key={text} className="inline-flex items-baseline gap-2">
-        <span className="font-display text-[22px] font-black leading-none tracking-[0.01em] text-sun md:text-[24px]">{figure}</span>
+        <span className="font-display text-[33px] font-black leading-none tracking-[0.01em] text-sun md:text-[36px]">{figure}</span>
         <span>{rest}</span>
       </span>
     ) : (
@@ -94,7 +94,7 @@ export function TrustMarquee({
       </ul>
       {/* Reduced motion: one still, centred row of the four facts. */}
       <ul aria-hidden className="hidden flex-wrap items-center justify-center gap-x-6 gap-y-0.5 px-4 py-1.5 text-[13px] font-bold motion-reduce:flex md:gap-x-7 md:text-sm">
-        {pills.map((p) => <li key={p.text} className="flex min-h-7 items-center whitespace-nowrap">{item(p)}</li>)}
+        {pills.map((p) => <li key={p.text} className="flex min-h-12 items-center whitespace-nowrap">{item(p)}</li>)}
       </ul>
       <div className="motion-reduce:hidden">
         <Marquee
@@ -103,7 +103,7 @@ export function TrustMarquee({
           tone="dark"
           speed={46}
           separator={<Sparkle className="size-3.5 fill-sun text-sun" strokeWidth={1.75} />}
-          itemClassName="h-10 px-5 text-[13px] font-bold tracking-[0.01em] md:h-11 md:px-7 md:text-sm"
+          itemClassName="h-14 px-5 text-[13px] font-bold tracking-[0.01em] md:h-16 md:px-7 md:text-sm"
         />
       </div>
     </div>

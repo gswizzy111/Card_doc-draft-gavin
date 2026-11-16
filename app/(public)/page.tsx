@@ -16,32 +16,29 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { CountUp } from "@/components/motion/count-up";
 import { BeforeAfter } from "@/components/motion/before-after";
 import { TrustedBy } from "@/components/marketing/trusted-by";
 import { ORG_ID, SITE, INSTAGRAM_URL, canonical } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
-import { CaseCard, FeaturedReview, ReviewBubbles } from "@/components/marketing/comic-reviews";
-import { receipt } from "@/components/marketing/receipts";
+import { FeaturedReview, ReviewBubbles } from "@/components/marketing/comic-reviews";
 import { ProcessSteps } from "@/components/marketing/process-steps";
-import { TrustMarquee, CARDS_RESTORED_DISPLAY } from "@/components/marketing/trust-pills";
+import { TrustMarquee } from "@/components/marketing/trust-pills";
 import { WatchTheWork } from "@/components/marketing/watch-the-work";
 import { SERVICE_CARDS } from "@/lib/service-cards";
-import { HERO, PROCESS, REASONS, RESULTS } from "@/lib/about";
-import { AcrylicHolder, Marquee, Print, Seamless, SectionHead, StatBlock, cta } from "@/components/brand";
+import { HERO, PROCESS, REASONS } from "@/lib/about";
+import { AcrylicHolder, Marquee, Print, cta } from "@/components/brand";
 import { cn } from "@/lib/utils";
 import rayquazaCard from "@/public/home/all-cards/rayquaza.webp";
 import mantle1952Card from "@/public/home/all-cards/mantle-1952.webp";
 import jordan1986Card from "@/public/home/all-cards/jordan-1986.webp";
 import charizardPsa from "@/public/home/charizard-psa.jpg";
+import prepMicroscope from "@/public/home/prep-microscope.jpg";
 import restorationKit from "@/public/shop/the-card-doc-restoration-kit.webp";
 import gyaradosProcessBefore from "@/public/home/gyarados-process-before.jpg";
 import gyaradosProcessAfter from "@/public/home/gyarados-process-after.jpg";
 import { CardStack, type StackCard } from "@/components/marketing/card-stack";
 import gyaradosBefore from "@/public/specimen-gyarados-before.jpg";
 import gyaradosAfter from "@/public/specimen-gyarados-after.jpg";
-import mantlePair from "@/public/home/mantle-pair.jpg";
-import charmanderPair from "@/public/home/charmander-pair.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -59,9 +56,6 @@ const CARD_KINDS: { group?: string; items: string[] }[] = [
   { group: "Sports cards", items: ["Baseball", "Basketball", "Football", "Hockey"] },
   { items: ["Vintage", "Modern", "Raw", "Graded"] },
 ];
-
-/** The receipts the home page shows as prints before the strip. */
-const BENTO_RECEIPT = "t11";
 
 /** "We do all cards.": one Pokémon, one baseball and one basketball card. */
 const ALL_CARDS: StackCard[] = [
@@ -193,13 +187,8 @@ function InstagramNote() {
 }
 
 export default function HomePage() {
-  // The owner's figure (display only; lib/site-stats.ts keeps the live count).
-  const cardsRestored = CARDS_RESTORED_DISPLAY;
   const allCards = FAQ.find((f) => f.q === "What types of cards do you work on?")?.a;
-  const mantle = RESULTS.find((r) => r.id === "mickey-mantle");
-  const charmanderCase = RESULTS.find((r) => r.id === "charmander");
   const [restoration, prep, kits] = SERVICES;
-  const bento = receipt(BENTO_RECEIPT);
 
   return (
     <div className="min-h-screen overflow-x-clip">
@@ -247,12 +236,12 @@ export default function HomePage() {
                 Restoration Pricing
                 <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
               </Link>
-              <Link href="/prep" className={cta({ tone: "outline-light", size: "lg" })}>
+              <Link href="/prep" className={cta({ tone: "white", size: "lg" })}>
                 PSA Prep Pricing
               </Link>
             </div>
             <div className="mt-9 flex flex-wrap items-center gap-x-3 gap-y-2.5">
-              <p className="label-caps mr-1 text-[17px] text-sun">We never</p>
+              <p className="label-caps mr-2 text-[28px] leading-none text-sun md:text-[32px]">We never</p>
               <ul className="contents">
                 {PROCESS.never.map((item) => (
                   <li
@@ -336,151 +325,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Proven Results ────────────────────────────────────────────── */}
-      <section aria-labelledby="results-heading" className="surface-ink relative">
-        <div className="wrap section-y">
-          <div data-reveal>
-            <SectionHead
-              id="results-heading"
-              tone="dark"
-              eyebrow="Why Collectors Trust Us"
-              title="Proven Results"
-              lead="Hundreds of cards restored and prepped. We don't just claim results, we show them."
-              actions={
-                <Link href="/tier-selection" className={cta({ size: "lg" })}>
-                  See Our Services
-                  <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
-                </Link>
-              }
-            />
-          </div>
-
-          <div className="mt-12 grid gap-6 md:mt-16 md:gap-7 lg:grid-cols-12">
-            {/* The Mantle pair on a studio seamless. Both cases share two
-                grid rows (photo, caption), so their captions line up. */}
-            <figure data-reveal className="m-0 lg:col-span-7 lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:gap-y-0">
-              <Seamless
-                src={mantlePair}
-                alt="A cracked Mickey Mantle card in a black glove next to the same card after restoration in a blue glove"
-                aspect="1446/1000"
-                inset="5% 4% 3%"
-                sizes="(min-width: 1280px) 720px, (min-width: 1024px) 56vw, 92vw"
-              >
-                <span className="ba-label left-4 md:left-5">Before</span>
-                <span className="ba-label right-4 md:right-5" style={{ background: "var(--sun)", color: "var(--ink)" }}>After</span>
-              </Seamless>
-              <figcaption className="mt-5 grid content-start gap-2 md:grid-cols-[auto_minmax(0,1fr)] md:gap-x-8">
-                <span>
-                  <span className="caps block font-display text-[28px] font-black leading-none md:text-[32px]">{mantle?.card}</span>
-                  <span className="mt-1.5 block text-sm font-bold text-sun">{mantle?.detail}</span>
-                </span>
-                {mantle && <span className="max-w-[60ch] text-[15px] leading-relaxed text-on-dark-muted">{mantle.caption}</span>}
-              </figcaption>
-            </figure>
-
-            {/* The Charmander composite as a print. */}
-            <figure data-reveal style={{ transitionDelay: "90ms" }} className="m-0 lg:col-span-5 lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:gap-y-0">
-              <div className="grid items-center">
-                <Print
-                  src={charmanderPair}
-                  alt="A Charmander card before and after restoration, side by side"
-                  aspect="576/513"
-                  surface="dark"
-                  border="lg"
-                  tilt={1.5}
-                  lift
-                  sizes="(min-width: 1024px) 460px, 92vw"
-                  caption={
-                    <span className="flex items-baseline justify-between gap-3">
-                      <span>{charmanderCase?.card}</span>
-                      <span className="font-sans text-sm font-bold normal-case tracking-normal text-ink-soft">{charmanderCase?.detail}</span>
-                    </span>
-                  }
-                  className="mx-auto w-full max-w-[30rem]"
-                >
-                  <span className="ba-label left-3">Before</span>
-                  <span className="ba-label ba-label-after right-3">After</span>
-                </Print>
-              </div>
-              {charmanderCase && <figcaption className="mt-5 text-[15px] leading-relaxed text-on-dark-muted">{charmanderCase.caption}</figcaption>}
-            </figure>
-
-            {/* Row two: the Charizard lot sheet, the two stats, a close-up of the cracking. */}
-            <CaseCard className="lg:col-span-5" />
-            <div data-reveal="stagger" className="grid gap-6 sm:grid-cols-2 md:gap-7 lg:col-span-3 lg:grid-cols-1">
-              <StatBlock tone="sun" value={<CountUp value={cardsRestored} />} label="Cards Restored" className="min-h-[180px] [&_.stat-value]:text-[clamp(64px,6vw,88px)]" />
-              <StatBlock tone="ink" value="Free" label="Photo Review" className="min-h-[180px] [&_.stat-value]:text-[clamp(64px,6vw,88px)]" />
-            </div>
-            {/* The Charizard lot sheet's own receipt: the customer's message. */}
-            <div data-reveal className="grid place-items-center py-4 lg:col-span-4">
-              <Print
-                src={bento.src}
-                alt={bento.alt}
-                aspect={`${bento.src.width}/${bento.src.height}`}
-                fit="contain"
-                matte={bento.matte}
-                surface="dark"
-                border="md"
-                tilt={-2.5}
-                lift
-                sizes="(min-width: 1024px) 340px, 86vw"
-                className="w-full max-w-[22rem]"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Watch the work ────────────────────────────────────────────── */}
-      <section aria-labelledby="watch-heading" className="surface-chalk">
-        <div className="wrap section-y">
-          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-            <h2 id="watch-heading" data-reveal className="display-lg text-ink">
-              Watch the work
-            </h2>
-            <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className={cta({ tone: "outline", size: "md" })}>
-              <Camera aria-hidden className="size-5" strokeWidth={1.75} />
-              @the_card_doc
-              <InstagramNote />
-            </a>
-          </div>
-          <div className="mt-10 md:mt-14">
-            <WatchTheWork />
-          </div>
-          <div className="mt-6 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between md:mt-8">
-            <p className="text-[15px] font-medium text-ink-soft">Restoration results vary by card condition.</p>
-            <Link href="/tier-selection" className={cta({ size: "lg", className: "self-start sm:self-auto" })}>
-              Book a Restoration
-              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── What our customers say ────────────────────────────────────── */}
-      <section aria-labelledby="reviews-heading" className="surface-white relative">
-        <div className="wrap section-y">
-          <h2 id="reviews-heading" data-reveal className="display-lg max-w-4xl text-ink">
-            What our customers say
-          </h2>
-          {/* One pull quote, then one receipts strip (text messages from md up). */}
-          <FeaturedReview className="mt-10 max-w-5xl md:mt-14" />
-
-          <div className="mt-12 md:mt-20">
-            <ReviewBubbles exclude={[BENTO_RECEIPT]} textOnPhone={false} />
-          </div>
-          <div className="mt-10 flex md:mt-12 md:justify-center">
-            <Link href="/tier-selection" className={cta({ tone: "ink", size: "lg" })}>
-              Book a Restoration
-              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
-            </Link>
-          </div>
-
-        </div>
-      </section>
-
       {/* ── Services ──────────────────────────────────────────────────── */}
-      <section aria-labelledby="services-heading" className="surface-chalk">
+      <section aria-labelledby="services-heading" className="surface-white">
         <div className="wrap pt-16 pb-[var(--section-y)] md:pt-24">
           <h2 id="services-heading" data-reveal className="display-lg text-ink">
             Services
@@ -522,14 +368,24 @@ export default function HomePage() {
             <li data-reveal style={{ transitionDelay: "90ms" }} className="lg:col-span-5">
               <Link
                 href={prep.href}
-                className="group grid h-full gap-6 rounded-[22px] bg-white p-7 text-ink shadow-[0_0_0_1px_var(--line),var(--panel-shadow)] md:p-8"
+                className="group grid h-full grid-cols-[minmax(0,1fr)_7rem] gap-x-5 gap-y-6 rounded-[22px] bg-white p-7 text-ink shadow-[0_0_0_1px_var(--line),var(--panel-shadow)] sm:grid-cols-[minmax(0,1fr)_9rem] md:p-8"
               >
                 <span className="flex flex-col">
                   <span className="caps font-display text-[40px] font-black leading-[0.9] md:text-[48px]">{prep.name}</span>
                   <span className="mt-3 text-[16px] leading-relaxed text-ink-soft">{prep.line}</span>
-                  <span className="mt-auto pt-6 font-display text-[34px] font-black leading-none whitespace-nowrap text-cobalt md:text-[40px]">{prep.price}</span>
+                  <span className="mt-auto pt-6 font-display text-[30px] font-black leading-[0.95] text-cobalt sm:whitespace-nowrap sm:text-[34px] xl:text-[36px]">{prep.price}</span>
                 </span>
-                <span className={cta({ tone: "ink", className: "justify-self-start" })}>
+                <span className="col-start-2 row-span-2 row-start-1 grid place-items-center">
+                  <Print
+                    src={prepMicroscope}
+                    alt="Cleaning the back of a Pokémon card under a digital microscope"
+                    aspect="840/1512"
+                    tilt={-3}
+                    sizes="(min-width: 640px) 144px, 112px"
+                    className="w-full transition-transform duration-500 ease-[var(--ease-out)] group-hover:rotate-[-1deg] motion-reduce:transition-none"
+                  />
+                </span>
+                <span className={cta({ tone: "ink", size: "lg", className: "col-start-1 self-end justify-self-start text-[19px]" })}>
                   {prep.action}
                   <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
                 </span>
@@ -540,7 +396,7 @@ export default function HomePage() {
             <li data-reveal style={{ transitionDelay: "160ms" }} className="lg:col-span-5">
               <Link
                 href={kits.href}
-                className="surface-sun group grid h-full grid-cols-[minmax(0,1fr)_7rem] gap-x-5 gap-y-6 rounded-[22px] p-7 sm:grid-cols-[minmax(0,1fr)_10rem] md:p-8"
+                className="surface-sun group grid h-full grid-cols-[minmax(0,1fr)_7rem] gap-x-5 gap-y-6 rounded-[22px] p-7 sm:grid-cols-[minmax(0,1fr)_9rem] md:p-8"
               >
                 <span className="flex flex-col">
                   <span className="caps font-display text-[40px] font-black leading-[0.9] md:text-[48px]">{kits.name}</span>
@@ -553,17 +409,65 @@ export default function HomePage() {
                     alt="The Official Card Doc Restoration Kit"
                     aspect="1000/892"
                     tilt={4}
-                    sizes="(min-width: 640px) 160px, 112px"
+                    sizes="(min-width: 640px) 144px, 112px"
                     className="w-full transition-transform duration-500 ease-[var(--ease-out)] group-hover:rotate-[1deg] motion-reduce:transition-none"
                   />
                 </span>
-                <span className={cta({ tone: "ink", className: "col-start-1 justify-self-start" })}>
+                <span className={cta({ tone: "ink", size: "lg", className: "col-start-1 self-end justify-self-start text-[19px]" })}>
                   {kits.action}
                   <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
                 </span>
               </Link>
             </li>
           </ul>
+        </div>
+      </section>
+
+      {/* ── Watch the work ────────────────────────────────────────────── */}
+      <section aria-labelledby="watch-heading" className="surface-chalk">
+        <div className="wrap section-y">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+            <h2 id="watch-heading" data-reveal className="display-lg text-ink">
+              Watch the work
+            </h2>
+            <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className={cta({ tone: "outline", size: "md" })}>
+              <Camera aria-hidden className="size-5" strokeWidth={1.75} />
+              @the_card_doc
+              <InstagramNote />
+            </a>
+          </div>
+          <div className="mt-10 md:mt-14">
+            <WatchTheWork />
+          </div>
+          <div className="mt-6 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between md:mt-8">
+            <p className="text-[15px] font-medium text-ink-soft">Restoration results vary by card condition.</p>
+            <Link href="/tier-selection" className={cta({ size: "lg", className: "self-start sm:self-auto" })}>
+              Book a Restoration
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── What our customers say ────────────────────────────────────── */}
+      <section aria-labelledby="reviews-heading" className="surface-white relative">
+        <div className="wrap section-y">
+          <h2 id="reviews-heading" data-reveal className="display-lg max-w-4xl text-ink">
+            What our customers say
+          </h2>
+          {/* One pull quote, then one receipts strip (text messages from md up). */}
+          <FeaturedReview className="mt-10 max-w-5xl md:mt-14" />
+
+          <div className="mt-12 md:mt-20">
+            <ReviewBubbles textOnPhone={false} />
+          </div>
+          <div className="mt-10 flex md:mt-12 md:justify-center">
+            <Link href="/tier-selection" className={cta({ tone: "ink", size: "lg" })}>
+              Book a Restoration
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
+          </div>
+
         </div>
       </section>
 

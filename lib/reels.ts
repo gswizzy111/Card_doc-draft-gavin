@@ -1,67 +1,57 @@
 import type { StaticImageData } from "next/image";
-import mantleAfter from "@/public/specimen-mantle-after.jpg";
-import charmander from "@/public/specimen-charmander.png";
-import garchomp from "@/public/before-after-garchomp.png";
-import beforeAfterHero from "@/public/before-after-hero.png";
+import charizard from "@/public/reels/charizard.jpg";
+import messi from "@/public/reels/messi.jpg";
+import brady from "@/public/reels/brady.jpg";
 
 /**
- * "Watch the work" on the home page: the four most recent @the_card_doc
- * Instagram reels, newest first.
- *
- * TODO(owner): paste your 4 most recent reels here.
- *   - href: the reel's link, like https://www.instagram.com/reel/ABC123xyz/
- *     (a /reel/ link plays inside the page; any other link opens Instagram
- *     in a new tab).
- *   - cover: the reel's front photo. Save it in /public (for example
- *     /public/reels/reel-1.jpg, portrait 9:16 looks best) and import it
- *     above, like the placeholders.
- *   - title: the reel's short title. alt: what the cover photo shows.
- *
- * Until then each tile uses an existing card photo and links to the profile.
+ * "Watch the work" on the home page: three videos, each with its own cover.
+ * Covers share one shape (1137:2000, the Charizard cover's), saved in
+ * /public/reels. `views` is shown under the title when set.
  */
 export type Reel = {
   id: string;
   title: string;
   href: string;
-  cover: StaticImageData | string;
+  platform: "YouTube" | "Instagram";
+  views?: string;
+  cover: StaticImageData;
   alt: string;
 };
 
-const PROFILE = "https://www.instagram.com/the_card_doc/";
-
 export const REELS: Reel[] = [
   {
-    id: "reel-1",
-    title: "Mickey Mantle", // TODO(owner): reel title
-    href: PROFILE, // TODO(owner): reel URL
-    cover: mantleAfter, // TODO(owner): reel cover photo
-    alt: "A Mickey Mantle card after restoration",
+    id: "charizard",
+    title: "Charizard Gold Star",
+    href: "https://youtube.com/shorts/UzuPoCmcv8k",
+    platform: "YouTube",
+    views: "8M Views",
+    cover: charizard,
+    alt: "A Charizard Gold Star card in a PSA slab, held in a blue glove",
   },
   {
-    id: "reel-2",
-    title: "Charmander", // TODO(owner): reel title
-    href: PROFILE, // TODO(owner): reel URL
-    cover: charmander, // TODO(owner): reel cover photo
-    alt: "A Charmander card before and after restoration",
+    id: "messi",
+    title: "Lionel Messi",
+    href: "https://www.instagram.com/reel/DeXAmOXRtIQ/",
+    platform: "Instagram",
+    views: "400K Views",
+    cover: messi,
+    alt: "A Lionel Messi card in a Beckett slab, held in a hand over a steel bench",
   },
   {
-    id: "reel-3",
-    title: "Garchomp", // TODO(owner): reel title
-    href: PROFILE, // TODO(owner): reel URL
-    cover: garchomp, // TODO(owner): reel cover photo
-    alt: "A Garchomp card corner before and after restoration",
-  },
-  {
-    id: "reel-4",
-    title: "Before → After", // TODO(owner): reel title
-    href: PROFILE, // TODO(owner): reel URL
-    cover: beforeAfterHero, // TODO(owner): reel cover photo
-    alt: "A card before and after restoration",
+    id: "brady",
+    title: "Tom Brady",
+    href: "https://www.instagram.com/reel/DeKl_T2yC-8/",
+    platform: "Instagram",
+    cover: brady,
+    alt: "A 2000 Bowman Tom Brady rookie card in a PSA slab, held in black gloves",
   },
 ];
 
-/** The reel's code when `href` is an Instagram reel link, else null. */
-export function reelCode(href: string): string | null {
-  const m = href.match(/^https:\/\/(?:www\.)?instagram\.com\/(?:reel|reels|p)\/([A-Za-z0-9_-]+)/);
-  return m ? m[1] : null;
+/** The address that plays a video inside the page, or null if it can't be embedded. */
+export function embedUrl(reel: Reel): string | null {
+  const yt = reel.href.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]+)|youtu\.be\/([A-Za-z0-9_-]+)|[?&]v=([A-Za-z0-9_-]+)/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1] ?? yt[2] ?? yt[3]}?autoplay=1&playsinline=1`;
+  const ig = reel.href.match(/^https:\/\/(?:www\.)?instagram\.com\/(?:reel|reels|p)\/([A-Za-z0-9_-]+)/);
+  if (ig) return `https://www.instagram.com/reel/${ig[1]}/embed`;
+  return null;
 }

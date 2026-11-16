@@ -10,19 +10,22 @@ function Person({ page }: { page: TrustedPage }) {
       href={page.href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-baseline gap-3 rounded-full px-1 py-1 text-white focus-visible:outline-sun"
+      className="group flex items-center gap-3.5 rounded-full px-1 py-1 text-white focus-visible:outline-sun"
     >
-      <span className="caps font-display text-[26px] font-extrabold leading-none tracking-[0.01em] transition-colors duration-200 group-hover:text-sun md:text-[34px]">
-        {page.name}
-      </span>
-      <span className="flex items-baseline gap-2 text-[13px] leading-none md:text-sm">
-        {page.role && <span className="text-on-dark-muted">{page.role}</span>}
-        <span className="font-bold text-white/90">{page.handle}</span>
+      {/* The name, with the follower count right underneath it. */}
+      <span className="flex flex-col">
+        <span className="caps font-display text-[26px] font-extrabold leading-none tracking-[0.01em] transition-colors duration-200 group-hover:text-sun md:text-[34px]">
+          {page.name}
+        </span>
         {page.followers && (
-          <span className="text-on-dark-muted">
+          <span className="mt-1 text-[13px] leading-none text-on-dark-muted md:text-sm">
             <span className="font-display text-base font-black text-sun md:text-lg">{page.followers}</span> followers
           </span>
         )}
+      </span>
+      <span className="flex items-baseline gap-2 self-start pt-1.5 text-[13px] leading-none md:pt-2.5 md:text-sm">
+        {page.role && <span className="text-on-dark-muted">{page.role}</span>}
+        <span className="font-bold text-white/90">{page.handle}</span>
         <ArrowUpRight aria-hidden className="size-4 self-center text-sun" strokeWidth={1.75} />
       </span>
       <span className="sr-only">(opens {page.platform} in a new tab)</span>
