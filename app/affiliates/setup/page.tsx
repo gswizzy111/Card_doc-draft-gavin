@@ -46,7 +46,7 @@ function Setup() {
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground -mt-3">You&apos;ll sign in with your creator code and this password.</p>
+      <p className="-mt-2 text-sm text-ink-soft">You&apos;ll sign in with your creator code and this password.</p>
       <div>
         <label htmlFor="setup-password" className={PORTAL_LABEL_CN}>Password</label>
         <input id="setup-password" type="password" autoComplete="new-password" minLength={MIN} required value={password} onChange={(e) => setPassword(e.target.value)} placeholder={`At least ${MIN} characters`} className={PORTAL_INPUT_CN} />

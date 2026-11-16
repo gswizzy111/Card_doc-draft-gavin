@@ -2,9 +2,26 @@
 
 import { useState } from "react";
 import { MissingNote, Need, Req, revealMissing } from "@/components/checkout/required";
-import { PixelIcon } from "@/components/pixel/sprites";
+import { ArrowRight } from "lucide-react";
+import { BrandLogo } from "@/components/brand";
+import { cn } from "@/lib/utils";
 
 const PRESET_AMOUNTS = [25, 50, 75, 100, 150, 200];
+
+// The field look: 48px tall, 12px corners, a 1.5px edge, cobalt focus.
+const FIELD =
+  "h-12 w-full min-w-0 rounded-[12px] border-[1.5px] border-input bg-white px-4 text-base text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-soft hover:border-ink-soft focus-visible:border-cobalt focus-visible:shadow-[0_0_0_4px_var(--cobalt-wash)] md:text-[15px]";
+const STEP = "label-caps mb-4 flex items-center gap-3 text-[18px] text-ink";
+
+/** The amount chips: sun when chosen, a white tile otherwise. */
+function chip(on: boolean) {
+  return cn(
+    "inline-flex h-14 w-full items-center justify-center rounded-[14px] font-display text-[24px] font-black tabular-nums transition-[background-color,box-shadow,transform] duration-150 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:active:scale-100",
+    on
+      ? "bg-sun text-ink shadow-[0_0_0_2px_var(--ink)]"
+      : "bg-white text-ink shadow-[0_0_0_1.5px_var(--line-strong)] hover:shadow-[0_0_0_1.5px_var(--ink)]"
+  );
+}
 
 export default function GiftCardsPage() {
   const [amountDollars, setAmountDollars] = useState<number | null>(50);
@@ -74,51 +91,55 @@ export default function GiftCardsPage() {
   }
 
   return (
-    <div className="min-h-screen page-glow">
-      <div className="max-w-5xl mx-auto px-4 md:px-10 py-12 md:py-20">
-        {/* The clinic gift shop: the sign on the wall */}
-        <div className="mb-10 md:mb-12">
-          <h1 className="font-heading leading-tight text-ink text-[clamp(2.5rem,9vw,4rem)]">Gift Cards</h1>
-          <p className="mt-5 max-w-2xl text-lg text-ink-soft leading-relaxed">
-            Give the gift of card restoration. The recipient gets a code they can apply at checkout.
-          </p>
-        </div>
+    <div className="surface-chalk min-h-screen overflow-x-clip">
+      <div className="wrap pt-12 pb-20 md:pt-20 md:pb-28">
+        <div className="grid gap-x-16 gap-y-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start">
+          {/* The gift card itself: a live preview of the chosen amount */}
+          <div className="min-w-0 lg:sticky lg:top-[calc(var(--header-h)+32px)]">
+            <p className="hero-in eyebrow mb-5 inline-flex items-center gap-2.5 text-cobalt">
+              <span aria-hidden className="h-[3px] w-6 rounded-full bg-cobalt" />
+              The Card Doc
+            </p>
+            <h1 className="hero-in font-display text-[clamp(3.25rem,13vw,4.5rem)] leading-[0.88] font-black text-ink md:text-[clamp(4.5rem,7vw,6.75rem)]">
+              Gift Cards
+            </h1>
+            <p className="hero-in lead mt-6 text-ink-soft" style={{ ["--d" as string]: 120 }}>
+              Give the gift of card restoration. The recipient gets a code they can apply at checkout.
+            </p>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-12 lg:items-start">
-          {/* The gift card on the counter: a decorative preview of the chosen amount */}
-          <div aria-hidden className="relative mx-auto w-full max-w-[17rem] sm:max-w-[22rem] lg:sticky lg:top-28">
-            <div className="relative aspect-[8/5] overflow-hidden bg-coral-fill px-frame-shadow">
-              <div className="absolute inset-y-0 left-[18%] w-4 bg-butter shadow-[inset_3px_0_0_var(--ink),inset_-3px_0_0_var(--ink)]" />
-              <div className="absolute inset-x-0 top-[40%] h-4 bg-butter shadow-[inset_0_3px_0_var(--ink),inset_0_-3px_0_var(--ink)]" />
-              <div className="absolute left-[18%] top-[40%] -ml-4 -mt-4">
-                <PixelIcon name="heart-plus" size={48} />
-              </div>
-              <span className="absolute right-3 top-3 font-pixel text-xs uppercase tracking-[0.04em] text-ink">The Card Doc</span>
-              <div className="absolute bottom-3 right-3 bg-panel px-3 py-1.5 px-frame">
-                <span className="font-heading text-3xl leading-none text-ink [font-feature-settings:'lnum'_1]">
-                  {effectiveAmountDollars ? `$${effectiveAmountDollars}` : "$"}
-                </span>
+            <div aria-hidden className="hero-in relative mx-auto mt-10 w-full max-w-[26rem] md:mt-14 lg:mx-0 lg:max-w-[30rem]" style={{ ["--d" as string]: 220 }}>
+              <div className="surface-cobalt relative isolate aspect-[8/5] -rotate-[3deg] overflow-hidden rounded-[22px] p-[7%] shadow-[0_0_0_4px_var(--white),var(--print-shadow)] transition-transform duration-500 ease-[var(--ease-out)] hover:rotate-0 motion-reduce:transition-none">
+                <span className="halftone-dots -right-[20%] -top-[30%] h-[150%] w-[80%]" />
+                <span className="absolute inset-y-0 right-[16%] w-[11%] bg-sun" />
+                <div className="relative flex h-full flex-col justify-between">
+                  <BrandLogo size={40} surface="dark" wordmarkClassName="text-[22px] md:text-[26px] text-white" />
+                  <div className="flex items-end justify-between gap-4">
+                    <span className="label-caps text-[15px] text-cobalt-tint md:text-[17px]">Gift Card</span>
+                    <span className="font-display text-[clamp(56px,14vw,92px)] font-black leading-[0.8] text-white tabular-nums">
+                      {effectiveAmountDollars ? `$${effectiveAmountDollars}` : "$"}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="px-window-ink p-5 md:p-8 flex flex-col gap-7">
+          <div className="panel flex min-w-0 flex-col gap-8 p-6 md:p-10">
 
           {/* Amount selection */}
           <Need missing={showMissing && !amountOk} note="Choose an amount from $10 to $1,000.">
-            <p className="rx-label text-coral-deep mb-4">Select Amount<Req /></p>
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            <p className={STEP}>
+              <span aria-hidden className="grid size-7 place-items-center rounded-full bg-ink text-[14px] font-bold text-white">1</span>
+              <span>Select Amount<Req /></span>
+            </p>
+            <div className="mb-3 grid grid-cols-3 gap-3">
               {PRESET_AMOUNTS.map((amt) => (
                 <button
                   key={amt}
                   type="button"
                   onClick={() => { setAmountDollars(amt); setUseCustom(false); }}
                   aria-pressed={!useCustom && amountDollars === amt}
-                  className={`px-btn h-12 w-full px-1 text-xl [font-feature-settings:'lnum'_1] ${
-                    !useCustom && amountDollars === amt
-                      ? "px-btn-butter"
-                      : "px-btn-panel"
-                  }`}
+                  className={chip(!useCustom && amountDollars === amt)}
                 >
                   ${amt}
                 </button>
@@ -128,17 +149,13 @@ export default function GiftCardsPage() {
               type="button"
               onClick={() => { setUseCustom(true); setAmountDollars(null); }}
               aria-pressed={useCustom}
-              className={`px-btn h-12 w-full text-base ${
-                useCustom
-                  ? "px-btn-butter"
-                  : "px-btn-panel"
-              }`}
+              className={cn(chip(useCustom), "font-sans text-[16px] font-bold")}
             >
               Custom amount
             </button>
             {useCustom && (
-              <div className="mt-4 flex items-center gap-2">
-                <span className="font-heading text-2xl text-ink">$</span>
+              <div className="mt-4 flex items-center gap-3">
+                <span aria-hidden className="font-display text-[32px] font-black text-ink">$</span>
                 <input
                   type="number"
                   min={10}
@@ -147,7 +164,8 @@ export default function GiftCardsPage() {
                   value={customAmount}
                   onChange={(e) => setCustomAmount(e.target.value)}
                   placeholder="Enter amount (10–1000)"
-                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] flex-1 min-w-0"
+                  aria-label="Custom amount"
+                  className={cn(FIELD, "flex-1")}
                   autoFocus
                 />
               </div>
@@ -155,80 +173,90 @@ export default function GiftCardsPage() {
           </Need>
 
           {/* Purchaser info */}
-          <div className="border-t-2 border-dashed border-ink/25 pt-6">
-            <p className="rx-label text-coral-deep mb-4">Your Info<Req /></p>
+          <div className="border-t border-line pt-8">
+            <p className={STEP}>
+              <span aria-hidden className="grid size-7 place-items-center rounded-full bg-ink text-[14px] font-bold text-white">2</span>
+              <span>Your Info<Req /></span>
+            </p>
             <div className="flex flex-col gap-3">
               <Need className="flex flex-col" missing={miss(purchaserName)} note="Enter your name.">
-<input
-                type="text"
-                value={purchaserName}
-                onChange={(e) => setPurchaserName(e.target.value)}
-                placeholder="Your name"
-                className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
-              />
-</Need>
+                <input
+                  type="text"
+                  value={purchaserName}
+                  onChange={(e) => setPurchaserName(e.target.value)}
+                  placeholder="Your name"
+                  aria-label="Your name"
+                  autoComplete="name"
+                  className={FIELD}
+                />
+              </Need>
               <Need className="flex flex-col" missing={miss(purchaserEmail)} note="Enter your email.">
-<input
-                type="email"
-                value={purchaserEmail}
-                onChange={(e) => setPurchaserEmail(e.target.value)}
-                placeholder="Your email (we'll send you a receipt)"
-                className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
-              />
-</Need>
+                <input
+                  type="email"
+                  value={purchaserEmail}
+                  onChange={(e) => setPurchaserEmail(e.target.value)}
+                  placeholder="Your email (we'll send you a receipt)"
+                  aria-label="Your email"
+                  autoComplete="email"
+                  className={FIELD}
+                />
+              </Need>
             </div>
           </div>
 
           {/* Send to recipient toggle */}
-          <div className="border-t-2 border-dashed border-ink/25 pt-6">
-            <label className="flex min-h-11 items-center gap-3 cursor-pointer mb-3">
+          <div className="border-t border-line pt-8">
+            <label className="flex min-h-11 cursor-pointer items-center gap-3">
               <input
                 type="checkbox"
                 checked={sendToRecipient}
                 onChange={(e) => setSendToRecipient(e.target.checked)}
-                className="h-5 w-5 shrink-0 accent-primary"
+                className="size-5 shrink-0 accent-cobalt"
               />
-              <span className="text-[15px] font-semibold text-ink">Send the gift card directly to someone else</span>
+              <span className="text-[16px] font-bold text-ink">Send the gift card directly to someone else</span>
             </label>
             {sendToRecipient && (
-              <div className="flex flex-col gap-3">
+              <div className="mt-4 flex flex-col gap-3">
                 <Need className="flex flex-col" missing={miss(recipientName)} note="Enter the recipient's name.">
-<input
-                  type="text"
-                  value={recipientName}
-                  onChange={(e) => setRecipientName(e.target.value)}
-                  placeholder="Recipient's name"
-                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
-                />
-</Need>
+                  <input
+                    type="text"
+                    value={recipientName}
+                    onChange={(e) => setRecipientName(e.target.value)}
+                    placeholder="Recipient's name"
+                    aria-label="Recipient's name"
+                    className={FIELD}
+                  />
+                </Need>
                 <Need className="flex flex-col" missing={miss(recipientEmail)} note="Enter the recipient's email.">
-<input
-                  type="email"
-                  value={recipientEmail}
-                  onChange={(e) => setRecipientEmail(e.target.value)}
-                  placeholder="Recipient's email"
-                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
-                />
-</Need>
+                  <input
+                    type="email"
+                    value={recipientEmail}
+                    onChange={(e) => setRecipientEmail(e.target.value)}
+                    placeholder="Recipient's email"
+                    aria-label="Recipient's email"
+                    className={FIELD}
+                  />
+                </Need>
                 <textarea
                   value={personalMessage}
                   onChange={(e) => setPersonalMessage(e.target.value)}
                   placeholder="Personal message (optional)"
+                  aria-label="Personal message (optional)"
                   rows={3}
-                  className="h-12 w-full rounded-none border-2 border-input bg-panel px-3 text-base text-ink shadow-[inset_0_2px_0_var(--muted)] placeholder:text-ink-soft outline-none transition-colors focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] h-auto py-2.5 resize-none"
+                  className={cn(FIELD, "h-auto resize-none py-3")}
                 />
               </div>
             )}
           </div>
 
-          {error && <p className="bg-rx-soft px-3 py-2 text-sm font-semibold text-destructive px-frame">{error}</p>}
+          {error && <p role="alert" className="rounded-[12px] bg-[#fdecea] px-4 py-3 text-sm font-bold text-destructive">{error}</p>}
 
           <div>
           <button
             type="button"
             onClick={handleCheckout}
             disabled={loading}
-            className="px-btn h-12 w-full text-base disabled:opacity-60"
+            className="btn btn-sun btn-lg w-full disabled:opacity-60"
           >
             {loading
               ? "Redirecting..."
@@ -236,15 +264,14 @@ export default function GiftCardsPage() {
               ? `Purchase $${effectiveAmountDollars} Gift Card`
               : "Purchase Gift Card"
             }
+            {!loading && <ArrowRight aria-hidden className="size-5" strokeWidth={2} />}
           </button>
           <MissingNote show={showMissing && !isValid} />
           </div>
 
-          <p className="flex items-start gap-2 text-xs leading-relaxed text-ink-soft">
-            <span>
+          <p className="text-[14px] leading-relaxed text-ink-soft">
             The gift card code will be emailed immediately after purchase.
             Gift cards never expire and can be used on any restoration order.
-            </span>
           </p>
           </div>
         </div>

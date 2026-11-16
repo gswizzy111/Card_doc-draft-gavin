@@ -5,7 +5,7 @@ import { OrderBuilder } from "@/components/order-builder/builder";
 import { isSoldOut, TIER_SELECTION_ENABLED } from "@/lib/site-config";
 import { getRestorationsOpen } from "@/lib/store-config";
 import type { RestorationTierId } from "@/lib/restoration-tiers";
-import { CardSprite, Window } from "@/components/pixel";
+import { RestorationSoldOut } from "@/app/(public)/restoration/sold-out";
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -32,18 +32,7 @@ export default async function OrderPage({ searchParams }: PageProps) {
   }
 
   if (isSoldOut()) {
-    return (
-      <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center md:py-28">
-        <div aria-hidden className="mb-8">
-          <CardSprite variant="hurt" scale={3} animate={false} />
-        </div>
-        <Window className="w-full">
-          <p className="rx-label text-coral-deep mb-3">Restoration Services</p>
-          <h1 className="font-heading text-4xl leading-none text-ink mb-4 md:text-5xl">Currently Unavailable</h1>
-          <p className="text-ink-soft leading-relaxed">We&apos;re at capacity right now. Check back soon — we&apos;ll be accepting new restoration orders again shortly.</p>
-        </Window>
-      </div>
-    );
+    return <RestorationSoldOut />;
   }
 
   const supabase = await createClient();

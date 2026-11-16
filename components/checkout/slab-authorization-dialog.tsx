@@ -7,6 +7,8 @@ import { SLAB_FEE_CENTS, SLAB_TITLE, cardTitle, slabAuthorization } from "@/lib/
 import { signSlab, slabSignature, slabSigned, type SigningState, type SlabCard } from "./signing-section";
 import { Need, Req, revealMissing } from "./required";
 import { PIXEL_FIELD } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { cta } from "@/components/brand";
 
 const FIELD = PIXEL_FIELD;
 
@@ -61,25 +63,25 @@ function SlabDialog({ card, state, onChange, onClose }: {
     <Dialog open onOpenChange={(open) => { if (!open) onClose(slabSigned(state, card)); }}>
       <DialogContent ref={setBox} className="sm:max-w-xl max-h-[92dvh] overflow-y-auto p-5 md:p-6 gap-5">
         <DialogHeader>
-          <DialogTitle className="pr-8 font-heading text-2xl leading-tight text-ink">{SLAB_TITLE}</DialogTitle>
+          <DialogTitle className="pr-8 font-heading text-[2rem] leading-[0.95] font-black text-ink">{SLAB_TITLE}</DialogTitle>
           <DialogDescription className="text-[15px] text-ink-soft">
             {cardTitle(d) || "This card"}: slab cracking is ${(SLAB_FEE_CENTS / 100).toFixed(0)}. We only open this holder once you sign below.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-[38dvh] overflow-y-auto bg-muted p-3 px-frame focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-frame-deep" tabIndex={0} aria-label={`${SLAB_TITLE} for ${d.card_name}`}>
+        <div className="max-h-[38dvh] overflow-y-auto rounded-[14px] bg-chalk p-4 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-cobalt" tabIndex={0} aria-label={`${SLAB_TITLE} for ${d.card_name}`}>
           <LegalDocument blocks={doc.blocks} variant="compact" />
         </div>
 
         <Need missing={tried && !agreed} note="Check this box to authorize opening the slab.">
           <label className="flex cursor-pointer items-start gap-3 text-[15px] leading-relaxed">
-            <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-primary" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+            <input type="checkbox" className="mt-0.5 shrink-0" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
             <span className="text-ink">I authorize The Card Doc to open this card&apos;s holder, as described above.<Req /></span>
           </label>
         </Need>
         <Need missing={tried && name.trim().length < 2} note="Type your full legal name to sign." className="flex flex-col gap-1.5">
-          <label htmlFor={`${id}-name`} className="text-sm font-semibold text-ink">Full legal name<Req /></label>
-          <input id={`${id}-name`} className={FIELD} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
+          <label htmlFor={`${id}-name`} className="label-caps text-[15px] text-ink">Full legal name<Req /></label>
+          <input id={`${id}-name`} className={cn(FIELD, "h-13 font-heading text-[1.5rem] font-extrabold md:text-[1.5rem]")} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
           <p className="text-[13px] leading-relaxed text-ink-soft">Typing your name signs this authorization for this card only. The date and time come from our server when you place the order.</p>
         </Need>
 
@@ -90,7 +92,7 @@ function SlabDialog({ card, state, onChange, onClose }: {
           <button
             type="button"
             onClick={sign}
-            className="px-btn h-12 px-6 text-base"
+            className={cta({ tone: "sun", size: "md" })}
           >
             Sign slab authorization
           </button>

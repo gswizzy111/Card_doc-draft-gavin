@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { PANEL, PANEL_LABEL } from "./portal";
+import { cta } from "@/components/brand";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -47,25 +49,25 @@ export function UpdateRequestPanel({
   }
 
   return (
-    <div id="update" className="px-window-ink p-5 scroll-mt-24">
-      <h2 className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft mb-3">Request an Update</h2>
+    <div id="update" className={`${PANEL} scroll-mt-24`}>
+      <h2 className={`${PANEL_LABEL} mb-3`}>Request an Update</h2>
 
       {lastReply && (
-        <div className="mb-4 p-4 bg-secondary/40">
-          <p className="rx-label text-rx mb-2">Latest update · {formatDate(lastReply.at)}</p>
+        <div className="mb-4 rounded-[14px] bg-sun-tint p-4">
+          <p className="label-caps mb-2 text-[14px] text-ink">Latest update · {formatDate(lastReply.at)}</p>
           <p className="text-sm text-foreground whitespace-pre-wrap">{lastReply.body}</p>
         </div>
       )}
 
       {askedAt ? (
-        <div role="status" className="border border-rx/30 bg-rx-soft px-4 py-3">
+        <div role="status" className="rounded-[14px] bg-cobalt-wash px-4 py-3">
           <p className="text-sm font-bold text-foreground">Update requested {formatDate(askedAt)}</p>
           <p className="text-xs text-muted-foreground mt-1">
             We&apos;ll email an update to <span className="font-semibold text-foreground [overflow-wrap:anywhere]">{email}</span>. We reply within 1 business day.
           </p>
         </div>
       ) : nextAllowedAt ? (
-        <div role="status" className="border border-border bg-secondary/40 px-4 py-3">
+        <div role="status" className="rounded-[14px] bg-chalk px-4 py-3">
           <p className="text-sm font-bold text-foreground">You can request another update on {formatDate(nextAllowedAt)}</p>
           <p className="text-xs text-muted-foreground mt-1">Updates can be requested once a week per order.</p>
         </div>
@@ -78,7 +80,7 @@ export function UpdateRequestPanel({
             type="button"
             onClick={ask}
             disabled={sending}
-            className="px-btn w-full h-11 disabled:opacity-60 px-5 text-base"
+            className={cta({ tone: "ink", size: "sm", className: "w-full" })}
           >
             {sending ? "Sending..." : "Request an update"}
           </button>

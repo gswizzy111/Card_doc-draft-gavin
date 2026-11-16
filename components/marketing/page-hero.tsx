@@ -1,13 +1,13 @@
 import { SplitReveal } from "@/components/motion/split-reveal";
-import { DocPortrait } from "@/components/pixel/doc-portrait";
+import { cn } from "@/lib/utils";
 
 /**
- * Page header: a small pixel eyebrow tag, a sentence-case headline in the
- * heading sans, and the lead as a plain paragraph. Revision 2 keeps it calm:
- * - `portrait` (opt-in) puts the lead in a dialog window beside the doc's
- *   portrait, for the one page where the doc "speaks".
- * - `sprite` (opt-in) is a slot for one small pixel sprite beside the
- *   headline (hidden on phones). Leave it empty on most pages.
+ * An inner page's header: a Big Shoulders eyebrow, a big mixed-case
+ * headline whose words rise in once, and the lead. Place it inside the
+ * page's own section (it sets no background).
+ * - `tone="dark"` for an ink or cobalt section (sun eyebrow, white text).
+ * - `actions` adds a row of pill buttons under the lead.
+ * - `sprite` and `portrait` are accepted for older callers and no longer drawn.
  */
 export function PageHero({
   eyebrow,
@@ -15,48 +15,54 @@ export function PageHero({
   lines,
   lead,
   className = "",
-  sprite,
-  portrait = false,
+  tone = "light",
+  actions,
 }: {
   eyebrow?: string;
   title: string;
   lines?: string[];
   lead?: React.ReactNode;
   className?: string;
+  tone?: "light" | "dark";
+  actions?: React.ReactNode;
+  /** @deprecated no longer drawn */
   sprite?: React.ReactNode;
+  /** @deprecated no longer drawn */
   portrait?: boolean;
 }) {
+  const dark = tone === "dark";
   return (
     <div className={className}>
       {eyebrow && (
-        <p className="hero-in mb-5 inline-flex items-center gap-2 font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-coral-deep md:text-xs">
-          <span aria-hidden className="size-1.5 bg-coral-deep" />
+        <p className={cn("hero-in eyebrow mb-5 inline-flex items-center gap-2.5", dark ? "text-sun" : "text-cobalt")}>
+          <span aria-hidden className={cn("h-[3px] w-6 rounded-full", dark ? "bg-sun" : "bg-cobalt")} />
           {eyebrow}
         </p>
       )}
-      <div className="flex items-end justify-between gap-6">
-        <h1 className="max-w-4xl font-heading font-bold leading-[1.04] tracking-[-0.02em] text-ink text-[clamp(2.25rem,8vw,3rem)] md:text-[3.5rem] lg:text-[4rem]">
-          <SplitReveal text={title} lines={lines} step={50} />
-        </h1>
-        {sprite && <div aria-hidden className="hidden shrink-0 md:block">{sprite}</div>}
-      </div>
-      {lead &&
-        (portrait ? (
-          <div
-            className="hero-in px-window mt-7 flex max-w-2xl items-start gap-4 p-4 md:mt-8 md:p-5"
-            style={{ ["--d" as string]: 200 }}
-          >
-            <DocPortrait size="sm" alt="" className="hidden sm:inline-flex" />
-            <p className="text-lg leading-relaxed text-ink md:text-xl">{lead}</p>
-          </div>
-        ) : (
-          <p
-            className="hero-in mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft md:mt-7 md:text-xl [text-wrap:pretty]"
-            style={{ ["--d" as string]: 200 }}
-          >
-            {lead}
-          </p>
-        ))}
+      <h1
+        className={cn(
+          "max-w-5xl font-heading text-[clamp(3rem,12vw,4.25rem)] leading-[0.9] font-black tracking-[-0.01em] md:text-[clamp(4.25rem,7vw,6.5rem)]",
+          dark ? "text-white" : "text-ink"
+        )}
+      >
+        <SplitReveal text={title} lines={lines} step={60} />
+      </h1>
+      {lead && (
+        <p
+          className={cn(
+            "hero-in lead mt-6 md:mt-8 md:text-[21px]",
+            dark ? "text-on-dark-muted" : "text-ink-soft"
+          )}
+          style={{ ["--d" as string]: 220 }}
+        >
+          {lead}
+        </p>
+      )}
+      {actions && (
+        <div className="hero-in mt-8 flex flex-wrap gap-4" style={{ ["--d" as string]: 320 }}>
+          {actions}
+        </div>
+      )}
     </div>
   );
 }

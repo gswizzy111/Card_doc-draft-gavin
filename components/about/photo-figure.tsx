@@ -1,11 +1,12 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 import type { Photo } from "@/lib/about";
 
 /**
- * A genuine photo from lib/about.ts in a pixel frame (panel mat, ink stepped
- * outline) with an optional caption. `bare` drops the mat for a photo that
- * already sits inside a pixel window. Renders nothing for an empty slot, so
- * the page never shows a placeholder.
+ * A genuine photo from lib/about.ts as a white-bordered print (8px corners,
+ * the layered print shadow) with an optional caption. `bare` drops the
+ * border for a photo that already sits inside a frame. Renders nothing for
+ * an empty slot, so the page never shows a placeholder.
  */
 export function PhotoFigure({
   photo,
@@ -20,15 +21,15 @@ export function PhotoFigure({
   /** Crop to a fixed ratio (e.g. "aspect-[4/5]"); otherwise the photo's own. */
   aspect?: string;
   preload?: boolean;
-  /** No mat or outline: for a photo inside a pixel window. */
+  /** No border or shadow: for a photo inside another frame. */
   bare?: boolean;
   className?: string;
 }) {
   if (!photo) return null;
   return (
-    <figure className={className}>
-      <div className={bare ? "bg-ink p-[2px]" : "bg-panel p-2 md:p-2.5 px-frame-shadow"}>
-        <div className={`overflow-hidden ${bare ? "" : "shadow-[0_0_0_2px_var(--frame)]"} ${aspect ?? ""}`}>
+    <figure className={cn("m-0", className)}>
+      <div className={cn(bare ? "overflow-hidden rounded-[8px]" : "print")}>
+        <div className={cn("relative overflow-hidden rounded-[3px]", aspect)}>
           <Image
             src={photo.src}
             alt={photo.alt}
@@ -39,9 +40,7 @@ export function PhotoFigure({
         </div>
       </div>
       {photo.caption && (
-        <figcaption className="mt-3 text-[13px] leading-snug text-ink-soft">
-          {photo.caption}
-        </figcaption>
+        <figcaption className="mt-3 text-[13px] font-medium leading-snug text-ink-soft">{photo.caption}</figcaption>
       )}
     </figure>
   );

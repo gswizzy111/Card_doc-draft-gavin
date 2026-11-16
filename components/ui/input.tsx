@@ -9,7 +9,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "h-10 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_2px_0_var(--muted)] transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-50 aria-invalid:border-destructive aria-invalid:outline-3 aria-invalid:outline-destructive/25 md:text-[15px] dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        "h-11 w-full min-w-0 rounded-[12px] border-[1.5px] border-input bg-white px-3.5 py-1 text-base transition-[border-color,background-color] outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground hover:border-ink-soft focus-visible:border-cobalt focus-visible:bg-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cobalt disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-50 aria-invalid:border-destructive aria-invalid:outline-2 aria-invalid:outline-destructive/30 md:text-[15px] dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
         className
       )}
       {...props}
@@ -18,11 +18,11 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
 }
 
 /**
- * The pixel field look as a class string, for native <select>s and bare
- * <input>s that can't use <Input/> (11 tall, 2px ink border, inset shade,
- * frame-blue focus with a butter tint).
+ * The field look as a class string, for native <select>s and bare <input>s
+ * that can't use <Input/> (44px tall, 12px corners, 1.5px grey edge, cobalt
+ * focus). The name is historical.
  */
 const PIXEL_FIELD =
-  "h-11 w-full min-w-0 rounded-none border-2 border-input bg-panel px-3 py-1 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:bg-[color-mix(in_srgb,var(--butter)_18%,var(--panel))] focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+  "h-11 w-full min-w-0 rounded-[12px] border-[1.5px] border-input bg-white px-3.5 py-1 text-base outline-none transition-[border-color] placeholder:text-muted-foreground hover:border-ink-soft focus-visible:border-cobalt focus-visible:bg-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cobalt md:text-[15px]"
 
 export { Input, PIXEL_FIELD }

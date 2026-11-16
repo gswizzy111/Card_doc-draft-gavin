@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Atkinson_Hyperlegible_Next, Bricolage_Grotesque, Silkscreen } from "next/font/google";
+import { Big_Shoulders, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { MetaPixelRouteTracker } from "@/components/meta-pixel-route-tracker";
@@ -8,29 +8,21 @@ import { siteUrl } from "@/lib/site-url";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ORGANIZATION } from "@/lib/seo";
 
-// Display, headings, buttons and nav: a confident grotesque with some
-// character (ink-trapped joins, optical sizes) that sits well next to the
-// small pixel accents. Variable weight; the opsz axis tightens big headlines.
-const bricolage = Bricolage_Grotesque({
+// Display: headlines, step numerals, stickers and short uppercase labels.
+// Big Shoulders is the merged Google family; its optical-size axis gives the
+// condensed "Display" cut at headline sizes and a more open cut at label
+// sizes (font-optical-sizing: auto).
+const bigShoulders = Big_Shoulders({
   variable: "--font-heading",
   subsets: ["latin"],
   axes: ["opsz"],
   display: "swap",
 });
 
-// Body, forms, FAQs and legal text: a crisp, highly readable sans.
-const atkinson = Atkinson_Hyperlegible_Next({
+// Body, UI, forms, buttons and legal text.
+const schibsted = Schibsted_Grotesk({
   variable: "--font-sans",
   subsets: ["latin"],
-  display: "swap",
-});
-
-// The pixel accent, used sparingly: eyebrow tags, status chips, small HUD
-// labels and price hints. Never headings or body copy.
-const silkscreen = Silkscreen({
-  variable: "--font-pixel",
-  subsets: ["latin"],
-  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -39,8 +31,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   interactiveWidget: "resizes-content",
-  // Matches the panel-white clinic header at the top of every page.
-  themeColor: "#fffbef",
+  // Matches the white header at the top of every page.
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
@@ -74,7 +66,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${atkinson.variable} ${silkscreen.variable} h-full antialiased`}>
+    <html lang="en" className={`${bigShoulders.variable} ${schibsted.variable} h-full antialiased`}>
       <head>
         <meta name="facebook-domain-verification" content="ihjnpqbitwq29e5kx3x0dujilxh1n9" />
         {/* Runs before anything else on the page and loads Google Analytics

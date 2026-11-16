@@ -1,8 +1,9 @@
 "use client";
 
+import { Check, Plus } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useState } from "react";
-import { pixelButton } from "@/components/pixel/pixel-button";
+import { cta } from "@/components/brand";
 
 interface Props {
   product: {
@@ -27,13 +28,15 @@ export function AddToCartButton({ product }: Props) {
   return (
     <button
       onClick={handleAdd}
-      className={pixelButton({
-        tone: added ? "mint" : "coral",
+      aria-label={added ? undefined : `Add ${product.name} to cart`}
+      className={cta({
+        tone: added ? "cobalt" : "sun",
         size: "sm",
-        className: "h-11 w-full sm:w-auto sm:min-w-20",
+        className: "w-full gap-1.5 px-4 sm:w-auto sm:min-w-24",
       })}
     >
-      {added ? "Added!" : "Add"}
+      {added ? <Check aria-hidden className="size-4" strokeWidth={2.5} /> : <Plus aria-hidden className="size-4" strokeWidth={2.5} />}
+      <span aria-live="polite">{added ? "Added!" : "Add"}</span>
     </button>
   );
 }

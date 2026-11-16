@@ -6,9 +6,8 @@ import { useEffect, useRef, useState } from "react";
  * Counts the number inside `value` up from zero the first time it scrolls
  * into view, then settles on the exact original text ("500+", "2,321+").
  * Server render and reduced motion both show the final text. The number
- * ticks in whole frames (about 15 a second), like an RPG score counter.
+ * eases out smoothly, so it slows into the final figure.
  */
-const FRAMES = 20;
 
 export function CountUp({ value, duration = 1400 }: { value: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -39,7 +38,7 @@ export function CountUp({ value, duration = 1400 }: { value: string; duration?: 
         const start = performance.now();
         const tick = (now: number) => {
           const raw = Math.min(1, (now - start) / duration);
-          const t = raw < 1 ? Math.floor(raw * FRAMES) / FRAMES : 1;
+          const t = raw;
           const eased = 1 - Math.pow(1 - t, 4); // strong ease-out
           setText(t < 1 ? `${prefix}${format(target * eased)}${suffix}` : value);
           if (t < 1) raf = requestAnimationFrame(tick);

@@ -216,27 +216,47 @@ Several design skills live in `.claude/skills/` (sources in
    already on). Scroll pinning and scrubbing only: the `gsap-*` skills
    (start with `gsap-react` and `gsap-scrolltrigger`).
 4. **Graphics.** `frontend-design` for the overall visual idea;
-   `svg-creator` for illustrations, mascots, icons and badges as SVG;
-   `pixelfx` for pixel-art sprite effects (sparkles, heal glows, pickups);
-   `shader-glsl` and `particle-system` for holo-foil, glow and confetti
-   effects; `threejs-*` (start with `threejs-react-three-fiber`) only when a
-   piece truly needs 3D, such as a tilting holographic card; `canvas-design`
-   and `algorithmic-art` for posters, patterns and generated textures.
-   Every graphic needs a lightweight fallback and a reduced-motion state.
+   `svg-creator` for small icons, separators and badges as SVG. The site is
+   photo-led: real customer card photos carry it, so no mascots, sprites or
+   illustrated scenes (`pixelfx` belongs to the retired pixel concept: do not
+   use it here). `shader-glsl`, `particle-system` and `threejs-*` only when a
+   piece truly needs it (say, the acrylic holder's glare), never as
+   decoration. Every graphic needs a lightweight fallback and a
+   reduced-motion state.
 5. **Verification: `preview-site`.** Start the site in preview mode (no keys
    needed), screenshot desktop (1440px) and phone (390px), check scroll
    frames and reduced motion, and look at the images before calling UI work
    done. `playwright-cli` and `webapp-testing` for anything more involved;
    `web-design-guidelines` and `react-best-practices` for review passes.
 
-## Redesign direction (draft)
+## Redesign direction: "Hobby Shop Poster" (bold-graphic)
 
-This repo is a sandbox copy for a hospital / Pokémon-inspired redesign: the
-"card doctor" as a clinic for trading cards (check-in, triage, treatment,
-discharge), with playful creature-collector energy. Build it from original
-artwork: no Pokémon names, characters, Poké Balls, logos, fonts or game
-screenshots, since those are Nintendo / The Pokémon Company IP. Real customer
-card photos stay as they are.
+The owner scrapped the pixel / Pokémon healing-center concept (Nov 16, 2026).
+The chosen direction is **bold-graphic**: photo-led and loud like a card-show
+booth. Cobalt, wax-pack sun yellow and ink on cool chalk; Big Shoulders
+(display) + Schibsted Grotesk (body); real customer cards shown as
+white-bordered physical prints; the hero before/after slider inside a clear
+acrylic one-touch holder; die-cut stickers (about 2 per screen at most);
+full-pill buttons with a lift; 22px panels; soft layered shadows; calm, eased
+motion.
+
+- **The decision, grafts, must-fixes and the not-allowed list:**
+  `docs/redesign/direction.md`. Read it before any visual work.
+- **Tokens and components:** `DESIGN.md` (source of truth) and
+  `app/globals.css`. Building blocks live in `components/brand/` (`Print`,
+  `AcrylicHolder`, `Seamless`, `Sticker`, `CtaPanel`, `StatBlock`,
+  `SectionHead`, `Marquee`, `cta()` button classes), page pieces in
+  `components/marketing/`, motion in `components/motion/`.
+- **Material:** `docs/redesign/inventory.md` (our photos, our wording, the
+  must-keep pieces); quality bar and the competitor signatures we must not
+  copy: `docs/redesign/mint-study.md`; judged mocks:
+  `docs/redesign/directions/` and `judging.json`.
+- **Rules:** owner's wording verbatim (em dashes included); real photos only
+  (no stock or AI); `/card-doctor.jpg` stays the logo; no invented claims,
+  numbers or reviews; cobalt, yellow and ink each lead at most one block in a
+  row. No Pokémon names, characters, logos, fonts or game screenshots in new
+  artwork (Nintendo / The Pokémon Company IP); real customer card photos
+  stay as they are.
 
 ## When the skills disagree
 

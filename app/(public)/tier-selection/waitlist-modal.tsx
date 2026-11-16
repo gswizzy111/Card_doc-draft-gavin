@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import { RestorationWaitlistForm } from "@/app/(public)/restoration/restoration-waitlist-form";
 
 export function WaitlistModal() {
@@ -16,44 +17,42 @@ export function WaitlistModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      {/* Backdrop: the clinic dims, a dither over dusk */}
+      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-night/70 px-dither"
+        className="absolute inset-0 animate-[fade-in_200ms_ease-out_both] bg-ink/55 backdrop-blur-[3px] motion-reduce:animate-none"
         onClick={() => setOpen(false)}
       />
 
-      {/* Modal: the front desk's dialog box */}
-      <div className="relative z-10 w-full max-w-md animate-[rx-in_200ms_ease-out_both] motion-reduce:animate-none">
-        <div className="px-window max-h-[calc(100dvh-6rem)] overflow-y-auto p-6 pb-8 md:p-8 md:pb-9">
-          {/* Close button */}
-          <button
-            onClick={() => setOpen(false)}
-            className="absolute top-2 right-2 grid size-11 place-items-center text-ink hover:bg-butter focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-frame-deep"
-            aria-label="Close"
-          >
-            <span aria-hidden className="font-heading text-3xl leading-none">×</span>
-          </button>
-
-          <div className="mb-6 pr-8">
-            <p className="rx-label mb-3 text-coral-deep">
-              Restoration Services
-            </p>
-            <h2 className="font-heading text-[2rem] leading-none text-ink mb-2.5">
+      {/* Modal: a sun header over a white form */}
+      <div className="relative z-10 w-full max-w-md animate-[rx-in_280ms_cubic-bezier(.16,1,.3,1)_both] motion-reduce:animate-none">
+        <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl bg-white shadow-[var(--pop-shadow)]">
+          <div className="surface-sun relative rounded-t-2xl px-6 pt-6 pb-6 md:px-8 md:pt-8">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-3 right-3 grid size-11 place-items-center rounded-full text-ink transition-colors hover:bg-ink/10 focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-ink"
+              aria-label="Close"
+            >
+              <X aria-hidden className="size-5" strokeWidth={2} />
+            </button>
+            <p className="eyebrow mb-3 pr-10 text-cobalt-deep">Restoration Services</p>
+            <h2 className="caps pr-8 font-display text-[40px] font-black leading-[0.9] text-ink">
               We&apos;re Currently Closed
             </h2>
-            <p className="text-[15px] leading-relaxed text-ink-soft">
+            <p className="mt-3 text-[15px] leading-relaxed text-ink">
               Sign up below and we&apos;ll notify you the moment we start accepting new restoration orders.
             </p>
           </div>
 
-          <RestorationWaitlistForm onSuccess={() => setOpen(false)} />
+          <div className="px-6 pt-6 pb-7 md:px-8 md:pb-8">
+            <RestorationWaitlistForm onSuccess={() => setOpen(false)} />
 
-          <button
-            onClick={() => setOpen(false)}
-            className="mt-3 flex min-h-11 w-full items-center justify-center text-sm text-ink-soft underline underline-offset-2 hover:text-ink"
-          >
-            No thanks, just browsing
-          </button>
+            <button
+              onClick={() => setOpen(false)}
+              className="mt-3 flex min-h-11 w-full items-center justify-center rounded-full text-sm font-semibold text-ink-soft underline underline-offset-4 hover:text-ink focus-visible:outline-3 focus-visible:outline-cobalt"
+            >
+              No thanks, just browsing
+            </button>
+          </div>
         </div>
       </div>
     </div>

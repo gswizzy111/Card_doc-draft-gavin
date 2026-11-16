@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { Download, ExternalLink } from "lucide-react";
+import { Download, ExternalLink, PenLine } from "lucide-react";
 import { LegalDocument } from "@/components/legal/legal-document";
 import {
   AGREE_LABEL, CERTIFICATION_CLAUSE, CERTIFICATION_TEXT, ESIGN_BLOCKS, ESIGN_LABEL,
@@ -11,6 +11,7 @@ import type { CardDetails } from "@/lib/legal/agreements-v1";
 import type { SubmittedSigning } from "@/lib/checkout-signing";
 import { Need, Req } from "./required";
 import { PIXEL_FIELD } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 /**
  * Everything a customer signs or chooses before an order is placed (Terms
@@ -75,9 +76,9 @@ export function submittedSigning(state: SigningState, slabCards: SlabCard[]): Su
   };
 }
 
-const CHECK = "mt-0.5 size-5 shrink-0 accent-primary";
+const CHECK = "mt-0.5 shrink-0";
 const NAME_INPUT = PIXEL_FIELD;
-const MORE = "inline-flex min-h-11 cursor-pointer items-center text-sm font-semibold text-ink-soft underline underline-offset-2 hover:text-ink";
+const MORE = "inline-flex min-h-11 cursor-pointer items-center text-sm font-bold text-ink-soft underline underline-offset-4 hover:text-ink";
 
 export function SigningSection({
   state,
@@ -95,8 +96,8 @@ export function SigningSection({
   const id = useId();
   return (
     <div className="flex flex-col gap-8">
-      <section className="flex flex-col gap-3 bg-panel p-4 px-frame sm:p-5">
-        <h3 className="font-heading text-xl text-ink">Optional permissions</h3>
+      <section className="flex flex-col gap-4 rounded-[22px] bg-white p-5 text-ink shadow-[0_0_0_1px_var(--line)] sm:p-7">
+        <h3 className="font-heading text-[1.5rem] leading-none font-extrabold text-ink">Optional permissions</h3>
         <label className="flex cursor-pointer items-start gap-3 text-[15px] leading-relaxed">
           <input
             type="checkbox"
@@ -119,21 +120,23 @@ export function SigningSection({
         <p className="text-[13px] text-ink-soft">{mediaRequiredNote ?? "Both are optional and don't affect your order."}</p>
       </section>
 
-      {/* The records desk: the signature card */}
-      <section className="px-window flex flex-col gap-5 p-4 sm:p-6">
-        <div>
-          <h3 className="font-heading text-2xl leading-tight text-ink">
+      {/* The signature card: an ink band on top, then the boxes and the name */}
+      <section className="flex flex-col overflow-hidden rounded-[22px] bg-white shadow-[0_0_0_2px_var(--ink),var(--panel-shadow)]">
+        <div className="surface-ink px-5 pt-5 pb-3 sm:px-7 sm:pt-6">
+          <h3 className="flex items-center gap-3 font-heading text-[1.9rem] leading-none font-black text-white md:text-[2.25rem]">
+            <PenLine aria-hidden className="size-7 shrink-0 text-sun" strokeWidth={2} />
             Sign to confirm your order
           </h3>
           <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
-            <a href="/terms" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-coral-deep underline underline-offset-2">
+            <a href="/terms" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 font-bold text-sun underline underline-offset-4">
               <ExternalLink className="h-3.5 w-3.5" strokeWidth={2} />Read the Terms of Service v{TERMS_VERSION}
             </a>
-            <a href={`/terms/v${TERMS_VERSION}/pdf`} className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-coral-deep underline underline-offset-2">
+            <a href={`/terms/v${TERMS_VERSION}/pdf`} className="inline-flex min-h-11 items-center gap-1.5 font-bold text-white underline underline-offset-4">
               <Download className="h-3.5 w-3.5" strokeWidth={2} />Download PDF
             </a>
           </div>
         </div>
+        <div className="flex flex-col gap-5 p-5 sm:p-7">
         <Need missing={showMissing && !state.agreed} note="Check this box to agree to the Terms.">
           <label className="flex cursor-pointer items-start gap-3 text-[15px] leading-relaxed">
             <input type="checkbox" className={CHECK} checked={state.agreed} onChange={(e) => onChange({ ...state, agreed: e.target.checked })} />
@@ -148,16 +151,16 @@ export function SigningSection({
         </Need>
         <details>
           <summary className={MORE}>Your certification (Section {CERTIFICATION_CLAUSE}) and electronic records</summary>
-          <div className="mt-2 flex max-h-64 flex-col gap-3 overflow-y-auto bg-muted p-3 px-frame focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-frame-deep" tabIndex={0} aria-label="Certification and consent to electronic records">
+          <div className="mt-2 flex max-h-64 flex-col gap-3 overflow-y-auto rounded-[14px] bg-chalk p-4 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-cobalt" tabIndex={0} aria-label="Certification and consent to electronic records">
             <p className="text-sm text-foreground leading-relaxed">{CERTIFICATION_TEXT}</p>
             <LegalDocument blocks={ESIGN_BLOCKS} variant="compact" />
           </div>
         </details>
-        <Need missing={showMissing && !named(state.signerName)} note="Type your full legal name to sign." className="flex max-w-md flex-col gap-2 border-t-2 border-dashed border-rule pt-5">
-          <label htmlFor={`${id}-legal-name`} className="text-sm font-semibold text-ink">Full legal name<Req /></label>
+        <Need missing={showMissing && !named(state.signerName)} note="Type your full legal name to sign." className="flex max-w-md flex-col gap-2 border-t border-line pt-6">
+          <label htmlFor={`${id}-legal-name`} className="label-caps text-[15px] text-ink">Full legal name<Req /></label>
           <input
             id={`${id}-legal-name`}
-            className={NAME_INPUT}
+            className={cn(NAME_INPUT, "h-13 font-heading text-[1.5rem] font-extrabold tracking-[0.01em] md:text-[1.5rem]")}
             autoComplete="name"
             value={state.signerName}
             onChange={(e) => onChange({ ...state, signerName: e.target.value })}
@@ -166,6 +169,7 @@ export function SigningSection({
             Typing your name is your electronic signature on the Terms, including the certification above. The date and time come from our server when you place the order.
           </p>
         </Need>
+        </div>
       </section>
     </div>
   );

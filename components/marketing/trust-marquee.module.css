@@ -7,7 +7,9 @@
 .track {
   animation: trust-slide 52s linear infinite;
 }
-.band:hover .track {
+.band:hover .track,
+.band:focus-within .track,
+.band[data-paused] .track {
   animation-play-state: paused;
 }
 @keyframes trust-slide {

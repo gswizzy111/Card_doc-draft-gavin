@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
-import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "motion/react";
+import { ChevronsLeftRight } from "lucide-react";
 import { usePrefersReducedMotion } from "@/components/motion/use-reduced-motion";
 
 type Props = {
@@ -15,17 +16,22 @@ type Props = {
 };
 
 const clamp = (v: number) => Math.min(100, Math.max(0, v));
-// Where the divider rests: through the face, so both states of it show.
-// Keep in step with --split's initial value and ba-sweep in globals.css.
-const REST = 58;
+// Where the divider rests (percent from the left): through the face, so
+// both states of it show, restored side the larger. Keep in step with
+// --split's initial value and ba-sweep in globals.css.
+const REST = 42;
 
 /**
- * The damaged and the restored photo of the same card, aligned and stacked.
- * The restored layer is wiped in from the left up to a divider (`--split`).
+ * The damaged and the restored photo of the same card, aligned and stacked,
+ * read the site's way: Before on the left, After on the right. The damaged
+ * layer covers the restored one from the left up to a divider (`--split`).
+ * The two labels sit above both layers, pinned to the frame's top corners;
+ * each fades out only when the divider nearly reaches its side, so neither
+ * is ever cut mid-word.
  * Hovering does nothing: the divider only moves while it is dragged. A mouse
  * press or a tap jumps it to that spot and dragging follows the pointer 1:1;
  * a finger drags it sideways (vertical swipes still scroll); arrow keys step
- * it. On load it sweeps from damaged to mostly restored in CSS, so it runs
+ * it. On load it sweeps from mostly damaged to mostly restored in CSS, so it runs
  * before hydration. It stays wherever it was left; nothing winds it back.
  */
 export function BeforeAfter({ before, after, beforeAlt, afterAlt, sizes, priority }: Props) {
@@ -40,6 +46,9 @@ export function BeforeAfter({ before, after, beforeAlt, afterAlt, sizes, priorit
   const target = useMotionValue(REST);
   const smooth = useSpring(target, { bounce: 0, duration: 0.3 });
   const split = useMotionTemplate`${smooth}%`;
+  // Before needs room on the left, After on the right.
+  const beforeOpacity = useTransform(smooth, [8, 14], [0, 1]);
+  const afterOpacity = useTransform(smooth, [86, 92], [1, 0]);
 
   function pct(clientX: number) {
     const r = ref.current!.getBoundingClientRect();
@@ -129,14 +138,23 @@ export function BeforeAfter({ before, after, beforeAlt, afterAlt, sizes, priorit
       onPointerCancel={endDrag}
       className="ba-intro group/ba relative touch-pan-y select-none overflow-hidden cursor-grab data-[dragging]:cursor-grabbing"
     >
-      {/* Damaged */}
-      <Image src={before} alt={beforeAlt} sizes={sizes} priority={priority} draggable={false} className="block w-full h-auto" />
-      <span className="ba-label right-2.5">Before</span>
+      {/* Restored: the base layer, seen right of the divider */}
+      <Image src={after} alt={afterAlt} sizes={sizes} priority={priority} draggable={false} className="block w-full h-auto" />
 
-      {/* Restored, wiped in from the left */}
-      <div className="ba-after absolute inset-0">
-        <Image src={after} alt={afterAlt} sizes={sizes} priority={priority} draggable={false} className="block w-full h-full object-cover" />
-        <span className="ba-label left-2.5">After</span>
+      {/* Damaged: covers the left of the frame up to the divider */}
+      <div className="ba-before absolute inset-0">
+        <Image src={before} alt={beforeAlt} sizes={sizes} priority={priority} draggable={false} className="block w-full h-full object-cover" />
+      </div>
+
+      {/* Labels: one overlay above both layers, never clipped by them. Before
+          the pointer takes over, the CSS sweep keeps both in view. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-[3]">
+        <motion.span className="ba-label ba-label-before left-2.5" style={isLive ? { opacity: beforeOpacity } : undefined}>
+          Before
+        </motion.span>
+        <motion.span className="ba-label ba-label-after right-2.5" style={isLive ? { opacity: afterOpacity } : undefined}>
+          After
+        </motion.span>
       </div>
 
       {/* Divider and handle */}
@@ -148,14 +166,11 @@ export function BeforeAfter({ before, after, beforeAlt, afterAlt, sizes, priorit
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={valueNow}
-        aria-valuetext={`${valueNow}% restored`}
+        aria-valuetext={`${100 - valueNow}% restored`}
         onKeyDown={onKeyDown}
-        className="ba-handle absolute top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 place-items-center bg-butter text-ink px-frame group-data-[dragging]/ba:bg-mint"
+        className="ba-handle absolute top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 place-items-center"
       >
-        {/* Two pixel arrows, ◀ ▶, drawn on a 1px grid. */}
-        <svg aria-hidden viewBox="0 0 11 7" width={22} height={14} shapeRendering="crispEdges" className="block">
-          <path fill="currentColor" d="M3 0h1v7h-1zM2 1h1v5h-1zM1 2h1v3h-1zM0 3h1v1h-1zM7 0h1v7h-1zM8 1h1v5h-1zM9 2h1v3h-1zM10 3h1v1h-1z" />
-        </svg>
+        <ChevronsLeftRight aria-hidden className="size-6" strokeWidth={2.25} />
       </div>
     </motion.div>
   );

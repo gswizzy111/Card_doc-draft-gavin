@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { BULK_PLANS, type BulkPlan } from "@/lib/bulk-pricing";
+import { cn } from "@/lib/utils";
 
 /**
  * Individual / 10+ / 20+ switch for the tier prices (and the Prep page's).
@@ -10,8 +11,8 @@ import { BULK_PLANS, type BulkPlan } from "@/lib/bulk-pricing";
  * cards stay server-rendered. `note` replaces the Restorations page's note;
  * `stacked` keeps the note under the switch at every width (a narrow column).
  *
- * Drawn as an RPG menu tray: a night panel of three slots, the chosen one lit
- * butter with the ▶ cursor beside its label.
+ * Drawn as a pill track: white, hairline-ringed, the chosen plan an ink pill
+ * with its discount in sun.
  */
 export function BulkSwitch({ children, note, stacked = false }: { children: React.ReactNode; note?: React.ReactNode; stacked?: boolean }) {
   const [plan, setPlan] = useState<BulkPlan>("single");
@@ -34,9 +35,15 @@ export function BulkSwitch({ children, note, stacked = false }: { children: Reac
 
   return (
     <div data-bulk={plan}>
-      <div className={stacked ? "mb-8 flex flex-col gap-5" : "mb-8 flex flex-col gap-5 md:mb-10 md:flex-row md:items-center md:justify-between md:gap-8"}>
-        {/* A segmented control, so on phones it doesn't read as another row of tier chips */}
-        <div role="radiogroup" aria-label="Number of cards" className={`grid w-full grid-cols-3 gap-[6px] bg-night p-[6px] px-frame-shadow${stacked ? "" : " md:inline-grid md:w-auto md:shrink-0"}`}>
+      <div className={stacked ? "mb-8 flex flex-col gap-4" : "mb-6 flex flex-col gap-3 md:mb-10 md:flex-row md:items-center md:justify-between md:gap-10"}>
+        <div
+          role="radiogroup"
+          aria-label="Number of cards"
+          className={cn(
+            "grid w-full grid-cols-3 gap-1 rounded-full bg-white p-1.5 shadow-[0_0_0_1px_var(--line),var(--panel-shadow)]",
+            !stacked && "md:inline-grid md:w-auto md:shrink-0"
+          )}
+        >
           {BULK_PLANS.map((p, i) => {
             const active = p.id === plan;
             return (
@@ -49,25 +56,25 @@ export function BulkSwitch({ children, note, stacked = false }: { children: Reac
                 tabIndex={active ? 0 : -1}
                 onClick={() => setPlan(p.id)}
                 onKeyDown={(e) => onKeyDown(e, i)}
-                className={`press relative flex h-12 flex-col items-center justify-center gap-1 px-2 outline-offset-[-6px] focus-visible:outline-2 focus-visible:outline-dashed md:px-6 ${
-                  active
-                    ? "bg-butter text-ink shadow-[inset_0_-4px_0_#d4b552,inset_0_2px_0_#f8e9ad] focus-visible:outline-ink"
-                    : "bg-night-raise text-stage-fg hover:bg-[#463f60] focus-visible:outline-butter"
-                }`}
+                className={cn(
+                  "relative flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-full px-2 transition-[background-color,color,box-shadow] duration-200 ease-[var(--ease-out)] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cobalt active:scale-[0.98] motion-reduce:transition-none md:px-7",
+                  active ? "bg-ink text-white shadow-[0_8px_18px_-10px_rgba(13,18,51,0.7)]" : "text-ink hover:bg-chalk"
+                )}
               >
-                <span className="flex items-center gap-1.5 font-heading text-[1.05rem] leading-none">
-                  {p.label}
-                </span>
-                <span className={`font-pixel text-xs uppercase leading-none tracking-[0.04em] ${
-                  p.percent > 0 ? (active ? "text-coral-deep" : "text-rx-bright") : active ? "text-ink-soft" : "text-stage-muted"
-                }`}>
+                <span className="text-[15px] font-extrabold leading-none whitespace-nowrap">{p.label}</span>
+                <span
+                  className={cn(
+                    "label-caps text-[13px] leading-none",
+                    p.percent > 0 ? (active ? "text-sun" : "text-cobalt") : active ? "text-on-dark-muted" : "text-ink-soft"
+                  )}
+                >
                   {p.percent > 0 ? `${p.percent}% off` : "Standard"}
                 </span>
               </button>
             );
           })}
         </div>
-        <p className={`text-sm leading-relaxed text-ink-soft${stacked ? "" : " md:max-w-md"}`}>
+        <p className={cn("text-[15px] leading-relaxed text-ink-soft", !stacked && "md:max-w-md")}>
           {note ?? <>Bulk pricing is applied automatically at checkout for every tier except Diamond. Discounts don&apos;t combine: you get the biggest one.</>}
         </p>
       </div>

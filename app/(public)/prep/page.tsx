@@ -1,16 +1,20 @@
 import Link from "next/link";
-import { X } from "lucide-react";
+import { ArrowRight, Camera, ClipboardCheck, Clock, Hammer, X } from "lucide-react";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PixelViewContent } from "@/components/pixel-view-content";
 import { PageHero } from "@/components/marketing/page-hero";
-import { CardSprite, PixelIcon, Window, pixelButton } from "@/components/pixel";
 import { ReviewsBand } from "@/components/marketing/comic-reviews";
 import { TrustPills } from "@/components/marketing/trust-pills";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ORG_ID, SITE, breadcrumbs, canonical } from "@/lib/seo";
 import { BulkSwitch } from "@/app/(public)/tier-selection/bulk-switch";
 import { BULK_PLANS, bulkPriceCents } from "@/lib/bulk-pricing";
+import { Print, cta } from "@/components/brand";
+import { SeamlessPrint } from "../seamless-print";
+import charmanderPair from "@/public/home/charmander-pair.jpg";
+import garchomp from "@/public/home/garchomp.jpg";
+
 
 export const dynamic = "force-dynamic";
 
@@ -74,184 +78,226 @@ export default async function PrepPage() {
     breadcrumbs([{ name: "PSA Prep Pricing", path: "/prep" }]),
   ];
 
+  const NOT_INCLUDED = ["Crease work", "Edge & corner work", "Dent removal", "Any restorative work"];
+  const priceCls = "font-display text-[64px] font-black leading-[0.82] tracking-[-0.01em] text-ink tabular-nums lining-nums md:text-[80px]";
+  const wasCls = "mb-1 text-base font-semibold text-ink-soft line-through tabular-nums";
+
   return (
-    <div className="min-h-screen page-glow">
+    <div className="min-h-screen overflow-x-clip">
       <JsonLd data={structured} />
       <PixelViewContent contentName="PSA Prep" contentCategory="Prep" />
-      <div className="max-w-5xl mx-auto px-4 md:px-10 py-12 md:py-20">
 
-        <PageHero
-          className="mb-8"
-          eyebrow="Prep Service"
-          title="Get Your Cards Grade-Ready"
-          lines={["Get Your Cards", "Grade-Ready"]}
-          lead={<>We surface-clean and prep your cards so they&apos;re submission-ready. Graders make their own call, so no grade is ever guaranteed.</>}
-        />
-
-        <TrustPills align="start" className="hero-in mb-12 md:mb-14" />
-
-        {!prices.isOpen && (
-          <div className="mb-10">
-            <Window className="flex items-center gap-3 bg-butter py-4 font-semibold text-ink md:py-5">
-              <PixelIcon name="clock" size={32} className="shrink-0" />
-              Prep is temporarily paused — check back soon.
-            </Window>
-          </div>
-        )}
-
-        <div className="grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:items-start hero-in" style={{ ["--d" as string]: 120 }}>
-          <div className="flex flex-col gap-10">
-            {/* Pricing, per number of cards (bulk pricing, lib/bulk-pricing.ts), as on the Restorations page */}
-            <BulkSwitch stacked note="Bulk pricing is applied automatically at checkout to every card. Add-ons and shipping aren't discounted.">
-            <div className="px-window-ink flex flex-col">
-              {/* The pre-exam room's price board */}
-              <div className="relative flex items-center justify-between gap-4 border-b-2 border-ink/80 bg-[color-mix(in_srgb,var(--mint)_55%,var(--panel))] px-5 py-5 md:px-7">
-                <div className="relative">
-                  <h2 className="font-heading text-[2rem] leading-none text-ink md:text-[2.5rem]">Prep Pricing</h2>
-                  <p className="mt-1.5 text-sm font-semibold text-ink">Per card — price based on declared value</p>
-                </div>
-                <span aria-hidden className="relative shrink-0">
-                  <CardSprite variant="sleeve" scale={2} animate={false} />
-                </span>
-              </div>
-              <div className="divide-y-2 divide-dashed divide-ink/20">
-                <div className="flex flex-col gap-3 px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 md:px-7">
-                  <div>
-                    <p className="flex items-center gap-2 font-heading text-xl leading-tight text-ink">
-                      <span aria-hidden className="size-3 shrink-0 bg-mint px-frame" />
-                      Cards under $1,500
-                    </p>
-                    <p className="mt-1 text-sm text-ink-soft">Surface clean, penny sleeve + semi-rigid holder</p>
-                  </div>
-                  <div className="shrink-0 sm:text-right">
-                    {/* One price per plan; the switch above shows the chosen one */}
-                    {BULK_PLANS.map((p) => (
-                      <div key={p.id} data-plan={p.id} className="flex flex-wrap items-baseline gap-x-2 sm:justify-end">
-                        {p.percent > 0 && (
-                          <span className="text-sm text-muted-foreground line-through tabular-nums" aria-label={`was ${fmt(prices.standardPriceCents)}`}>{fmt(prices.standardPriceCents)}</span>
-                        )}
-                        <span className="font-heading text-[2.75rem] leading-none text-ink tabular-nums lining-nums md:text-5xl">{fmt(bulkPriceCents(prices.standardPriceCents, p.percent))}</span>
-                      </div>
-                    ))}
-                    <p className="rx-label mt-1.5">per card</p>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-3 px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 md:px-7">
-                  <div>
-                    <p className="flex items-center gap-2 font-heading text-xl leading-tight text-ink">
-                      <span aria-hidden className="size-3 shrink-0 bg-butter px-frame" />
-                      Cards $1,500 and over
-                    </p>
-                    {/* The examples per plan; the switch above shows the chosen one */}
-                    {BULK_PLANS.map((p) => (
-                      <p key={p.id} data-plan={p.id} className="text-sm text-ink-soft mt-1">
-                        {/* One inline box (the shown plan's <p> is display: flex): a wrap
-                            falls after the dot, never before it; from md up each example stays on one line */}
-                        <span>
-                          e.g. <span className="md:whitespace-nowrap">$2,000 card = {fmt(bulkPriceCents(HIGH_VALUE_EXAMPLES_CENTS[0], p.percent))}&nbsp;&nbsp;·</span>{" "}
-                          <span className="md:whitespace-nowrap">$5,000 card = {fmt(bulkPriceCents(HIGH_VALUE_EXAMPLES_CENTS[1], p.percent))}</span>
-                        </span>
-                      </p>
-                    ))}
-                  </div>
-                  <div className="shrink-0 sm:text-right">
-                    {/* One rate per plan (2% of value, less the bulk percent) */}
-                    {BULK_PLANS.map((p) => (
-                      <div key={p.id} data-plan={p.id} className="flex flex-wrap items-baseline gap-x-2 sm:justify-end">
-                        {p.percent > 0 && (
-                          <span className="text-sm text-muted-foreground line-through tabular-nums" aria-label="was 2%">2%</span>
-                        )}
-                        <span className="font-heading text-[2.75rem] leading-none text-ink tabular-nums lining-nums md:text-5xl">{valueRate(p.percent)}</span>
-                      </div>
-                    ))}
-                    <p className="rx-label mt-1.5">of declared value</p>
-                  </div>
-                </div>
-              </div>
-              <div className="border-t-2 border-ink/15 px-5 py-5 md:px-7">
-                {prices.isOpen ? (
-                  <Link
-                    href="/prep/order"
-                    className={pixelButton({ size: "lg", className: "w-full" })}
-                  >
-                    Order Prep
-                  </Link>
-                ) : (
-                  <div className="flex h-14 w-full cursor-not-allowed items-center justify-center bg-panel font-heading text-lg text-ink-soft px-frame">
-                    Currently Paused
-                  </div>
-                )}
-              </div>
-            </div>
-            </BulkSwitch>
-
-            {/* Add-ons: the extra tests on the chart */}
-            <div>
-              <h2 className="mb-5 font-heading text-[2rem] leading-none text-ink">Available Add-Ons</h2>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <div className="px-window-ink flex flex-col gap-3 p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <PixelIcon name="clipboard" size={32} className="shrink-0" />
-                    <span className="font-pixel text-sm text-coral-deep tabular-nums">+{fmt(prices.preGradePriceCents)}/card</span>
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-xl leading-tight text-ink">Pre-Grade Assessment</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                      We assess each card and give you an estimated grade before you submit — so you know what to expect.
-                    </p>
-                  </div>
-                </div>
-                <div className="px-window-ink flex flex-col gap-3 p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <span aria-hidden className="shrink-0"><CardSprite variant="slab" scale={2} animate={false} /></span>
-                    <span className="font-pixel text-sm text-coral-deep tabular-nums">+{fmt(prices.slabCrackPriceCents)}/card</span>
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-xl leading-tight text-ink">Slab Crack</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-                      Already graded? We carefully crack the slab and include the raw card in your prep order.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <p className="mt-4 text-xs text-ink-soft">Add-ons are selected during the order process.</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-10">
-            {/* Not included: the room's do-not list */}
-            <div className="px-window-ink">
-              <div className="border-b-2 border-ink/15 px-5 pt-5 pb-3">
-                <p className="font-pixel text-xs uppercase tracking-[0.04em] text-coral-deep">Prep does not include:</p>
-              </div>
-              <ul className="grid grid-cols-1 gap-x-6 gap-y-2.5 px-5 pt-4 min-[400px]:grid-cols-2">
-                {["Crease work", "Edge & corner work", "Dent removal", "Any restorative work"].map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-sm font-medium text-ink">
-                    <span aria-hidden className="grid size-5 shrink-0 place-items-center bg-rx-soft text-coral-deep px-frame">
-                      <X className="h-3 w-3" strokeWidth={3} />
-                    </span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="px-5 pt-5 pb-5 text-sm text-ink">
-                Need restoration?{" "}
-                <Link href="/tier-selection" className="font-semibold text-coral-deep underline decoration-2 underline-offset-4 hover:text-ink">
-                  See our Restoration tiers
-                </Link>
-              </p>
-            </div>
-
-            <p className="px-1 text-sm text-ink">
-              Questions?{" "}
-              <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="font-semibold text-coral-deep underline decoration-2 underline-offset-4 hover:text-ink">
-                DM us @the_card_doc
-              </a>
-            </p>
+      {/* Paused: a sun notice across the top of the page */}
+      {!prices.isOpen && (
+        <div className="surface-sun border-b border-ink/10">
+          <div className="wrap flex items-center gap-4 py-5 md:py-6">
+            <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-sun">
+              <Clock className="size-5" strokeWidth={1.75} />
+            </span>
+            <p className="text-base font-bold leading-snug text-ink md:text-lg">Prep is temporarily paused — check back soon.</p>
           </div>
         </div>
+      )}
 
-      </div>
+      <section aria-labelledby="prep-pricing-heading" className="surface-chalk">
+        <div className="wrap pt-12 pb-16 md:pt-20 md:pb-24">
+          {/* Header, with the Garchomp corner as a print on a studio seamless */}
+          <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 gap-y-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+            <div>
+              <PageHero
+                eyebrow="Prep Service"
+                title="Get Your Cards Grade-Ready"
+                lines={["Get Your Cards", "Grade-Ready"]}
+                lead={<>We surface-clean and prep your cards so they&apos;re submission-ready. Graders make their own call, so no grade is ever guaranteed.</>}
+              />
+              <TrustPills align="start" className="hero-in mt-8" />
+            </div>
+            <SeamlessPrint
+              src={garchomp}
+              alt="A Garchomp holo card corner, before and after"
+              aspect="538/520"
+              tilt={3.5}
+              caption="Garchomp LV.X · corner"
+              priority
+              sizes="(min-width: 1024px) 384px, 80vw"
+              className="hero-in mx-auto w-full max-w-[min(100%,18rem,calc(46vh-4rem))] md:max-w-[22rem] lg:max-w-none"
+            />
+          </div>
+
+          <div className="mt-14 grid gap-10 md:mt-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
+            {/* Pricing, per number of cards (bulk pricing, lib/bulk-pricing.ts), as on the Restorations page */}
+            <BulkSwitch stacked note="Bulk pricing is applied automatically at checkout to every card. Add-ons and shipping aren't discounted.">
+              <div className="overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_var(--line),var(--panel-shadow)]">
+                <div className="surface-ink px-6 py-6 md:px-8 md:py-7">
+                  <h2 id="prep-pricing-heading" className="display-md text-white">Prep Pricing</h2>
+                  <p className="mt-2.5 text-[15px] font-medium text-on-dark-muted">Per card — price based on declared value</p>
+                </div>
+
+                <div className="divide-y divide-line">
+                  <div className="flex flex-col gap-5 px-6 py-7 sm:flex-row sm:items-end sm:justify-between sm:gap-6 md:px-8">
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-2.5 font-display text-[28px] font-extrabold leading-none text-ink">
+                        <span aria-hidden className="h-[18px] w-[13px] shrink-0 rounded-[3px] bg-cobalt" />
+                        Cards under $1,500
+                      </p>
+                      <p className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">Surface clean, penny sleeve + semi-rigid holder</p>
+                    </div>
+                    <div className="shrink-0 sm:text-right">
+                      {/* One price per plan; the switch above shows the chosen one */}
+                      {BULK_PLANS.map((p) => (
+                        <div key={p.id} data-plan={p.id} className="flex flex-wrap items-end gap-x-3 sm:justify-end">
+                          {p.percent > 0 && (
+                            <span className={wasCls} aria-label={`was ${fmt(prices.standardPriceCents)}`}>{fmt(prices.standardPriceCents)}</span>
+                          )}
+                          <span className={priceCls}>{fmt(bulkPriceCents(prices.standardPriceCents, p.percent))}</span>
+                        </div>
+                      ))}
+                      <p className="label-caps mt-2.5 text-[13px] text-cobalt">per card</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-5 px-6 py-7 sm:flex-row sm:items-end sm:justify-between sm:gap-6 md:px-8">
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-2.5 font-display text-[28px] font-extrabold leading-none text-ink">
+                        <span aria-hidden className="h-[18px] w-[13px] shrink-0 rounded-[3px] bg-sun-deep" />
+                        Cards $1,500 and over
+                      </p>
+                      {/* The examples per plan; the switch above shows the chosen one */}
+                      {BULK_PLANS.map((p) => (
+                        <p key={p.id} data-plan={p.id} className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">
+                          {/* One inline box (the shown plan's <p> is display: flex): a wrap
+                              falls after the dot, never before it; from md up each example stays on one line */}
+                          <span>
+                            e.g. <span className="md:whitespace-nowrap">$2,000 card = {fmt(bulkPriceCents(HIGH_VALUE_EXAMPLES_CENTS[0], p.percent))}&nbsp;&nbsp;·</span>{" "}
+                            <span className="md:whitespace-nowrap">$5,000 card = {fmt(bulkPriceCents(HIGH_VALUE_EXAMPLES_CENTS[1], p.percent))}</span>
+                          </span>
+                        </p>
+                      ))}
+                    </div>
+                    <div className="shrink-0 sm:text-right">
+                      {/* One rate per plan (2% of value, less the bulk percent) */}
+                      {BULK_PLANS.map((p) => (
+                        <div key={p.id} data-plan={p.id} className="flex flex-wrap items-end gap-x-3 sm:justify-end">
+                          {p.percent > 0 && (
+                            <span className={wasCls} aria-label="was 2%">2%</span>
+                          )}
+                          <span className={priceCls}>{valueRate(p.percent)}</span>
+                        </div>
+                      ))}
+                      <p className="label-caps mt-2.5 text-[13px] text-cobalt">of declared value</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-line bg-chalk/60 px-6 py-6 md:px-8">
+                  {prices.isOpen ? (
+                    <Link href="/prep/order" className={cta({ size: "lg", className: "w-full" })}>
+                      Order Prep
+                      <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+                    </Link>
+                  ) : (
+                    <div className="flex min-h-[58px] w-full cursor-not-allowed items-center justify-center rounded-full bg-white font-display text-lg font-extrabold uppercase tracking-[0.05em] text-ink-soft shadow-[inset_0_0_0_1.5px_var(--line)]">
+                      Currently Paused
+                    </div>
+                  )}
+                </div>
+              </div>
+            </BulkSwitch>
+
+            <div className="flex flex-col gap-8">
+              {/* Not included */}
+              <div className="rounded-2xl bg-white p-6 shadow-[0_0_0_1px_var(--line)] md:p-8">
+                <p className="eyebrow text-cobalt">Prep does not include:</p>
+                <ul className="mt-5 grid gap-x-6 gap-y-3 min-[400px]:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  {NOT_INCLUDED.map((item) => (
+                    <li key={item} className="flex items-center gap-3 text-[15px] font-bold text-ink">
+                      <span aria-hidden className="grid size-7 shrink-0 place-items-center rounded-full bg-chalk text-ink">
+                        <X className="size-3.5" strokeWidth={2.75} />
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-7 border-t border-line pt-6 text-[15px] text-ink">
+                  Need restoration?{" "}
+                  <Link href="/tier-selection" className="tlink font-bold text-cobalt">
+                    See our Restoration tiers
+                  </Link>
+                </p>
+              </div>
+
+              {/* Add-ons */}
+              <div>
+                <h2 className="display-sm text-ink">Available Add-Ons</h2>
+                <ul className="mt-5 grid gap-4">
+                  {[
+                    {
+                      Icon: ClipboardCheck,
+                      title: "Pre-Grade Assessment",
+                      price: prices.preGradePriceCents,
+                      body: "We assess each card and give you an estimated grade before you submit — so you know what to expect.",
+                    },
+                    {
+                      Icon: Hammer,
+                      title: "Slab Crack",
+                      price: prices.slabCrackPriceCents,
+                      body: "Already graded? We carefully crack the slab and include the raw card in your prep order.",
+                    },
+                  ].map(({ Icon, title, price, body }) => (
+                    <li key={title} className="grid grid-cols-[2.75rem_minmax(0,1fr)] gap-x-4 rounded-2xl bg-white p-5 shadow-[0_0_0_1px_var(--line)] md:p-6">
+                      <span aria-hidden className="grid size-11 place-items-center rounded-xl bg-cobalt-wash text-cobalt">
+                        <Icon className="size-5" strokeWidth={1.75} />
+                      </span>
+                      <div>
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                          <h3 className="font-display text-[24px] font-extrabold leading-none text-ink">{title}</h3>
+                          <span className="font-display text-[24px] font-black leading-none text-cobalt tabular-nums">+{fmt(price)}/card</span>
+                        </div>
+                        <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{body}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-sm text-ink-soft">Add-ons are selected during the order process.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Questions: the Charmander pair as a print, the DM link and the order */}
+      <section aria-labelledby="prep-questions-heading" className="surface-ink">
+        <div className="wrap grid max-w-5xl items-center gap-x-14 gap-y-10 py-16 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:py-20">
+          <div data-reveal className="mx-auto w-full max-w-[18rem] md:order-last md:max-w-none">
+            <Print
+              src={charmanderPair}
+              alt="A Charmander card before and after restoration, side by side"
+              aspect="576/513"
+              tilt={-3}
+              surface="dark"
+              border="lg"
+              lift
+              sizes="(min-width: 768px) 320px, 288px"
+            />
+          </div>
+          <div data-reveal>
+            <h2 id="prep-questions-heading" className="display-md text-white">Questions?</h2>
+            <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:gap-4">
+              <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className={cta({ size: "lg" })}>
+                <Camera aria-hidden className="size-5" strokeWidth={1.75} />
+                DM us @the_card_doc
+                <span className="sr-only">on Instagram (opens in a new tab)</span>
+              </a>
+              {prices.isOpen && (
+                <Link href="/prep/order" className={cta({ tone: "outline-light", size: "lg" })}>
+                  Order Prep
+                  <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
 
       <ReviewsBand title="What Our Customers Say" compact id="prep-reviews-heading" />
     </div>

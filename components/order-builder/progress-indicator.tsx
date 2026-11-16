@@ -1,4 +1,6 @@
 import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
+
 const STEPS = [
   { n: 1, label: "Cards" },
   { n: 2, label: "Your Info" },
@@ -7,17 +9,17 @@ const STEPS = [
 ];
 
 /**
- * The check-in track: four stops on a segmented bar that fills in mint as
- * each step is done. The current stop is coral.
+ * The order's four steps on a rail that fills in cobalt as each one is done.
+ * Done stops are cobalt with a check, the current stop is the sun disc.
  */
 export function ProgressIndicator({ currentStep }: { currentStep: number }) {
   const done = Math.max(0, Math.min(STEPS.length - 1, currentStep - 1));
   return (
-    <div className="relative w-full px-1 pt-1">
-      {/* Track: night rail with a mint fill, drawn between the first and last stop */}
-      <div aria-hidden className="absolute top-[23px] right-[12.5%] left-[12.5%] h-0.5 bg-ink/15">
+    <div className="relative w-full">
+      {/* Rail, drawn between the first and last stop */}
+      <div aria-hidden className="absolute top-[21px] right-[12.5%] left-[12.5%] h-1 overflow-hidden rounded-full bg-ink/10">
         <span
-          className="block h-full bg-mint-deep transition-[width] duration-300 ease-out motion-reduce:transition-none"
+          className="block h-full rounded-full bg-cobalt transition-[width] duration-500 ease-[var(--ease-out)] motion-reduce:transition-none"
           style={{ width: `${(done / (STEPS.length - 1)) * 100}%` }}
         />
       </div>
@@ -25,18 +27,22 @@ export function ProgressIndicator({ currentStep }: { currentStep: number }) {
         {STEPS.map((step) => {
           const state = step.n < currentStep ? "done" : step.n === currentStep ? "current" : "next";
           return (
-            <li key={step.n} className="flex flex-col items-center gap-2" aria-current={state === "current" ? "step" : undefined}>
+            <li key={step.n} className="flex flex-col items-center gap-2.5" aria-current={state === "current" ? "step" : undefined}>
               <span
-                className={`relative grid size-10 place-items-center font-pixel text-sm tabular-nums text-ink px-frame ${
-                  state === "done" ? "bg-mint" : state === "current" ? "bg-coral-fill" : "bg-panel"
-                }`}
+                className={cn(
+                  "relative grid size-11 place-items-center rounded-full font-heading text-xl font-black tabular-nums transition-[background-color,color,box-shadow,transform] duration-300",
+                  state === "done" && "bg-cobalt text-white shadow-[0_0_0_4px_var(--chalk)]",
+                  state === "current" && "scale-110 bg-sun text-ink shadow-[0_0_0_4px_var(--chalk),0_0_0_6px_var(--ink)]",
+                  state === "next" && "bg-white text-ink-soft shadow-[0_0_0_4px_var(--chalk),inset_0_0_0_1.5px_var(--line-strong)]"
+                )}
               >
-                {state === "done" ? <Check className="h-4 w-4" strokeWidth={3} /> : step.n}
+                {state === "done" ? <Check className="size-5" strokeWidth={3} /> : step.n}
               </span>
               <span
-                className={`max-w-[8ch] text-center sm:max-w-none text-sm leading-tight ${
-                  state === "current" ? "font-semibold text-ink" : "text-ink-soft"
-                }`}
+                className={cn(
+                  "label-caps max-w-[9ch] text-center text-[15px] leading-tight sm:max-w-none",
+                  state === "current" ? "text-ink" : "text-ink-soft"
+                )}
               >
                 {step.label}
               </span>

@@ -3,8 +3,9 @@
 import { useCart } from "@/lib/cart-context";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, Zap } from "lucide-react";
-import { pixelButton } from "@/components/pixel/pixel-button";
+import { Check, ShoppingCart, Zap } from "lucide-react";
+import { cta } from "@/components/brand";
+import { cn } from "@/lib/utils";
 
 const SIZES = ["Small", "Medium", "Large", "XL"] as const;
 
@@ -49,26 +50,27 @@ export function AddToCartButtonLarge({ product, requiresSize }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {requiresSize && (
-        <fieldset className="flex flex-col gap-2.5">
-          <legend className="mb-2.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink">Select Size</legend>
-          <div className="grid grid-cols-4 gap-3">
+        <fieldset className="flex flex-col">
+          <legend className="label-caps mb-3 text-[15px] text-ink">Select Size</legend>
+          <div className="grid grid-cols-4 gap-2.5">
             {SIZES.map((s) => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
                 aria-pressed={size === s}
-                className={pixelButton({
-                  tone: size === s ? "ink" : "panel",
-                  size: "sm",
-                  className: "h-11 w-full px-1 text-base normal-case",
-                })}
+                className={cn(
+                  "min-h-12 rounded-[14px] px-1 text-[15px] font-bold transition-[background-color,box-shadow,color] duration-150 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-cobalt",
+                  size === s
+                    ? "bg-ink text-white shadow-[inset_0_0_0_2px_var(--ink)]"
+                    : "bg-white text-ink shadow-[inset_0_0_0_1.5px_var(--line-strong)] hover:shadow-[inset_0_0_0_1.5px_var(--ink-soft)]"
+                )}
               >
                 {s}
               </button>
             ))}
           </div>
           {!size && (
-            <p className="text-sm text-ink-soft">Please select a size before adding to cart.</p>
+            <p className="mt-2.5 text-sm text-ink-soft">Please select a size before adding to cart.</p>
           )}
         </fieldset>
       )}
@@ -76,22 +78,18 @@ export function AddToCartButtonLarge({ product, requiresSize }: Props) {
       <button
         onClick={handleBuyNow}
         disabled={requiresSize && !size}
-        className={pixelButton({ tone: "coral", size: "lg", className: "w-full disabled:cursor-not-allowed disabled:opacity-45" })}
+        className={cta({ tone: "sun", size: "lg", className: "w-full" })}
       >
-        <Zap className="h-4 w-4 fill-current" />
+        <Zap aria-hidden className="size-5 fill-current" strokeWidth={1.75} />
         Buy It Now
       </button>
       <button
         onClick={handleAdd}
         disabled={requiresSize && !size}
-        className={pixelButton({
-          tone: added ? "mint" : "panel",
-          size: "lg",
-          className: "w-full disabled:cursor-not-allowed disabled:opacity-45",
-        })}
+        className={cta({ tone: added ? "cobalt" : "outline", size: "lg", className: "w-full" })}
       >
-        <ShoppingCart className="h-4 w-4" strokeWidth={1.75} />
-        {added ? "Added to Cart!" : "Add to Cart"}
+        {added ? <Check aria-hidden className="size-5" strokeWidth={2.25} /> : <ShoppingCart aria-hidden className="size-5" strokeWidth={1.75} />}
+        <span aria-live="polite">{added ? "Added to Cart!" : "Add to Cart"}</span>
       </button>
     </div>
   );

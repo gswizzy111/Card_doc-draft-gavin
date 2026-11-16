@@ -1,32 +1,43 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BadgeCheck,
+  Camera,
+  ClipboardCheck,
+  Clock,
+  Package,
+  Plus,
+  ScanSearch,
+  ShieldAlert,
+  Star,
+  UserRound,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { CountUp } from "@/components/motion/count-up";
-import { VelocityMarquee } from "@/components/motion/velocity-marquee";
 import { BeforeAfter } from "@/components/motion/before-after";
 import { TrustedBy } from "@/components/marketing/trusted-by";
 import { ORG_ID, SITE, INSTAGRAM_URL, canonical } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
-import { ReviewsBand } from "@/components/marketing/comic-reviews";
+import { CaseCard, FeaturedReview, ReviewBubbles } from "@/components/marketing/comic-reviews";
+import { receipt } from "@/components/marketing/receipts";
+import { ProcessSteps } from "@/components/marketing/process-steps";
 import { TrustMarquee, CARDS_RESTORED_DISPLAY } from "@/components/marketing/trust-pills";
 import { WatchTheWork } from "@/components/marketing/watch-the-work";
 import { SERVICE_CARDS } from "@/lib/service-cards";
-import { CardSlot } from "@/components/marketing/card-slot";
 import { HERO, PROCESS, REASONS, RESULTS } from "@/lib/about";
-import {
-  DocSprite,
-  HpBar,
-  PixelIcon,
-  StatusChip,
-  Window,
-  pixelButton,
-  type PixelIconName,
-} from "@/components/pixel";
+import { AcrylicHolder, Marquee, Print, Seamless, SectionHead, StatBlock, cta } from "@/components/brand";
+import { cn } from "@/lib/utils";
 import mantleBefore from "@/public/specimen-mantle-before.jpg";
 import mantleAfter from "@/public/specimen-mantle-after.jpg";
-import mantlePair from "@/public/before-after-mickey-mantle.png";
-import charmander from "@/public/specimen-charmander.png";
-import garchomp from "@/public/before-after-garchomp.png";
+import mantleInHand from "@/public/about/mantle-in-hand.jpg";
+import mantleDetail from "@/public/about/mantle-detail-before.jpg";
+import mantlePair from "@/public/home/mantle-pair.jpg";
+import charmanderPair from "@/public/home/charmander-pair.jpg";
+import charmanderAfter from "@/public/home/charmander-after.jpg";
+import garchomp from "@/public/home/garchomp.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -37,20 +48,16 @@ export const metadata: Metadata = {
 const TAGLINE = "Expert card restoration & PSA prep — every card treated like it's worth a fortune.";
 const INSTAGRAM = INSTAGRAM_URL;
 
-/** The card kinds the owner lists in the FAQ answer below, as labels. */
-const CARD_KINDS: { label: string; tile: string }[] = [
-  { label: "Pokémon", tile: "bg-rx-soft" },
-  { label: "Magic: The Gathering", tile: "bg-rx-soft" },
-  { label: "Yu-Gi-Oh!", tile: "bg-rx-soft" },
-  { label: "Baseball", tile: "bg-powder" },
-  { label: "Basketball", tile: "bg-powder" },
-  { label: "Football", tile: "bg-powder" },
-  { label: "Hockey", tile: "bg-powder" },
-  { label: "Vintage", tile: "bg-butter" },
-  { label: "Modern", tile: "bg-butter" },
-  { label: "Raw", tile: "bg-mint" },
-  { label: "Graded", tile: "bg-mint" },
+/** The card kinds the owner lists in the FAQ answer below, as labels,
+ * grouped the way the answer groups them (its own words as group names). */
+const CARD_KINDS: { group?: string; items: string[] }[] = [
+  { group: "Trading cards", items: ["Pokémon", "Magic: The Gathering", "Yu-Gi-Oh!"] },
+  { group: "Sports cards", items: ["Baseball", "Basketball", "Football", "Hockey"] },
+  { items: ["Vintage", "Modern", "Raw", "Graded"] },
 ];
+
+/** The receipts the home page shows as prints before the strip. */
+const BENTO_RECEIPT = "t11";
 
 const FIXES = ["Creases", "Dents", "Dimples", "Edge lifts", "Corner lifts", "Minor bends", "Holo polishing", "Surface cleaning"];
 
@@ -77,41 +84,49 @@ const FAQ = [
   },
 ];
 
-const TOS_HIGHLIGHTS: { title: string; body: string; icon: PixelIconName }[] = [
+const TOS_HIGHLIGHTS: { title: string; body: string; icon: LucideIcon }[] = [
   {
     title: "Turnaround times are estimates",
     body: "All turnaround times shown are rough estimates and not guaranteed. Actual processing may be affected by order volume, card condition, shipping delays, or circumstances outside our control.",
-    icon: "clock",
+    icon: Clock,
   },
   {
     title: "You assume shipping risk",
     body: "You are responsible for selecting your shipping method and carrier. The Card Doc assumes no responsibility for loss or damage in transit until items are physically received and confirmed.",
-    icon: "box",
+    icon: Package,
   },
   {
     title: "Alteration Risk",
     body: "Cards can be flagged as altered: professional graders can detect restoration and may give an 'Altered' designation. If your card is damaged during restoration, our liability is limited to the service fee paid — not the card's market value.",
-    icon: "shield",
+    icon: ShieldAlert,
   },
   {
     title: "No refunds after work begins",
     body: "All sales are final once restoration work has commenced. If we believe a card won't respond well to treatment, we will contact you before proceeding.",
-    icon: "clipboard",
+    icon: ClipboardCheck,
   },
+];
+
+/** The six steps of /how-it-works, titles and notes word for word. */
+const STEPS: { title: string; note: string }[] = [
+  { title: "Choose Your Service, Tier, and Add-Ons", note: "(Tiers, services, and add-ons lock at checkout and cannot be changed afterward)" },
+  { title: "Book Your Order at theonethatsaveditall.com", note: "(Payment is collected in full at checkout)" },
+  { title: "Pack and Ship Your Cards", note: "(US & Puerto Rico orders only)" },
+  { title: "Arrival, Check-In, and Evaluation", note: "(Allow 1–3 business days after carrier delivery for check-in)" },
+  { title: "Hands-On Work", note: "(Order status: In Progress to Completed)" },
+  { title: "Return Shipping", note: "(Order status: Shipped Back to Delivered)" },
 ];
 
 const SERVICES = SERVICE_CARDS;
 
-/** Pixel art for each service row, by link (the lib's lucide icons stay for other pages). */
-const SERVICE_ICONS: Record<string, PixelIconName> = {
-  "/tier-selection": "brush",
-  "/prep": "magnifier",
-  "/shop": "kit",
-};
-const SERVICE_TILE = ["bg-rx-soft", "bg-powder", "bg-mint"];
+// "30+ years of combined collecting", set as a big figure and its words.
+const YEARS = (() => {
+  const title = REASONS.items[1].title;
+  const m = title.match(/^(\S+)\s(.*)$/);
+  return m ? { figure: m[1], rest: m[2] } : { figure: title, rest: "" };
+})();
 
-const REASON_ICONS: PixelIconName[] = ["user", "star", "magnifier", "shield"];
-const REASON_TILE = ["bg-rx-soft", "bg-butter", "bg-powder", "bg-mint"];
+const REASON_ICONS: LucideIcon[] = [UserRound, Star, ScanSearch, BadgeCheck];
 
 function structuredData() {
   return {
@@ -156,75 +171,14 @@ function structuredData() {
   };
 }
 
-/** A small pixel eyebrow: a square bullet and a pixel-font label. */
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="inline-flex items-center gap-2 font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-coral-deep md:text-xs">
-      <span aria-hidden className="size-1.5 bg-coral-deep" />
-      {children}
-    </p>
-  );
+/** A small card-shaped mark: the ticker separator and the category bullets. */
+function CardMark({ className = "" }: { className?: string }) {
+  return <span aria-hidden className={cn("inline-block h-[18px] w-[13px] shrink-0 rounded-[3px]", className)} />;
 }
 
-/** Section headline: the heading sans, bold, sentence case. */
-const H2 =
-  "font-heading font-bold leading-[1.05] tracking-[-0.02em] text-ink text-[clamp(2.125rem,6vw,3.25rem)] [text-wrap:balance]";
-
-/** A photo in a quiet window, with its name and detail underneath. */
-function PhotoWindow({
-  children,
-  label,
-  detail,
-  className = "",
-}: {
-  children: React.ReactNode;
-  label: string;
-  detail?: string;
-  className?: string;
-}) {
-  return (
-    <Window as="figure" tone="ink" className={`p-0 md:p-0 ${className}`}>
-      <div className="p-2.5 md:p-3">{children}</div>
-      <figcaption className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t-2 border-tile px-4 py-3">
-        <span className="font-heading text-lg font-semibold leading-tight text-ink">{label}</span>
-        {detail && <span className="text-sm text-ink-soft">{detail}</span>}
-      </figcaption>
-    </Window>
-  );
-}
-
-/**
- * The patient chart: a trading-card-shaped frame around the Mickey Mantle
- * before/after slider. Drag the divider to compare damaged and restored.
- */
-function PatientCard({ name }: { name: string }) {
-  return (
-    <figure className="relative mx-auto w-full max-w-[34rem] bg-butter p-2 px-frame-shadow md:p-2.5">
-      <div className="flex items-center justify-between gap-2 bg-panel px-3 py-2 px-frame">
-        <span className="font-heading text-lg font-semibold leading-none text-ink md:text-xl">{name}</span>
-      </div>
-      <div className="relative mt-2 px-frame">
-        <BeforeAfter
-          before={mantleBefore}
-          after={mantleAfter}
-          beforeAlt="A Mickey Mantle card before restoration, cracked across the face and jersey"
-          afterAlt="The same Mickey Mantle card after restoration"
-          sizes="(min-width: 1280px) 520px, (min-width: 768px) 70vw, 92vw"
-          priority
-        />
-      </div>
-      <figcaption className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 bg-panel px-3 py-3 px-frame">
-        <div className="flex flex-col gap-2">
-          <StatusChip status="discharged" className="self-start" />
-          <HpBar level={1} animate />
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          <StatusChip status="treatment">ADMITTED</StatusChip>
-          <HpBar level={0.18} label={null} className="w-full" />
-        </div>
-      </figcaption>
-    </figure>
-  );
+/** Instagram link label: the visible handle, with the new-tab note for screen readers. */
+function InstagramNote() {
+  return <span className="sr-only">on Instagram (opens in a new tab)</span>;
 }
 
 export default function HomePage() {
@@ -233,305 +187,487 @@ export default function HomePage() {
   const allCards = FAQ.find((f) => f.q === "What types of cards do you work on?")?.a;
   const mantle = RESULTS.find((r) => r.id === "mickey-mantle");
   const charmanderCase = RESULTS.find((r) => r.id === "charmander");
+  const [restoration, prep, kits] = SERVICES;
+  const bento = receipt(BENTO_RECEIPT);
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-clip">
       <JsonLd data={structuredData()} />
 
-      <TrustMarquee className="hero-in" />
+      <TrustMarquee />
 
-      {/* ── Front desk ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        <div className="relative mx-auto grid max-w-7xl gap-x-16 px-4 pt-8 pb-10 md:px-10 md:pt-14 md:pb-14 lg:pb-20 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
-          {/* The patient chart: drag to compare */}
-          <div className="hero-in order-2 mt-10 md:mt-12 xl:order-none xl:col-start-2 xl:row-start-1 xl:mt-0 xl:w-[30rem]" style={{ ["--d" as string]: 80 }}>
-            <PatientCard name={mantle?.card ?? "Mickey Mantle"} />
+      {/* ── Hero ───────────────────────────────────────────────────────── */}
+      <section aria-labelledby="hero-heading" className="surface-cobalt relative isolate overflow-hidden">
+        <span aria-hidden className="halftone-dots -right-[10%] -top-[18%] h-[120%] w-[70%]" />
+        <span aria-hidden className="halftone-dots -bottom-[30%] -left-[20%] h-[70%] w-[60%] opacity-70" />
+        <div className="wrap grid gap-x-14 pt-7 pb-16 sm:pt-10 md:pt-14 md:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] lg:grid-rows-[auto_1fr] lg:pt-16 lg:pb-24 xl:grid-cols-[minmax(0,1fr)_minmax(0,31rem)] xl:gap-x-20">
+          <h1
+            id="hero-heading"
+            className="hero-in font-display text-[clamp(3.25rem,14.2vw,6rem)] font-black leading-[0.86] tracking-[-0.012em] lg:col-start-1 lg:row-start-1 lg:text-[clamp(4.25rem,6.6vw,6.5rem)]"
+          >
+            <span className="block text-white">{HERO.headline[0]}</span>
+            <span className="block text-sun">{HERO.headline[1]}</span>
+          </h1>
+
+          {/* The Mantle, drag to compare, in its one-touch holder. */}
+          <div className="relative mx-auto mt-7 w-full max-w-[25rem] sm:mt-10 sm:max-w-[28rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-2 lg:max-w-none lg:self-start">
+            <div className="hero-in relative z-[1] lg:rotate-[1.5deg]" style={{ ["--d" as string]: 120 }}>
+              <AcrylicHolder title={mantle?.card ?? "Mickey Mantle"} detail={mantle?.detail}>
+                <BeforeAfter
+                  before={mantleBefore}
+                  after={mantleAfter}
+                  beforeAlt="A Mickey Mantle card before restoration, cracked across the face and jersey"
+                  afterAlt="The same Mickey Mantle card after restoration"
+                  sizes="(min-width: 1280px) 500px, (min-width: 1024px) 432px, (min-width: 640px) 448px, 92vw"
+                  priority
+                />
+              </AcrylicHolder>
+            </div>
           </div>
 
-          {/* The headline, the two actions, and what we never do right under them */}
-          <div className="relative z-10 order-1 lg:mx-auto lg:w-full lg:max-w-[736px] xl:order-none xl:mx-0 xl:max-w-none xl:col-start-1 xl:row-start-1">
-            <div className="hero-in" style={{ ["--d" as string]: 180 }}>
-              <h1 className="font-heading font-bold leading-[1.02] tracking-[-0.03em] text-[clamp(2.5rem,10vw,4rem)] xl:text-[clamp(3.25rem,4.6vw,4.5rem)] [text-wrap:balance]">
-                <span className="block text-ink">{HERO.headline[0]}</span>
-                <span className="block text-coral-deep">{HERO.headline[1]}</span>
-              </h1>
-              <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-ink-soft md:text-xl [text-wrap:pretty]">
-                {TAGLINE}
-              </p>
-              <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-                <Link href="/tier-selection" className={pixelButton({ size: "lg" })}>
-                  Restoration Pricing
-                </Link>
-                <Link href="/prep" className={pixelButton({ tone: "panel", size: "lg" })}>
-                  PSA Prep Pricing
-                </Link>
-              </div>
+          {/* Tagline, the two actions, and what we never do. */}
+          <div className="hero-in mt-10 lg:col-start-1 lg:row-start-2 lg:mt-8 lg:max-w-[36rem]" style={{ ["--d" as string]: 220 }}>
+            <p className="max-w-[34rem] text-[clamp(1.125rem,1.6vw,1.375rem)] font-medium leading-[1.5] text-[#e6ebff] [text-wrap:pretty]">
+              {TAGLINE}
+            </p>
+            <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:gap-4">
+              <Link href="/tier-selection" className={cta({ size: "lg" })}>
+                Restoration Pricing
+                <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+              </Link>
+              <Link href="/prep" className={cta({ tone: "outline-light", size: "lg" })}>
+                PSA Prep Pricing
+              </Link>
             </div>
-            <div className="hero-in mt-7 max-w-[36rem] border-l-2 md:mt-8 border-coral-deep pl-4" style={{ ["--d" as string]: 300 }}>
-              <p className="font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-ink-soft">We never</p>
-              <ul className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-3">
+            <div className="mt-9 flex flex-wrap items-center gap-x-3 gap-y-2.5">
+              <p className="label-caps mr-1 text-[17px] text-sun">We never</p>
+              <ul className="contents">
                 {PROCESS.never.map((item) => (
-                  <li key={item} className="flex items-center gap-2">
-                    <span aria-hidden className="font-pixel text-xs leading-none text-coral-deep">×</span>
-                    <span className="text-sm font-semibold leading-tight text-ink">{item}</span>
+                  <li
+                    key={item}
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full bg-ink/35 px-3.5 text-sm font-bold text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.22)]"
+                  >
+                    <X aria-hidden className="size-3.5 text-sun" strokeWidth={2.5} />
+                    {item}
                   </li>
                 ))}
               </ul>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* ── We do all cards ───────────────────────────────────────────── */}
-        <div aria-labelledby="all-cards-heading" role="region" className="border-t-2 border-tile bg-panel/60">
-          <div className="mx-auto grid max-w-7xl gap-x-12 gap-y-5 px-4 py-8 md:px-10 md:py-11 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center">
-            <h2 id="all-cards-heading" className="font-heading text-[clamp(1.875rem,5vw,2.5rem)] font-bold leading-none tracking-[-0.02em] text-ink">
+      {/* ── Symptoms ticker: flat and quiet ───────────────────────────── */}
+      <section aria-label="What we can fix" className="border-y border-line bg-white py-4 text-ink md:py-5">
+        <Marquee
+          label="What we can fix"
+          items={FIXES.map((word) => (
+            <span key={word} className="caps font-display text-[30px] font-extrabold leading-none tracking-[0.01em] md:text-[40px]">
+              {word}
+            </span>
+          ))}
+          speed={44}
+          pauseOnHover={false}
+          separator={<CardMark className="mx-6 rotate-[8deg] border-2 border-cobalt md:mx-9" />}
+        />
+      </section>
+
+      {/* ── We do all cards. ──────────────────────────────────────────── */}
+      <section aria-labelledby="all-cards-heading" className="surface-chalk">
+        <div className="wrap grid items-start gap-x-16 gap-y-8 py-16 md:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div>
+            <h2 id="all-cards-heading" data-reveal className="font-display text-[clamp(4rem,15vw,6.5rem)] font-black lg:text-[clamp(5.5rem,7vw,7rem)] leading-[0.84] tracking-[-0.015em] text-ink [text-wrap:balance]">
               We do all cards.
             </h2>
-            <div className="min-w-0">
-              {allCards && <p className="max-w-[62ch] text-[15px] leading-relaxed text-ink-soft md:text-base">{allCards}</p>}
-              <ul aria-label="Cards we work on" className="mt-4 flex flex-wrap gap-2">
-                {CARD_KINDS.map(({ label, tile }) => (
-                  <li key={label} className="flex h-8 shrink-0 items-center gap-2 bg-panel px-3 text-[13px] font-semibold whitespace-nowrap text-ink px-frame">
-                    <span aria-hidden className={`size-2 ${tile} outline outline-1 outline-ink/40`} />
-                    {label}
-                  </li>
-                ))}
-              </ul>
+            {/* All cards, shown with real cards: a sports card and two TCG
+                cards, each cropped close so none repeats a photo below. A row
+                of three tilted prints on phones, a loose stack from lg. */}
+            <div
+              data-reveal="stagger"
+              className="relative mt-10 flex items-start gap-3 sm:gap-5 lg:mt-12 lg:block lg:h-[24rem] lg:max-w-none"
+            >
+              <Print
+                src={mantleInHand}
+                alt="A restored Mickey Mantle baseball card held in a blue glove"
+                aspect="4/5"
+                position="62% 30%"
+                zoom={1.15}
+                tilt={-6}
+                border="sm"
+                sizes="(min-width: 1024px) 256px, 31vw"
+                className="w-[31%] shrink-0 lg:absolute lg:top-6 lg:left-0 lg:w-[16rem]"
+              />
+              <Print
+                src={charmanderAfter}
+                alt="The flame corner of a Base Set Charmander card after restoration"
+                aspect="4/5"
+                position="92% 26%"
+                zoom={1.5}
+                tilt={3}
+                border="sm"
+                sizes="(min-width: 1024px) 256px, 31vw"
+                className="z-[1] mt-4 w-[31%] shrink-0 lg:absolute lg:top-0 lg:left-[calc(50%-8rem)] lg:mt-0 lg:w-[16rem]"
+              />
+              <Print
+                src={garchomp}
+                alt="The holo corner of a Garchomp card"
+                aspect="4/5"
+                position="62% 40%"
+                zoom={1.3}
+                tilt={-2}
+                border="sm"
+                sizes="(min-width: 1024px) 256px, 31vw"
+                className="w-[31%] shrink-0 lg:absolute lg:top-10 lg:right-0 lg:w-[16rem]"
+              />
             </div>
-            <Link href="/tier-selection" className={pixelButton({ className: "justify-self-start lg:justify-self-end" })}>
+          </div>
+          <div className="lg:pt-3">
+            {allCards && <p data-reveal className="lead text-ink-soft">{allCards}</p>}
+            <div data-reveal="stagger" className="mt-8 grid gap-5">
+              {CARD_KINDS.map(({ group, items }) => (
+                <div key={group ?? items[0]} className={cn(!group && "border-t border-line pt-5")}>
+                  {group && <p className="label-caps mb-2.5 text-[13px] text-cobalt">{group}</p>}
+                  <ul aria-label={group ?? "Condition"} className="flex flex-wrap gap-2">
+                    {items.map((label) => (
+                      <li
+                        key={label}
+                        className={cn(
+                          "inline-flex min-h-9 items-center rounded-full px-3.5 text-[15px] font-bold",
+                          group
+                            ? "bg-white text-ink shadow-[0_0_0_1px_var(--line)]"
+                            : "bg-transparent text-ink shadow-[inset_0_0_0_1.5px_var(--ink)]"
+                        )}
+                      >
+                        {label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <Link href="/tier-selection" className={cta({ tone: "ink", size: "lg", className: "mt-10" })}>
               Book a Restoration
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Symptoms ticker ────────────────────────────────────────────── */}
-      <section aria-label="What we can fix" className="overflow-hidden bg-night py-5 md:py-6">
-        <VelocityMarquee>
-          {[0, 1].map((copy) => (
-            <ul key={copy} aria-hidden={copy === 1 || undefined} className={`flex items-center ${copy === 1 ? "marquee-dupe" : ""}`}>
-              {FIXES.map((word, i) => (
-                <li key={word} className="flex items-center">
-                  <span className={`whitespace-nowrap font-heading font-semibold leading-none tracking-[-0.02em] text-[clamp(1.875rem,5vw,3.5rem)] motion-reduce:text-[clamp(1.5rem,5vw,3.5rem)] ${i % 2 ? "text-mint" : "text-panel"}`}>
-                    {word}
-                  </span>
-                  <span aria-hidden className="mx-6 shrink-0 opacity-80 motion-reduce:mx-3 md:mx-10 md:motion-reduce:mx-8">
-                    <PixelIcon name="heart-plus" size={20} />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ))}
-        </VelocityMarquee>
-      </section>
-
-      {/* ── Results: admitted vs discharged ────────────────────────────── */}
-      <section aria-labelledby="results-heading" className="relative">
-        <div className="relative mx-auto max-w-7xl px-4 py-20 md:px-10 md:py-32">
-          <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-            <div data-reveal className="lg:col-span-7">
-              <Eyebrow>Why Collectors Trust Us</Eyebrow>
-              <h2 id="results-heading" className={`mt-4 ${H2}`}>
-                Proven Results
-              </h2>
-            </div>
-            <div data-reveal className="lg:col-span-5">
-              <p className="text-lg leading-relaxed text-ink-soft">
-                Hundreds of cards restored and prepped. We don&apos;t just claim results, we show them.
-              </p>
-              <Link href="/tier-selection" className={pixelButton({ tone: "panel", className: "mt-5" })}>See Our Services</Link>
-            </div>
+      {/* ── Proven Results ────────────────────────────────────────────── */}
+      <section aria-labelledby="results-heading" className="surface-ink relative">
+        <div className="wrap section-y">
+          <div data-reveal>
+            <SectionHead
+              id="results-heading"
+              tone="dark"
+              eyebrow="Why Collectors Trust Us"
+              title="Proven Results"
+              lead="Hundreds of cards restored and prepped. We don't just claim results, we show them."
+              actions={
+                <Link href="/tier-selection" className={cta({ size: "lg" })}>
+                  See Our Services
+                  <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+                </Link>
+              }
+            />
           </div>
 
-          <div className="mt-14 grid gap-10 md:mt-16 lg:grid-cols-12 lg:gap-10">
-            <div data-reveal className="lg:col-span-7">
-              <PhotoWindow label={mantle?.card ?? "Mickey Mantle"} detail={mantle?.detail}>
-                <div className="relative">
-                  <Image
-                    src={mantlePair}
-                    alt="A cracked Mickey Mantle card in a black glove next to the same card after restoration in a blue glove"
-                    sizes="(min-width: 1280px) 700px, (min-width: 1024px) 56vw, 92vw"
-                    className="h-auto w-full"
-                  />
-                  <StatusChip status="treatment" className="absolute bottom-2 left-2">ADMITTED</StatusChip>
-                  <StatusChip status="discharged" className="absolute right-2 bottom-2" />
-                </div>
-              </PhotoWindow>
-              {mantle && (
-                <p className="mt-6 max-w-2xl border-l-2 border-mint-deep pl-4 text-[15px] leading-relaxed text-ink-soft">{mantle.caption}</p>
-              )}
-            </div>
-
-            <div className="grid gap-10 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
-              <div data-reveal style={{ transitionDelay: "100ms" }}>
-                <PhotoWindow label={charmanderCase?.card ?? "Charmander"} detail={charmanderCase?.detail}>
-                  <div className="bg-wall/60 px-6 py-5">
-                    <Image src={charmander} alt="A Charmander card before and after restoration" sizes="(min-width: 1024px) 420px, 45vw" className="mx-auto h-auto w-full max-w-[22rem]" />
-                  </div>
-                </PhotoWindow>
-              </div>
-              <div data-reveal style={{ transitionDelay: "180ms" }}>
-                <PhotoWindow label="Garchomp">
-                  <div className="stage stage-light px-6 py-4">
-                    <Image src={garchomp} alt="A Garchomp card corner before and after restoration" sizes="(min-width: 1024px) 420px, 45vw" className="relative mx-auto h-auto w-full max-w-[20rem]" />
-                  </div>
-                </PhotoWindow>
-              </div>
-            </div>
-          </div>
-
-          <dl className="mt-16 grid border-y-2 border-tile sm:grid-cols-2 md:mt-24">
-            {[
-              { stat: cardsRestored, label: "Cards Restored" },
-              { stat: "Free", label: "Photo Review" },
-            ].map((s, i) => (
-              <div
-                key={s.label}
-                data-reveal
-                style={{ transitionDelay: `${i * 90}ms` }}
-                className={`flex flex-col-reverse gap-3 py-8 md:py-10 ${i > 0 ? "border-t-2 border-tile sm:border-t-0 sm:border-l-2 sm:pl-10" : ""}`}
+          <div className="mt-12 grid gap-6 md:mt-16 md:gap-7 lg:grid-cols-12">
+            {/* The Mantle pair on a studio seamless. Both cases share two
+                grid rows (photo, caption), so their captions line up. */}
+            <figure data-reveal className="m-0 lg:col-span-7 lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:gap-y-0">
+              <Seamless
+                src={mantlePair}
+                alt="A cracked Mickey Mantle card in a black glove next to the same card after restoration in a blue glove"
+                aspect="1446/1000"
+                inset="5% 4% 3%"
+                sizes="(min-width: 1280px) 720px, (min-width: 1024px) 56vw, 92vw"
               >
-                <dt className="font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft">{s.label}</dt>
-                <dd className="font-heading text-[clamp(3rem,8vw,4.75rem)] font-bold leading-[0.9] tracking-[-0.03em] text-ink tabular-nums">
-                  <CountUp value={s.stat} />
-                </dd>
+                <span className="ba-label left-4 md:left-5">Before</span>
+                <span className="ba-label right-4 md:right-5" style={{ background: "var(--sun)", color: "var(--ink)" }}>After</span>
+              </Seamless>
+              <figcaption className="mt-5 grid content-start gap-2 md:grid-cols-[auto_minmax(0,1fr)] md:gap-x-8">
+                <span>
+                  <span className="caps block font-display text-[28px] font-black leading-none md:text-[32px]">{mantle?.card}</span>
+                  <span className="mt-1.5 block text-sm font-bold text-sun">{mantle?.detail}</span>
+                </span>
+                {mantle && <span className="max-w-[60ch] text-[15px] leading-relaxed text-on-dark-muted">{mantle.caption}</span>}
+              </figcaption>
+            </figure>
+
+            {/* The Charmander composite as a print. */}
+            <figure data-reveal style={{ transitionDelay: "90ms" }} className="m-0 lg:col-span-5 lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:gap-y-0">
+              <div className="grid items-center">
+                <Print
+                  src={charmanderPair}
+                  alt="A Charmander card before and after restoration, side by side"
+                  aspect="576/513"
+                  surface="dark"
+                  border="lg"
+                  tilt={1.5}
+                  lift
+                  sizes="(min-width: 1024px) 460px, 92vw"
+                  caption={
+                    <span className="flex items-baseline justify-between gap-3">
+                      <span>{charmanderCase?.card}</span>
+                      <span className="font-sans text-sm font-bold normal-case tracking-normal text-ink-soft">{charmanderCase?.detail}</span>
+                    </span>
+                  }
+                  className="mx-auto w-full max-w-[30rem]"
+                >
+                  <span className="ba-label left-3">Before</span>
+                  <span className="ba-label ba-label-after right-3">After</span>
+                </Print>
               </div>
-            ))}
-          </dl>
+              {charmanderCase && <figcaption className="mt-5 text-[15px] leading-relaxed text-on-dark-muted">{charmanderCase.caption}</figcaption>}
+            </figure>
+
+            {/* Row two: the Charizard lot sheet, the two stats, a close-up of the cracking. */}
+            <CaseCard className="lg:col-span-5" />
+            <div data-reveal="stagger" className="grid gap-6 sm:grid-cols-2 md:gap-7 lg:col-span-3 lg:grid-cols-1">
+              <StatBlock tone="sun" value={<CountUp value={cardsRestored} />} label="Cards Restored" className="min-h-[180px] [&_.stat-value]:text-[clamp(64px,6vw,88px)]" />
+              <StatBlock tone="ink" value="Free" label="Photo Review" className="min-h-[180px] [&_.stat-value]:text-[clamp(64px,6vw,88px)]" />
+            </div>
+            {/* The Charizard lot sheet's own receipt: the customer's message. */}
+            <div data-reveal className="grid place-items-center py-4 lg:col-span-4">
+              <Print
+                src={bento.src}
+                alt={bento.alt}
+                aspect={`${bento.src.width}/${bento.src.height}`}
+                fit="contain"
+                matte={bento.matte}
+                surface="dark"
+                border="md"
+                tilt={-2.5}
+                lift
+                sizes="(min-width: 1024px) 340px, 86vw"
+                className="w-full max-w-[22rem]"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── Watch the work ─────────────────────────────────────────────── */}
-      <section aria-labelledby="watch-heading" className="bg-panel/60">
-        <div className="mx-auto max-w-7xl px-4 py-20 md:px-10 md:py-28">
-          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
-            <h2 id="watch-heading" data-reveal className={H2}>
+      {/* ── Watch the work ────────────────────────────────────────────── */}
+      <section aria-labelledby="watch-heading" className="surface-chalk">
+        <div className="wrap section-y">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+            <h2 id="watch-heading" data-reveal className="display-lg text-ink">
               Watch the work
             </h2>
-            <a
-              href={INSTAGRAM}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 font-semibold text-ink underline decoration-coral-deep decoration-2 underline-offset-4 hover:text-coral-deep"
-            >
-              <span aria-hidden className="grid size-6 place-items-center bg-rx-soft">
-                <PixelIcon name="camera" size={16} />
-              </span>
+            <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className={cta({ tone: "outline", size: "md" })}>
+              <Camera aria-hidden className="size-5" strokeWidth={1.75} />
               @the_card_doc
-              <span className="sr-only">on Instagram (opens in a new tab)</span>
+              <InstagramNote />
             </a>
           </div>
-          <div className="mt-10 md:mt-12">
+          <div className="mt-10 md:mt-14">
             <WatchTheWork />
           </div>
-          <div className="mt-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-ink-soft">Restoration results vary by card condition.</p>
-            <Link href="/tier-selection" className={pixelButton({ className: "self-start sm:self-auto" })}>
+          <div className="mt-6 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between md:mt-8">
+            <p className="text-[15px] font-medium text-ink-soft">Restoration results vary by card condition.</p>
+            <Link href="/tier-selection" className={cta({ size: "lg", className: "self-start sm:self-auto" })}>
               Book a Restoration
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
             </Link>
           </div>
         </div>
       </section>
 
-      <ReviewsBand title="What our customers say" />
+      {/* ── What our customers say ────────────────────────────────────── */}
+      <section aria-labelledby="reviews-heading" className="surface-white relative">
+        <div className="wrap section-y">
+          <h2 id="reviews-heading" data-reveal className="display-lg max-w-4xl text-ink">
+            What our customers say
+          </h2>
+          {/* One pull quote, then one receipts strip (text messages from md up). */}
+          <FeaturedReview className="mt-10 max-w-5xl md:mt-14" />
 
-      <TrustedBy />
+          <div className="mt-12 md:mt-20">
+            <ReviewBubbles exclude={[BENTO_RECEIPT]} textOnPhone={false} />
+          </div>
+          <div className="mt-10 flex md:mt-12 md:justify-center">
+            <Link href="/tier-selection" className={cta({ tone: "ink", size: "lg" })}>
+              Book a Restoration
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
+          </div>
 
-      {/* ── Intake: the slot for your card ─────────────────────────────── */}
-      <div className="wall-band">
-        <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-4 py-14 md:px-10 md:py-20 lg:place-items-center">
-          <div className="mx-auto grid w-full max-w-xl grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] items-center gap-6 sm:gap-10">
-            <CardSlot className="w-full max-w-[16rem]" />
-
-            <div className="grid size-32 place-items-center justify-self-center bg-panel px-frame-shadow sm:size-36">
-              <span className="px-3 text-center font-heading text-xl font-bold leading-[1.1] text-ink sm:text-2xl">
-                Free<br />Photo<br />Review
-              </span>
-            </div>
+          <div className="mt-16 border-t border-line pt-16">
+            <TrustedBy bare />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Services ───────────────────────────────────────────────────── */}
-      <section aria-labelledby="services-heading">
-        <div className="mx-auto max-w-6xl px-4 py-20 md:px-10 md:py-32">
-          <h2 id="services-heading" data-reveal className={H2}>
+      {/* ── Services ──────────────────────────────────────────────────── */}
+      <section aria-labelledby="services-heading" className="surface-chalk">
+        <div className="wrap pt-16 pb-[var(--section-y)] md:pt-24">
+          <h2 id="services-heading" data-reveal className="display-lg text-ink">
             Services
           </h2>
 
-          <ul data-reveal className="mt-10 border-t-2 border-tile md:mt-12">
-            {SERVICES.map(({ href, name, line, price, action }, i) => (
-              <li key={href} className="border-b-2 border-tile">
-                <Link
-                  href={href}
-                  className="group grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-4 px-1 py-7 transition-colors duration-150 hover:bg-panel/70 focus-visible:bg-panel/70 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-x-8 md:px-4 md:py-8"
-                >
-                  <span aria-hidden className={`grid size-14 place-items-center md:size-16 ${SERVICE_TILE[i % SERVICE_TILE.length]}`}>
-                    <PixelIcon name={SERVICE_ICONS[href] ?? "heart-plus"} size={32} />
+          <ul className="mt-10 grid gap-6 md:mt-14 md:gap-7 lg:grid-cols-12 lg:grid-rows-[auto_auto]">
+            {/* Restoration: the big cobalt tile. */}
+            <li data-reveal className="lg:col-span-7 lg:row-span-2">
+              <Link
+                href={restoration.href}
+                className="surface-cobalt group relative isolate flex h-full flex-col overflow-hidden rounded-[22px] p-7 md:p-10"
+              >
+                <span aria-hidden className="halftone-dots -right-[10%] -bottom-[20%] h-[90%] w-[70%]" />
+                <span className="caps font-display text-[44px] font-black leading-[0.9] md:text-[64px]">{restoration.name}</span>
+                <span className="mt-4 max-w-[30ch] text-[17px] leading-relaxed text-[#e6ebff] md:text-lg">{restoration.line}</span>
+                <span className="relative my-8 grid min-h-[16rem] flex-1 place-items-center md:my-10">
+                  <Print
+                    src={charmanderAfter}
+                    alt="A Base Set Charmander card after restoration"
+                    aspect="364/503"
+                    position="50% 50%"
+                    surface="dark"
+                    tilt={-5}
+                    sizes="(min-width: 1024px) 300px, 60vw"
+                    className="w-[58%] max-w-[17rem] transition-transform duration-500 ease-[var(--ease-out)] group-hover:rotate-[-2deg] motion-reduce:transition-none"
+                  />
+                </span>
+                <span className="mt-auto flex flex-wrap items-end justify-between gap-5">
+                  <span className="font-display text-[40px] font-black leading-none text-sun md:text-[52px]">{restoration.price}</span>
+                  <span className={cta({ size: "lg" })}>
+                    {restoration.action}
+                    <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
                   </span>
-                  <span className="min-w-0">
-                    <span className="block font-heading text-2xl font-bold leading-tight tracking-[-0.01em] text-ink group-hover:text-coral-deep md:text-3xl">{name}</span>
-                    <span className="mt-1.5 block text-[15px] leading-relaxed text-ink-soft">{line}</span>
-                  </span>
-                  <span className="col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center md:col-span-1 md:flex-col md:items-end">
-                    <span className={price.startsWith("From") ? "font-heading text-xl font-bold leading-none tracking-[-0.01em] text-ink tabular-nums md:text-2xl" : "font-pixel text-xs uppercase tracking-[0.04em] text-ink-soft"}>
-                      {price}
+                </span>
+              </Link>
+            </li>
+
+            {/* Prep: a white tile. */}
+            <li data-reveal style={{ transitionDelay: "90ms" }} className="lg:col-span-5">
+              <Link
+                href={prep.href}
+                className="group grid h-full gap-6 rounded-[22px] bg-white p-7 text-ink shadow-[0_0_0_1px_var(--line),var(--panel-shadow)] md:p-8"
+              >
+                <span className="flex flex-col">
+                  <span className="caps font-display text-[40px] font-black leading-[0.9] md:text-[48px]">{prep.name}</span>
+                  <span className="mt-3 text-[16px] leading-relaxed text-ink-soft">{prep.line}</span>
+                  <span className="mt-auto pt-6 font-display text-[34px] font-black leading-none whitespace-nowrap text-cobalt md:text-[40px]">{prep.price}</span>
+                </span>
+                <span className={cta({ tone: "ink", className: "justify-self-start" })}>
+                  {prep.action}
+                  <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+                </span>
+              </Link>
+            </li>
+
+            {/* DIY Kits: the sun tile. */}
+            <li data-reveal style={{ transitionDelay: "160ms" }} className="lg:col-span-5">
+              <Link
+                href={kits.href}
+                className="surface-sun group grid h-full gap-6 rounded-[22px] p-7 md:p-8"
+              >
+                <span className="flex flex-col">
+                  <span className="caps font-display text-[40px] font-black leading-[0.9] md:text-[48px]">{kits.name}</span>
+                  <span className="mt-3 text-[16px] leading-relaxed text-ink">{kits.line}</span>
+                  <span className="mt-auto pt-6 text-[15px] font-extrabold leading-snug text-ink">{kits.price}</span>
+                </span>
+                <span className={cta({ tone: "ink", className: "justify-self-start" })}>
+                  {kits.action}
+                  <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+                </span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* ── The Step-by-Step Process ──────────────────────────────────── */}
+      <section aria-labelledby="process-heading" className="surface-ink">
+        <div className="wrap section-y">
+          <div data-reveal className="flex flex-wrap items-end justify-between gap-x-12 gap-y-7">
+            <h2 id="process-heading" className="display-lg text-white">
+              The <span className="whitespace-nowrap">Step-by-Step</span> Process
+            </h2>
+            <Link href="/how-it-works" className={cta({ size: "lg" })}>
+              How It Works
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
+          </div>
+          <div className="mt-12 md:mt-16">
+            <ProcessSteps
+              steps={STEPS}
+              photos={{
+                list: [
+                  { src: mantleDetail, alt: "Close-up of the cracking on a Mickey Mantle card before restoration", aspect: "1" },
+                  { src: mantleInHand, alt: "The same Mickey Mantle card after restoration, held in a blue glove", aspect: "1", position: "50% 45%" },
+                ],
+                forStep: [0, 0, 0, 0, 1, 1],
+              }}
+              phonePhoto={{ src: mantleDetail, alt: "", aspect: "4/3", position: "50% 45%" }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why collectors choose us ──────────────────────────────────── */}
+      <section aria-labelledby="reasons-heading" className="surface-white">
+        <div className="wrap section-y grid items-center gap-x-16 gap-y-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          {/* The years figure as a cobalt slab (type, not another photo). */}
+          <div data-reveal className="surface-cobalt relative isolate mx-auto hidden w-full max-w-[34rem] overflow-hidden rounded-[22px] p-8 md:block md:p-12">
+            <span aria-hidden className="halftone-dots -right-[20%] -bottom-[25%] h-[90%] w-[80%]" />
+            <p className="relative">
+              <span className="block font-display text-[clamp(7rem,30vw,12rem)] font-black leading-[0.8] tracking-[-0.02em] text-sun">{YEARS.figure}</span>
+              <span className="mt-4 block max-w-[14ch] font-display text-[clamp(2rem,7vw,3rem)] font-extrabold leading-[0.95] text-white">{YEARS.rest}</span>
+            </p>
+          </div>
+          <div>
+            <h2 id="reasons-heading" data-reveal className="display-lg text-ink">
+              {REASONS.title}
+            </h2>
+            <p data-reveal className="lead mt-6 text-ink-soft">{REASONS.lead}</p>
+            <ul data-reveal="stagger" className="mt-10 grid gap-x-10 gap-y-9 sm:grid-cols-2">
+              {REASONS.items.map((item, i) => {
+                const Icon = REASON_ICONS[i] ?? BadgeCheck;
+                return (
+                  <li key={item.title} className="border-t-2 border-ink pt-5">
+                    <span aria-hidden className="grid size-11 place-items-center rounded-xl bg-cobalt-wash text-cobalt">
+                      <Icon className="size-5" strokeWidth={1.75} />
                     </span>
-                    <span className={pixelButton({ className: "w-full sm:w-auto md:min-w-40" })}>{action}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                    <h3 className="mt-4 font-display text-[26px] font-extrabold leading-[1] text-ink">{item.title}</h3>
+                    <p className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">{item.body}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* ── Why collectors choose us ───────────────────────────────────── */}
-      <section aria-labelledby="reasons-heading" className="wall-band">
-        <div className="relative mx-auto max-w-7xl px-4 pt-20 pb-20 md:px-10 md:pt-28 md:pb-28">
-          <h2 id="reasons-heading" data-reveal className={`max-w-3xl ${H2}`}>
-            {REASONS.title}
-          </h2>
-          <ul data-reveal="stagger" className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {REASONS.items.map((item, i) => (
-              <li key={item.title} className="flex">
-                <Window tone="ink" className="flex w-full flex-col">
-                  <span aria-hidden className={`grid size-11 place-items-center ${REASON_TILE[i % REASON_TILE.length]}`}>
-                    <PixelIcon name={REASON_ICONS[i] ?? "heart-plus"} size={24} />
-                  </span>
-                  <h3 className="mt-5 font-heading text-xl font-semibold leading-snug text-ink">{item.title}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{item.body}</p>
-                </Window>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ── FAQ ────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="faq-heading" className="relative bg-panel/60">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-[1fr_1.5fr] md:gap-16 md:px-10 md:py-32">
-          <div className="md:sticky md:top-32 md:self-start">
-            <Eyebrow>Before You Order</Eyebrow>
-            <h2 id="faq-heading" className={`mt-4 mb-7 ${H2}`}>
+      {/* ── FAQ ───────────────────────────────────────────────────────── */}
+      <section aria-labelledby="faq-heading" className="surface-chalk">
+        <div className="wrap section-y grid gap-x-20 gap-y-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+          <div className="md:sticky md:top-[calc(var(--header-h)+2.5rem)] md:self-start">
+            <p className="eyebrow mb-4 text-cobalt">Before You Order</p>
+            <h2 id="faq-heading" className="display-md text-ink">
               Frequently asked questions
             </h2>
-            <Link href="/faq" className={pixelButton({ tone: "panel" })}>See all FAQs</Link>
+            <Link href="/faq" className={cta({ tone: "outline", className: "mt-8" })}>
+              See all FAQs
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
           </div>
-          <div data-reveal className="border-t-2 border-tile">
-            {FAQ.map((item) => (
-              <details key={item.q} className="group border-b-2 border-tile">
-                <summary className="flex min-h-16 cursor-pointer list-none items-center gap-4 py-5 select-none [&::-webkit-details-marker]:hidden">
-                  <span className="flex-1 font-heading text-lg font-semibold leading-snug text-ink group-hover:text-coral-deep md:text-xl">{item.q}</span>
+          <div data-reveal className="border-t-2 border-ink">
+            {FAQ.map((item, i) => (
+              <details key={item.q} open={i === 0} className="group border-b border-ink/20">
+                <summary className="flex min-h-16 cursor-pointer list-none items-center gap-5 py-5 select-none [&::-webkit-details-marker]:hidden">
+                  <span className="flex-1 text-lg font-extrabold leading-snug text-ink transition-colors duration-150 group-hover:text-cobalt md:text-xl">
+                    {item.q}
+                  </span>
                   <span
                     aria-hidden
-                    className="grid size-8 shrink-0 place-items-center bg-panel font-pixel text-sm leading-none text-ink px-frame group-open:bg-mint"
+                    className="grid size-10 shrink-0 place-items-center rounded-full bg-white text-ink shadow-[0_0_0_1px_var(--line)] transition-[rotate,background-color] duration-300 ease-[var(--ease-out)] group-open:rotate-45 group-open:bg-sun motion-reduce:transition-none"
                   >
-                    <span className="group-open:hidden">+</span>
-                    <span className="hidden group-open:inline">−</span>
+                    <Plus className="size-5" strokeWidth={2} />
                   </span>
                 </summary>
-                <div className="pb-6 pr-12">
-                  <p className="max-w-[62ch] text-base leading-relaxed text-ink-soft">{item.a}</p>
+                <div className="pb-7 pr-4 md:pr-16">
+                  <p className="max-w-[62ch] text-base leading-relaxed text-ink-soft md:text-[17px]">{item.a}</p>
                 </div>
               </details>
             ))}
@@ -539,58 +675,62 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Terms ──────────────────────────────────────────────────────── */}
-      <section aria-labelledby="terms-heading" className="py-20 md:py-32">
-        <div className="mx-auto max-w-6xl px-4 md:px-10">
-          <div className="mb-12 max-w-2xl md:mb-14">
-            <h2 id="terms-heading" className={`mb-5 ${H2}`}>
+      {/* ── Terms of Service ──────────────────────────────────────────── */}
+      <section aria-labelledby="terms-heading" className="surface-white">
+        <div className="wrap section-y">
+          <div className="grid gap-x-16 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end">
+            <h2 id="terms-heading" className="display-md text-ink">
               Terms of Service
             </h2>
-            <p className="text-base leading-relaxed text-ink-soft md:text-lg">
+            <p className="max-w-[46ch] text-[17px] leading-relaxed text-ink-soft md:text-lg">
               By placing an order you agree to these terms. Key points are summarized below.{" "}
-              <Link href="/terms" className="font-semibold text-coral-deep underline decoration-2 underline-offset-2">Read the full terms</Link>
+              <Link href="/terms" className="tlink text-cobalt">Read the full terms</Link>
             </p>
           </div>
-          <div data-reveal="stagger" className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
-            {TOS_HIGHLIGHTS.map(({ title, body, icon }) => (
-              <div key={title} className="flex gap-4 border-t-2 border-tile pt-6 md:gap-5">
-                <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-wall/70">
-                  <PixelIcon name={icon} size={24} />
+          <div data-reveal="stagger" className="mt-12 grid grid-cols-1 gap-x-14 gap-y-10 md:mt-14 md:grid-cols-2">
+            {TOS_HIGHLIGHTS.map(({ title, body, icon: Icon }) => (
+              <div key={title} className="flex gap-5 border-t-2 border-ink pt-6">
+                <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-xl bg-chalk text-ink">
+                  <Icon className="size-5" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0">
-                  <h3 className="mb-2 font-heading text-xl font-semibold leading-snug text-ink">{title}</h3>
-                  <p className="text-sm leading-relaxed text-ink-soft md:text-[15px]">{body}</p>
+                  <h3 className="mb-2 text-xl font-extrabold leading-snug text-ink">{title}</h3>
+                  <p className="text-[15px] leading-relaxed text-ink-soft">{body}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-14 bg-butter/40 p-5 text-sm leading-relaxed text-ink px-frame md:p-6">
-            <p>
-              <strong>Important:</strong> All sales are final once work begins. Turnaround times are estimates only and are not guaranteed.
+          <div className="surface-sun mt-14 rounded-[22px] p-7 md:mt-16 md:p-10">
+            <p className="max-w-[80ch] text-[16px] leading-relaxed md:text-[17px]">
+              <strong className="font-extrabold">Important:</strong> All sales are final once work begins. Turnaround times are estimates only and are not guaranteed.
               The Card Doc LLC is not responsible for loss or damage during transit. Restoration results vary by card condition.
               By submitting an order, you acknowledge and agree to the full{" "}
-              <Link href="/terms" className="font-semibold text-coral-deep underline decoration-2 underline-offset-2 hover:text-ink">Terms and Conditions</Link>.
+              <Link href="/terms" className="font-extrabold underline decoration-2 underline-offset-4 hover:decoration-cobalt">Terms and Conditions</Link>.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── Closing: night at the clinic ───────────────────────────────── */}
-      <section aria-labelledby="close-heading" className="stage stage-light relative overflow-hidden">
-        <div className="relative z-[1] mx-auto max-w-4xl px-4 pt-24 pb-24 text-center md:px-10 md:pt-32 md:pb-28">
-          <DocSprite scale={2} animate={false} className="mx-auto mb-8 block" />
-          <h2 id="close-heading" data-reveal className="font-heading font-bold leading-[1.05] tracking-[-0.02em] text-[clamp(2.125rem,6vw,3.5rem)] [text-wrap:balance]">
-            <span className="block text-stage-fg">Your Collection Means Something.</span>
-            <span className="block text-butter">We Understand Why.</span>
+      {/* ── Closing ───────────────────────────────────────────────────── */}
+      <section aria-labelledby="close-heading" className="surface-cobalt relative isolate overflow-hidden">
+        <span aria-hidden className="halftone-dots -left-[10%] -top-[20%] h-[140%] w-[60%]" />
+        <div className="wrap relative py-24 text-center md:py-36">
+          <h2 id="close-heading" data-reveal className="mx-auto max-w-5xl font-display text-[clamp(3rem,7.4vw,6.75rem)] font-black leading-[0.88] tracking-[-0.01em] [text-wrap:balance]">
+            <span className="block text-white">Your Collection Means Something.</span>
+            <span className="mt-2 block text-sun">We Understand Why.</span>
           </h2>
-          <p data-reveal className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-stage-muted md:text-xl">
+          <p data-reveal className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-[#e6ebff] md:text-xl">
             From childhood favorites to prized collectibles, every card deserves thoughtful care.
           </p>
           <div data-reveal className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-            <Link href="/tier-selection" className={pixelButton({ size: "lg" })}>Explore Restoration Services</Link>
-            <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className={pixelButton({ tone: "panel", size: "lg" })}>
+            <Link href="/tier-selection" className={cta({ size: "lg" })}>
+              Explore Restoration Services
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
+            <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className={cta({ tone: "outline-light", size: "lg" })}>
               Contact Us
-              <span className="sr-only">on Instagram (opens in a new tab)</span>
+              <ArrowUpRight aria-hidden className="size-5" strokeWidth={2} />
+              <InstagramNote />
             </a>
           </div>
         </div>

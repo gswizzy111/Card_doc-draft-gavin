@@ -3,6 +3,8 @@
 import { Info, ShieldCheck, ShieldOff } from "lucide-react";
 import { INSURANCE_DECLINED_TEXT, INSURANCE_DETAILS, NOT_INSURED_TEXT } from "@/lib/legal/current-terms";
 import { Need, Req } from "./required";
+import { CHOICE, CHOICE_FOCUS, CHOICE_OFF, CHOICE_ON, INSET, NOTE_SUN } from "./form-styles";
+import { cn } from "@/lib/utils";
 
 export type InsuranceElection = "purchased" | "declined" | null;
 
@@ -32,27 +34,29 @@ export function InsuranceElectionBox({
 }) {
   const option = (value: Exclude<InsuranceElection, null>, label: string, Icon: typeof ShieldCheck, disabled = false) => (
     <label
-      className={`flex min-h-12 items-start gap-3 p-3 px-frame has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-3 has-[:focus-visible]:outline-frame-deep ${
-        disabled ? "cursor-not-allowed bg-muted opacity-50" : election === value ? "cursor-pointer bg-rx-soft" : "cursor-pointer bg-panel hover:bg-butter/30"
-      }`}
+      className={cn(
+        "flex min-h-14 items-center gap-3 px-4 py-3",
+        CHOICE_FOCUS,
+        disabled ? CHOICE_OFF : cn("cursor-pointer", CHOICE, election === value && CHOICE_ON)
+      )}
     >
       <input
         type="radio"
         name="insurance-election"
-        className="mt-0.5 accent-primary"
+        className="shrink-0"
         checked={election === value}
         disabled={disabled}
         onChange={() => onElection(value)}
       />
-      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-ink" strokeWidth={1.75} />
-      <span className="text-[15px] font-semibold text-ink">{label}</span>
+      <Icon className="size-5 shrink-0 text-cobalt" strokeWidth={1.75} />
+      <span className="text-[15px] font-bold text-ink">{label}</span>
     </label>
   );
 
   return (
-    <div className="flex flex-col gap-3" id="insurance-election">
+    <div className="flex flex-col gap-4" id="insurance-election">
       <div>
-        <h3 className="font-heading text-xl text-ink">Shipping insurance<Req /> <span className="font-sans text-xs normal-case tracking-normal text-ink-soft">(choose one)</span></h3>
+        <h3 className="font-heading text-[1.5rem] leading-none font-extrabold text-ink">Shipping insurance<Req /> <span className="font-sans text-sm font-semibold normal-case tracking-normal text-ink-soft">(choose one)</span></h3>
         <p className="mt-1 text-sm text-ink-soft">{NOT_INSURED_TEXT}</p>
       </div>
       <Need missing={showMissing && election === null} note="Choose to buy or decline shipping insurance.">
@@ -63,7 +67,7 @@ export function InsuranceElectionBox({
       </Need>
       {!purchaseAvailable && unavailableNote && <p className="text-xs text-muted-foreground">{unavailableNote}</p>}
       {election === "purchased" && purchaseAvailable && (
-        <div className="flex flex-col gap-3 bg-panel p-4 px-frame">
+        <div className={`${INSET} flex flex-col gap-3`}>
           <ul className="flex flex-col gap-1.5 text-[13px] leading-relaxed text-ink-soft">
             {INSURANCE_DETAILS.map((d) => <li key={d}>{d}</li>)}
           </ul>
@@ -73,7 +77,7 @@ export function InsuranceElectionBox({
         </div>
       )}
       {election === "declined" && (
-        <p className="flex items-start gap-2 bg-butter/40 px-3 py-2.5 text-sm text-ink px-frame">
+        <p className={`${NOTE_SUN} flex items-start gap-2`}>
           <Info className="h-4 w-4 mt-0.5 shrink-0" strokeWidth={1.75} />
           {INSURANCE_DECLINED_TEXT}
         </p>

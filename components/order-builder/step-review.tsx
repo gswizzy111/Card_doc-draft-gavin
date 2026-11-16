@@ -12,6 +12,9 @@ import { INSURANCE_ENABLED } from "@/lib/site-config";
 import { InsuranceElectionBox, type InsuranceElection } from "@/components/checkout/insurance-election";
 import { Req } from "@/components/checkout/required";
 import type { InsuranceType } from "@/lib/types";
+import { CHOICE, CHOICE_FOCUS, CHOICE_ON, FORM_PANEL, BLOCK_TITLE, NOTE_OK, STEP_TITLE, TEXT_ACTION } from "@/components/checkout/form-styles";
+import { cta } from "@/components/brand";
+import { cn } from "@/lib/utils";
 
 const INSURANCE_OPTION_LABELS: Record<Exclude<InsuranceType, "none">, { label: string; sub: string }> = {
   inbound: { label: "Insure the trip to us", sub: "Covers the prepaid label's package from you to The Card Doc" },
@@ -227,16 +230,16 @@ export function StepReview({
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="mb-2 font-heading text-[2.25rem] leading-none text-ink md:text-5xl">Review your order.</h2>
+        <h2 className={STEP_TITLE}>Review your order.</h2>
       </div>
 
       {/* Bulk discount banner (it replaces a smaller code or loyalty discount) */}
       {discountKind === "bulk" && (
-        <div className="flex items-center gap-3 bg-mint/35 p-4 px-frame-shadow">
-          <Trophy className="h-6 w-6 shrink-0 text-mint-deep" strokeWidth={1.75} />
+        <div className={`${NOTE_OK} flex items-center gap-3.5 p-4`}>
+          <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-success text-white"><Trophy className="size-5" strokeWidth={1.75} /></span>
           <div>
-            <p className="font-bold text-ink text-sm">{discountPercentApplied}% bulk discount applied!</p>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-[15px] font-bold text-ink">{discountPercentApplied}% bulk discount applied!</p>
+            <p className="mt-0.5 text-xs text-ink-soft">
               {cards.length} cards: {discountPercentApplied}% off the per-card price{cards.some((c) => (c.tier ?? selectedTier) === "elite") ? " (Diamond cards excluded)" : ""}.
             </p>
           </div>
@@ -244,13 +247,13 @@ export function StepReview({
       )}
 
       {/* Shipping */}
-      <div className="flex flex-col gap-2">
+      <div className={`${FORM_PANEL} flex flex-col gap-2`}>
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-xl text-ink">Shipping</h3>
+          <h3 className={`${BLOCK_TITLE} text-[1.375rem] md:text-[1.5rem]`}>Shipping</h3>
           <button
             type="button"
             onClick={() => onEditStep(4)}
-            className="-my-2 inline-flex min-h-11 items-center px-2 font-pixel text-xs uppercase tracking-[0.04em] text-coral-deep hover:bg-butter/40 hover:underline"
+            className={TEXT_ACTION}
           >
             Edit
           </button>
@@ -266,18 +269,18 @@ export function StepReview({
 
       {/* Signature confirmation add-on */}
       {shippingMethod === "buy_label" && (
-        <div className={`p-4 px-frame ${addSignatureConfirmation ? "bg-powder/35" : "bg-panel"}`}>
-          <label className="flex items-start gap-3 cursor-pointer select-none">
+        <div className={cn("p-4 sm:p-5", CHOICE, CHOICE_FOCUS, addSignatureConfirmation && CHOICE_ON)}>
+          <label className="flex cursor-pointer items-start gap-3.5 select-none">
             <input
               type="checkbox"
               checked={addSignatureConfirmation}
               onChange={(e) => onSignatureConfirmationChange(e.target.checked)}
-              className="mt-0.5 size-5 shrink-0 cursor-pointer accent-primary"
+              className="mt-0.5 shrink-0"
             />
             <div>
               <p className="text-[15px] font-semibold text-ink">
                 Add signature confirmation on delivery{" "}
-                <span className="font-semibold text-coral-deep">+$5.00</span>
+                <span className="font-bold text-cobalt-deep">+$5.00</span>
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Requires someone to sign for the package when delivered to you. Adds an extra layer of security for high-value cards.
@@ -289,6 +292,7 @@ export function StepReview({
 
       {/* Shipping insurance: a required choice, buy or decline (Terms 15.2, 15.4) */}
       {INSURANCE_ENABLED && (
+        <div className={FORM_PANEL}>
         <InsuranceElectionBox
           election={insuranceElection}
           onElection={onInsuranceElectionChange}
@@ -309,7 +313,7 @@ export function StepReview({
                 onChange={(e) => setInsuranceDollars(e.target.value)}
                 onBlur={handleDeclaredValueBlur}
                 placeholder="e.g. 500"
-                className="h-11 w-40 rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+                className="h-11 w-40 rounded-[12px] border-[1.5px] border-input bg-white px-3.5 text-base outline-none transition-[border-color] placeholder:text-muted-foreground hover:border-ink-soft focus-visible:border-cobalt focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cobalt md:text-[15px]"
               />
               {quotingInsurance && <span className="text-xs text-muted-foreground">Getting rate...</span>}
             </div>
@@ -322,17 +326,17 @@ export function StepReview({
                 const { label, sub } = INSURANCE_OPTION_LABELS[type];
                 const price = type === "round_trip" ? insuranceQuote.roundTripChargeCents : insuranceQuote.customerChargeCents;
                 return (
-                  <label key={type} className={`flex cursor-pointer items-start gap-3 p-3 px-frame has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-3 has-[:focus-visible]:outline-frame-deep ${insurance.type === type ? "bg-rx-soft" : "bg-panel hover:bg-butter/30"}`}>
+                  <label key={type} className={cn("flex cursor-pointer items-start gap-3 p-3.5", CHOICE, CHOICE_FOCUS, insurance.type === type && CHOICE_ON)}>
                     <input
                       type="radio"
                       name="insurance-type"
                       checked={insurance.type === type}
                       onChange={() => handleInsuranceTypeChange(type)}
-                      className="mt-0.5 accent-primary"
+                      className="mt-0.5"
                     />
                     <div className="flex-1">
-                      <span className="text-sm font-medium text-foreground">{label}</span>
-                      <span className="ml-2 text-sm font-semibold text-coral-deep">{formatCurrency(price)}</span>
+                      <span className="text-sm font-bold text-ink">{label}</span>
+                      <span className="ml-2 text-sm font-bold text-cobalt-deep">{formatCurrency(price)}</span>
                       <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
                     </div>
                   </label>
@@ -345,25 +349,26 @@ export function StepReview({
             <p className="text-xs text-muted-foreground italic">Enter the amount to insure to see the price.</p>
           )}
         </InsuranceElectionBox>
+        </div>
       )}
 
       {/* Instagram Feature Add-on */}
-      <div className={`p-5 px-frame ${instagramFeature ? "bg-powder/35" : "bg-panel"}`}>
-        <label className="flex items-start gap-4 cursor-pointer select-none">
+      <div className={cn("p-5 sm:p-6", CHOICE, CHOICE_FOCUS, instagramFeature && CHOICE_ON)}>
+        <label className="flex cursor-pointer items-start gap-4 select-none">
           <input
             type="checkbox"
             checked={instagramFeature}
             onChange={(e) => onInstagramFeatureChange(e.target.checked)}
-            className="mt-0.5 size-5 shrink-0 cursor-pointer accent-primary"
+            className="mt-1 shrink-0"
           />
           <div>
-            <p className="font-heading text-xl leading-tight text-ink">
+            <p className="font-heading text-[1.5rem] leading-[1.05] font-extrabold text-ink">
               Feature my card in an Instagram video{" "}
-              <span className="text-coral-deep">+{formatCurrency(INSTAGRAM_FEATURE_CENTS)}</span>
+              <span className="text-cobalt-deep">+{formatCurrency(INSTAGRAM_FEATURE_CENTS)}</span>
             </p>
             <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
               We&apos;ll film your card being restored and post it to{" "}
-              <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="text-rx hover:underline">@the_card_doc</a>.
+              <a href="https://www.instagram.com/the_card_doc" target="_blank" rel="noopener noreferrer" className="font-semibold text-cobalt underline-offset-2 hover:underline">@the_card_doc</a>.
               Perfect for rare or high-value cards.
             </p>
           </div>
@@ -371,10 +376,10 @@ export function StepReview({
       </div>
 
       {/* Tip */}
-      <div className="px-window-ink p-5">
-        <p className="mb-1 font-heading text-xl text-ink">Add a tip <span className="font-sans text-xs normal-case tracking-normal text-ink-soft">(optional)</span></p>
+      <div className={FORM_PANEL}>
+        <p className="mb-1.5 font-heading text-[1.5rem] leading-none font-extrabold text-ink">Add a tip <span className="font-sans text-sm font-semibold normal-case tracking-normal text-ink-soft">(optional)</span></p>
         <p className="text-sm text-muted-foreground mb-3">100% goes to the technician working on your cards. Thank you!</p>
-        <div className="mb-4 flex flex-wrap gap-3">
+        <div className="mb-4 flex flex-wrap gap-2.5">
           {[0, ...TIP_PRESETS_CENTS].map((cents) => (
             <button
               key={cents}
@@ -384,18 +389,19 @@ export function StepReview({
                 setCustomTip("");
                 onTipCentsChange(cents);
               }}
-              className={`px-btn h-11 px-3.5 text-base ${
+              className={cn(
+                "min-h-11 rounded-full px-4 text-[15px] font-bold tabular-nums transition-[background-color,box-shadow,color] duration-150 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cobalt",
                 tipCents === cents
-                  ? "px-btn-mint"
-                  : "px-btn-panel"
-              }`}
+                  ? "bg-ink text-white"
+                  : "bg-white text-ink shadow-[inset_0_0_0_1.5px_var(--line-strong)] hover:shadow-[inset_0_0_0_1.5px_var(--ink-soft)]"
+              )}
             >
               {cents === 0 ? "No tip" : formatCurrency(cents)}
             </button>
           ))}
         </div>
         <div className="relative max-w-xs">
-          <span className="absolute left-3 top-1/2 z-[1] -translate-y-1/2 text-sm text-ink-soft">$</span>
+          <span className="absolute left-3.5 top-1/2 z-[1] -translate-y-1/2 text-sm font-semibold text-ink-soft">$</span>
           <input
             type="number"
             min={0}
@@ -411,11 +417,12 @@ export function StepReview({
               setCustomTip(v > MAX_TIP_CENTS ? String(MAX_TIP_CENTS / 100) : e.target.value);
               onTipCentsChange(Math.min(Math.max(v, 0), MAX_TIP_CENTS));
             }}
-            className="h-11 w-full rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px] pl-7"
+            className="h-11 w-full rounded-[12px] border-[1.5px] border-input bg-white px-3.5 text-base outline-none transition-[border-color] placeholder:text-muted-foreground hover:border-ink-soft focus-visible:border-cobalt focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cobalt md:text-[15px] pl-7"
           />
         </div>
       </div>
 
+      <div className={`${FORM_PANEL} flex flex-col gap-7`}>
       {/* Notes */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="customer-notes">Anything else we should know? (optional)</Label>
@@ -443,25 +450,25 @@ export function StepReview({
               onDiscountChange(0);
             }}
             placeholder="CREATOR123"
-            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-[12px] border-[1.5px] border-input bg-white px-3.5 text-base outline-none transition-[border-color] placeholder:text-muted-foreground hover:border-ink-soft focus-visible:border-cobalt focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cobalt md:text-[15px]"
           />
           <button
             type="button"
             onClick={validateCode}
             disabled={!affiliateCode.trim()}
-            className="px-btn px-btn-panel h-11 shrink-0 px-4 text-sm disabled:opacity-45"
+            className={cta({ tone: "outline", size: "sm", className: "shrink-0 px-5" })}
           >
             Apply
           </button>
         </div>
         {codeStatus === "valid" && discountPercent > 0 && discountKind !== "bulk" && (
-          <p className="text-sm font-semibold text-mint-deep"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />{discountPercent}% discount applied — {codeName}</p>
+          <p className="text-sm font-semibold text-success"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />{discountPercent}% discount applied — {codeName}</p>
         )}
         {codeStatus === "valid" && discountPercent > 0 && discountKind === "bulk" && (
           <p className="text-sm text-muted-foreground">Your {bulkPercent}% bulk discount is bigger, so it applies instead of this code (discounts don&apos;t combine).</p>
         )}
         {codeStatus === "valid" && discountPercent === 0 && (
-          <p className="text-sm font-semibold text-mint-deep"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Code applied — {codeName}</p>
+          <p className="text-sm font-semibold text-success"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Code applied — {codeName}</p>
         )}
         {codeStatus === "invalid" && <p className="text-sm text-destructive">Invalid code.</p>}
       </div>
@@ -480,21 +487,23 @@ export function StepReview({
               onGiftCardAmountChange(0);
             }}
             placeholder="GIFT-XXXX-XXXX"
-            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-none border-2 border-input bg-panel px-3 text-base shadow-[inset_0_2px_0_var(--muted)] outline-none placeholder:text-muted-foreground focus-visible:border-frame-deep focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-frame-deep/35 md:text-[15px]"
+            className="h-11 min-w-0 flex-1 font-mono uppercase rounded-[12px] border-[1.5px] border-input bg-white px-3.5 text-base outline-none transition-[border-color] placeholder:text-muted-foreground hover:border-ink-soft focus-visible:border-cobalt focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cobalt md:text-[15px]"
           />
           <button
             type="button"
             onClick={validateGiftCard}
             disabled={!giftCardCode.trim()}
-            className="px-btn px-btn-panel h-11 shrink-0 px-4 text-sm disabled:opacity-45"
+            className={cta({ tone: "outline", size: "sm", className: "shrink-0 px-5" })}
           >
             Apply
           </button>
         </div>
         {gcStatus === "valid" && gcApplied > 0 && (
-          <p className="text-sm font-semibold text-mint-deep"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Gift card applied — {formatCurrency(gcApplied)} off</p>
+          <p className="text-sm font-semibold text-success"><Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />Gift card applied — {formatCurrency(gcApplied)} off</p>
         )}
         {gcStatus === "invalid" && <p className="text-sm text-destructive">Invalid or already used gift card.</p>}
+      </div>
+
       </div>
 
       {signingSlot}

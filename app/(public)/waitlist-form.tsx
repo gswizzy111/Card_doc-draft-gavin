@@ -34,7 +34,7 @@ export function WaitlistForm() {
 
   if (status === "success") {
     return (
-      <p className="mt-8 inline-flex items-center gap-2 bg-mint px-4 py-3 text-base font-semibold text-ink px-frame">
+      <p role="status" className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-success-tint px-5 py-3 text-base font-semibold text-ink">
         <Check className="h-4 w-4 shrink-0" strokeWidth={3} />You&apos;re on the list — we&apos;ll email you when we&apos;re back.
       </p>
     );
@@ -42,7 +42,7 @@ export function WaitlistForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mt-10 flex flex-col items-center gap-3">
-      <p className="mb-1 font-pixel text-xs uppercase tracking-[0.06em] text-stage-muted">
+      <p className="label-caps mb-1 text-[15px] text-on-dark-muted">
         Get notified when we&apos;re back
       </p>
       <div className="flex w-full max-w-[420px] gap-3">
@@ -52,17 +52,19 @@ export function WaitlistForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
-          className="h-12 min-w-0 flex-1 border-2 border-stage-muted bg-night-raise px-4 text-base text-stage-fg outline-none placeholder:text-stage-muted focus-visible:border-butter focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-butter/35"
+          aria-label="Email address"
+          autoComplete="email"
+          className="h-12 min-w-0 flex-1 rounded-full border-[1.5px] border-line-dark bg-ink-2 px-5 text-base text-white outline-none transition-[border-color] placeholder:text-on-dark-muted hover:border-on-dark-muted focus-visible:border-sun focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sun"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="px-btn h-12 shrink-0 px-5 text-base disabled:opacity-60"
+          className="btn btn-sun shrink-0 disabled:opacity-60"
         >
           {status === "loading" ? "..." : "Notify Me"}
         </button>
       </div>
-      {error && <p className="text-sm font-semibold text-rx-bright">{error}</p>}
+      {error && <p role="alert" className="text-sm font-semibold text-sun">{error}</p>}
     </form>
   );
 }

@@ -6,14 +6,15 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { usePrefersReducedMotion } from "@/components/motion/use-reduced-motion";
 
-// Booking and checkout pages, where the dock would cover the form: the
+// Booking and checkout pages, where the dock would cover the form, and the
+// Prep pages, where a visitor is shopping Prep, not Restoration: the
 // restoration and prep order forms, the cart and its checkout, gift cards,
 // subscriptions and the pages a payment returns to.
 const HIDE_ON = [
   "/restoration",
   "/tier-selection",
   "/order",
-  "/prep/order",
+  "/prep",
   "/cart",
   "/checkout",
   "/gift-cards",
@@ -27,7 +28,7 @@ export function hidesBookingButton(pathname: string) {
 }
 
 /**
- * Phone call button: a small night-window button with the Doc's portrait,
+ * Phone call button: a small ink pill with the brand mark,
  * bottom right. It climbs in once the visitor scrolls
  * past the first screen, tucks away when the footer arrives (so it never
  * covers the end of the page) and pads for the home indicator.
@@ -38,6 +39,15 @@ export function RestorationBubble() {
   const [pastHero, setPastHero] = useState(false);
   const [atFooter, setAtFooter] = useState(false);
   const hidden = hidesBookingButton(pathname);
+
+  // While the dock can show, phones get room under <main> (globals.css,
+  // html[data-dock]) so it never sits over the last rows of a page.
+  useEffect(() => {
+    if (hidden) return;
+    const root = document.documentElement;
+    root.setAttribute("data-dock", "");
+    return () => root.removeAttribute("data-dock");
+  }, [hidden]);
 
   useEffect(() => {
     if (hidden) return;
@@ -73,15 +83,15 @@ export function RestorationBubble() {
         >
           <Link
             href="/restoration"
-            className="press group flex items-center gap-2.5 bg-night py-1.5 pr-1.5 pl-1.5 text-stage-fg px-frame-shadow"
+            className="group flex min-h-14 items-center gap-3 rounded-full bg-ink py-1.5 pr-5 pl-1.5 text-white shadow-[0_0_0_2px_var(--white),0_14px_30px_-10px_rgba(8,12,40,0.6)] transition-transform duration-150 ease-out active:scale-[0.97]"
           >
-            <span aria-hidden className="relative shrink-0">
+            <span aria-hidden className="relative block size-11 shrink-0 overflow-hidden rounded-full bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/card-doctor.jpg" alt="" className="block size-11 bg-panel object-cover object-[50%_18%] p-[2px] shadow-[inset_0_0_0_2px_var(--frame)]" />
+              <img src="/card-doctor.jpg" alt="" className="block size-full scale-[1.9] object-cover object-[52%_0%] [transform-origin:52%_12%]" />
             </span>
-            <span className="flex flex-col items-start gap-1 pr-1">
-              <span className="font-heading text-base font-semibold leading-none">Book a Restoration</span>
-              <span className="font-pixel text-[0.6875rem] leading-none text-butter tabular-nums">
+            <span className="flex flex-col items-start gap-1">
+              <span className="text-[15px] font-extrabold leading-none">Book a Restoration</span>
+              <span className="font-display text-[15px] font-extrabold leading-none tracking-[0.02em] text-sun tabular-nums">
                 From $75 / card
               </span>
             </span>

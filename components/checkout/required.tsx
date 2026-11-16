@@ -32,10 +32,15 @@ export function Need({
   return (
     <div
       data-missing={missing || undefined}
-      className={`${className} ${missing ? "outline-3 outline-offset-4 outline-destructive" : ""}`}
+      className={`${className} ${missing ? "rounded-[10px] outline-2 outline-offset-4 outline-destructive" : ""}`}
     >
       {children}
-      {missing && note && <p className="mt-1.5 flex items-center gap-1.5 text-sm font-semibold text-destructive" role="alert"><span aria-hidden className="size-2 shrink-0 bg-destructive" />{note}</p>}
+      {missing && note && (
+        <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-destructive" role="alert">
+          <span aria-hidden className="grid size-4 shrink-0 place-items-center rounded-full bg-destructive text-[11px] font-black leading-none text-white">!</span>
+          {note}
+        </p>
+      )}
     </div>
   );
 }

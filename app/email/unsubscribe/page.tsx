@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { DocPortrait, Window } from "@/components/pixel";
 import { MailWarning } from "lucide-react";
 import { lookupUnsubscribeToken } from "@/lib/email-unsubscribe";
 import { UnsubscribePanel } from "./unsubscribe-panel";
+import { PortalHeader } from "@/components/account/portal";
 
 // The token is in this page's address: never pass it on to other pages or sites
 export const metadata: Metadata = {
@@ -34,24 +33,19 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
   }
 
   return (
-    <div className="page-glow flex flex-1 flex-col min-h-screen">
-      <div className="max-w-7xl w-full mx-auto px-4 md:px-10 py-5">
-        <Link href="/" className="inline-flex min-h-11 items-center gap-3 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-frame-deep">
-          <DocPortrait size="xs" alt="" />
-          <span className="font-heading text-xl text-ink">The Card Doc</span>
-        </Link>
-      </div>
+    <div className="surface-chalk flex min-h-screen flex-1 flex-col">
+      <PortalHeader width="max-w-3xl" sticky={false} />
       <div className="flex flex-1 items-center">
-        <div className="mx-auto w-full max-w-xl px-4 py-16 md:px-10 md:py-28">
-          <Window className="px-6 py-8 md:px-8">
+        <div className="mx-auto w-full max-w-xl px-4 py-16 md:py-28">
+          <div className="rounded-[22px] bg-white px-6 py-8 shadow-[0_0_0_1px_var(--line),var(--panel-shadow)] md:px-10 md:py-10">
           {found ? (
             <UnsubscribePanel token={token} email={found.email} alreadyUnsubscribed={found.unsubscribed} />
           ) : (
             <>
-              <span className="mb-6 flex size-12 items-center justify-center bg-rx-soft text-coral-deep px-frame">
-                <MailWarning className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+              <span className="mb-6 flex size-14 items-center justify-center rounded-[18px] bg-cobalt-wash text-cobalt">
+                <MailWarning className="size-7" strokeWidth={1.75} aria-hidden />
               </span>
-              <h1 className="mb-4 font-heading text-3xl leading-tight text-ink md:text-4xl">
+              <h1 className="mb-4 font-heading text-[2.25rem] leading-[0.95] font-black text-ink md:text-[2.75rem]">
                 {failed ? "Something went wrong" : "This link isn't valid"}
               </h1>
               <p className="text-[17px] leading-relaxed text-ink-soft">
@@ -61,7 +55,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
               </p>
             </>
           )}
-          </Window>
+          </div>
         </div>
       </div>
     </div>

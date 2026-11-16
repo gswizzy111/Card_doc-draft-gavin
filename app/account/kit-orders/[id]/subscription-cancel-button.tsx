@@ -26,7 +26,7 @@ export function SubscriptionCancelButton() {
 
   if (done) {
     return (
-      <div className="bg-mint/25 border border-mint-deep/50 px-4 py-3 text-sm text-mint-deep font-semibold">
+      <div className="rounded-[14px] bg-success-tint px-4 py-3 text-sm font-semibold text-success">
         ✓ Subscription cancelled. No future charges will occur.
       </div>
     );
@@ -36,7 +36,7 @@ export function SubscriptionCancelButton() {
     return (
       <button
         onClick={() => setConfirming(true)}
-        className="text-sm font-semibold px-4 py-2 bg-rx-soft text-destructive border border-destructive/50 hover:bg-rx-soft transition-colors"
+        className="inline-flex min-h-11 items-center rounded-full px-5 text-sm font-bold text-destructive shadow-[inset_0_0_0_1.5px_currentColor] transition-colors hover:bg-red-50"
       >
         Cancel Subscription
       </button>
@@ -44,24 +44,24 @@ export function SubscriptionCancelButton() {
   }
 
   return (
-    <div className="border border-destructive/50 p-4 bg-rx-soft flex flex-col gap-3">
+    <div className="flex flex-col gap-3 rounded-[14px] bg-red-50 p-4 shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--danger)_30%,transparent)]">
       <p className="text-sm font-semibold text-destructive">Are you sure you want to cancel?</p>
       <p className="text-xs text-destructive">
         Your subscription will be cancelled immediately. Any kit that has already shipped is yours to keep.
         Future monthly charges will stop.
       </p>
       {error && <p className="text-xs text-destructive font-semibold">{error}</p>}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <button
           onClick={handleCancel}
           disabled={loading}
-          className="px-4 py-2 text-sm font-bold bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+          className="btn btn-danger btn-sm"
         >
           {loading ? "Cancelling…" : "Yes, Cancel Subscription"}
         </button>
         <button
           onClick={() => setConfirming(false)}
-          className="px-4 py-2 text-sm font-semibold bg-panel px-frame text-foreground hover:bg-secondary transition-colors"
+          className="btn btn-white btn-sm"
         >
           Keep Subscription
         </button>

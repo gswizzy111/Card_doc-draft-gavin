@@ -12,18 +12,10 @@ import { VALUE_HELP } from "@/lib/legal/current-terms";
 import type { Service, CardEntry } from "@/lib/types";
 import { getAllTiers, formatCents } from "@/lib/restoration-tiers";
 import type { RestorationTier, RestorationTierId } from "@/lib/restoration-tiers";
+import { CHOICE, CHOICE_FOCUS, CHOICE_OFF, CHOICE_ON, FORM_PANEL, STEP_TITLE } from "@/components/checkout/form-styles";
+import { cn } from "@/lib/utils";
 
 const DEFAULT_TIERS = getAllTiers();
-
-// One selection style for every tier (clinic theme)
-const TIER_STYLES: Record<string, { selected: string; normal: string }> = {
-  regular: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  expedited: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  premium: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  ultra_premium: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  elite: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-  fast_pass: { selected: "bg-rx-soft text-ink outline-2 -outline-offset-[6px] outline-coral-deep", normal: "bg-panel text-ink hover:bg-[color-mix(in_srgb,var(--butter)_30%,var(--panel))]" },
-};
 
 function parseCents(str: string): number {
   const val = parseFloat(str.replace(/[$,]/g, ""));
@@ -114,15 +106,15 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="mb-2 font-heading text-[2.25rem] leading-none text-ink md:text-5xl">
+        <h2 className={`${STEP_TITLE} mb-4`}>
           Tell us about your cards.
         </h2>
-        <p className="text-ink-soft">
+        <p className="lead text-ink-soft">
           Add each card you&apos;re sending. You can assign different services to different cards.
         </p>
       </div>
 
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-8">
         {cards.map((card, i) => {
           const estimatedValueCents = parseCents(card.estimated_value ?? "");
           const activeTierId = card.tier ?? defaultTier;
@@ -130,9 +122,10 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
           const missing = new Set(showMissing ? cardProblems(card, defaultTier, tiers) : []);
 
           return (
-            <div key={card.id} className="px-window flex flex-col gap-5 p-4 pt-5 sm:p-6">
+            <div key={card.id} className={`${FORM_PANEL} flex flex-col gap-6`}>
               <div className="flex items-center justify-between">
-                <h3 className="font-heading text-2xl leading-none text-ink">
+                <h3 className="flex items-center gap-3 font-heading text-[1.75rem] leading-none font-black text-ink">
+                  <span aria-hidden className="h-7 w-1.5 rounded-full bg-sun" />
                   Card {i + 1}
                 </h3>
                 {cards.length > 1 && (
@@ -140,7 +133,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                     type="button"
                     onClick={() => removeCard(card.id)}
                     aria-label={`Remove card ${i + 1}`}
-                    className="grid size-11 place-items-center text-ink-soft hover:bg-rx-soft hover:text-destructive focus-visible:outline-3 focus-visible:outline-frame-deep"
+                    className="grid size-11 place-items-center rounded-full text-ink-soft transition-colors hover:bg-red-50 hover:text-destructive focus-visible:outline-3 focus-visible:outline-cobalt"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -207,11 +200,10 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
               {/* Per-card tier selector */}
               <Need missing={missing.has("tier")} note={activeTier ? "Pick a tier that allows this card's value." : "Pick a service level."} className="flex flex-col gap-2">
                 <Label>Service Level<Req /></Label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                   {tiers.map((t) => {
                     const selected = (card.tier ?? defaultTier) === t.id;
                     const available = tierAvailable(t, estimatedValueCents);
-                    const styles = TIER_STYLES[t.id] ?? TIER_STYLES.regular;
                     return (
                       <button
                         key={t.id}
@@ -219,21 +211,24 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                         disabled={!available}
                         onClick={() => available && updateCard(card.id, { tier: t.id as RestorationTierId })}
                         title={!available && t.max_card_value_cents ? `Requires cards under $${(t.max_card_value_cents / 100).toLocaleString()}` : undefined}
-                        className={`min-h-14 px-3 py-2.5 text-left text-sm px-frame focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-frame-deep ${
-                          !available
-                            ? "cursor-not-allowed bg-muted text-ink-soft opacity-50"
-                            : selected
-                            ? styles.selected
-                            : styles.normal
-                        }`}
+                        className={cn(
+                          "relative min-h-16 px-3.5 py-3 text-left text-sm",
+                          CHOICE_FOCUS,
+                          !available ? CHOICE_OFF : cn(CHOICE, selected && CHOICE_ON)
+                        )}
                       >
-                        <span className="block font-heading text-lg leading-tight">
-                          {selected && <Check className="inline h-3.5 w-3.5 mr-1 -mt-0.5" strokeWidth={2.5} />}{t.name}
+                        {selected && (
+                          <span aria-hidden className="absolute top-2.5 right-2.5 grid size-5 place-items-center rounded-full bg-cobalt text-white">
+                            <Check className="size-3.5" strokeWidth={3} />
+                          </span>
+                        )}
+                        <span className="block pr-6 font-heading text-[1.3rem] leading-tight font-extrabold">
+                          {t.name}
                           {!available && t.max_card_value_cents && (
                             <span className="ml-1 font-sans text-xs normal-case tracking-normal">(max ${(t.max_card_value_cents / 100).toLocaleString()})</span>
                           )}
                         </span>
-                        <span className="text-xs">
+                        <span className="mt-0.5 block text-[13px] leading-snug text-ink-soft">
                           {t.pricing_type === "percentage"
                             ? `${((t.pricing_rate ?? 0) * 100).toFixed(0)}% of value`
                             : `${formatCents(t.price_cents)}/card`}
@@ -259,11 +254,11 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                           type="button"
                           onClick={() => toggleService(card.id, s.id)}
                           aria-pressed={active}
-                          className={`inline-flex min-h-10 items-center px-3 font-pixel text-xs uppercase tracking-[0.04em] px-frame ${
-                            active
-                              ? "bg-mint text-ink"
-                              : "bg-panel text-ink-soft hover:bg-butter/40"
-                          }`}
+                          className={cn(
+                            "inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold",
+                            CHOICE_FOCUS,
+                            active ? "bg-ink text-white" : "bg-white text-ink shadow-[inset_0_0_0_1.5px_var(--line-strong)] hover:shadow-[inset_0_0_0_1.5px_var(--ink-soft)]"
+                          )}
                         >
                           {s.name}
                         </button>
@@ -280,7 +275,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                     Photos<Req />
                   </Label>
                   {card.photo_urls.length > 0 && (
-                    <span className="text-xs font-semibold text-mint-deep"><Check className="inline h-3 w-3 mr-1 -mt-0.5" strokeWidth={2.5} />{card.photo_urls.length} photo{card.photo_urls.length !== 1 ? "s" : ""} added</span>
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-success"><Check className="size-3.5" strokeWidth={2.75} />{card.photo_urls.length} photo{card.photo_urls.length !== 1 ? "s" : ""} added</span>
                   )}
                 </div>
                 <PhotoUploader
@@ -293,7 +288,7 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
               </Need>
 
               {/* Slab cracking */}
-              <div className="flex items-start gap-3 bg-panel px-4 py-3.5 px-frame has-[:checked]:bg-butter/35">
+              <div className={cn("flex items-start gap-3.5 px-4 py-4", CHOICE, CHOICE_FOCUS, "has-[:checked]:bg-cobalt-wash has-[:checked]:shadow-[inset_0_0_0_2px_var(--cobalt)]")}>
                 <input
                   type="checkbox"
                   id={`slab-${card.id}`}
@@ -303,10 +298,10 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
                     // Its authorization pops up right away
                     if (e.target.checked) onOpenSlab?.(card.id);
                   }}
-                  className="mt-0.5 size-5 shrink-0 accent-[var(--rx)]"
+                  className="mt-0.5 shrink-0"
                 />
-                <label htmlFor={`slab-${card.id}`} className="text-sm cursor-pointer">
-                  <span className="font-semibold text-ink">Need your slab cracked? +$7</span>
+                <label htmlFor={`slab-${card.id}`} className="flex-1 cursor-pointer text-sm">
+                  <span className="text-[15px] font-bold text-ink">Need your slab cracked? +$7</span>
                   <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft">
                     Check this if your card is currently in a PSA, BGS, or other graded slab and needs to be removed before restoration.
                   </span>
@@ -314,16 +309,16 @@ export function StepCards({ cards, services, selectedServiceIds, onChange, defau
               </div>
 
               {/* Pregrade */}
-              <div className="flex items-start gap-3 bg-panel px-4 py-3.5 px-frame has-[:checked]:bg-butter/35">
+              <div className={cn("flex items-start gap-3.5 px-4 py-4", CHOICE, CHOICE_FOCUS, "has-[:checked]:bg-cobalt-wash has-[:checked]:shadow-[inset_0_0_0_2px_var(--cobalt)]")}>
                 <input
                   type="checkbox"
                   id={`pregrade-${card.id}`}
                   checked={card.needs_pregrade ?? false}
                   onChange={(e) => updateCard(card.id, { needs_pregrade: e.target.checked })}
-                  className="mt-0.5 size-5 shrink-0 accent-[var(--rx)]"
+                  className="mt-0.5 shrink-0"
                 />
-                <label htmlFor={`pregrade-${card.id}`} className="text-sm cursor-pointer">
-                  <span className="font-semibold text-ink">Add Pregrade? +$25</span>
+                <label htmlFor={`pregrade-${card.id}`} className="flex-1 cursor-pointer text-sm">
+                  <span className="text-[15px] font-bold text-ink">Add Pregrade? +$25</span>
                   <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft">
                     We&apos;ll pregrade your card before submitting so you know what grade to expect — helping you decide whether to send it off.
                   </span>

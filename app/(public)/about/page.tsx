@@ -2,17 +2,35 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { canonical } from "@/lib/seo";
-import { ArrowUpRight, X } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BadgeCheck,
+  Droplets,
+  Flame,
+  ScanSearch,
+  Sparkles,
+  Star,
+  UserRound,
+  Waves,
+  Wrench,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { SplitReveal } from "@/components/motion/split-reveal";
-import { ExpandingStage } from "@/components/motion/expanding-stage";
 import { CountUp } from "@/components/motion/count-up";
-import { CustomerReviews } from "@/components/marketing/customer-reviews";
+import { FeaturedReview, ReviewBubbles } from "@/components/marketing/comic-reviews";
 import { PhotoFigure } from "@/components/about/photo-figure";
 import { ResultsGallery } from "@/components/about/results-gallery";
+import { Print, SectionHead, StatBlock, Sticker, cta } from "@/components/brand";
 import { getCardsFinishedStat } from "@/lib/site-stats";
 import { FOUNDERS, FOUNDERS_MESSAGE, HERO, PROCESS, REASONS, RESULTS, STORY } from "@/lib/about";
 import { siteUrl } from "@/lib/site-url";
-import { DocSprite, PixelIcon, WallBand, Window, pixelButton, type PixelIconName } from "@/components/pixel";
+import { cn } from "@/lib/utils";
+import { SeamlessPrint } from "../seamless-print";
+import mantleBeforeHeld from "@/public/home/mantle-before-held.jpg";
+import charmanderAfter from "@/public/home/charmander-after.jpg";
+import garchomp from "@/public/home/garchomp.jpg";
 
 // The finished-cards figure is read from the database; refresh it hourly.
 export const revalidate = 3600;
@@ -65,215 +83,306 @@ const JSON_LD = {
   },
 };
 
-// Section headings: the heading sans, bold, sentence case.
-const sectionTitle = "font-heading font-bold text-[2.125rem] md:text-5xl tracking-[-0.02em] leading-[1.05] [text-wrap:balance]";
+const REASON_ICONS: LucideIcon[] = [UserRound, Star, ScanSearch, BadgeCheck];
+const METHOD_ICONS: LucideIcon[] = [Sparkles, Waves, Droplets, Flame, Wrench];
 
-// Small pixel icons beside each reason.
-const REASON_ICONS: PixelIconName[] = ["heart-plus", "star", "magnifier", "shield"];
-// Decorative pixel icons beside each treatment method.
-const METHOD_ICONS: PixelIconName[] = ["sparkle", "bandage", "clock", "box", "brush"];
+/** Instagram link label: the new-tab note for screen readers. */
+function InstagramNote() {
+  return <span className="sr-only">on Instagram (opens in a new tab)</span>;
+}
 
-/** A small pixel eyebrow with a square bullet. */
-function WallTab({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function BookCta({ tone = "sun", className }: { tone?: "sun" | "ink"; className?: string }) {
   return (
-    <p className={`inline-flex items-center gap-2 font-pixel text-[0.6875rem] uppercase leading-none tracking-[0.06em] text-coral-deep md:text-xs ${className}`}>
-      <span aria-hidden className="size-1.5 bg-coral-deep" />
-      {children}
-    </p>
+    <Link href="/tier-selection" className={cta({ tone, size: "lg", className })}>
+      Book a Restoration
+      <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+    </Link>
   );
 }
 
 export default async function AboutPage() {
   const cardsFinished = await getCardsFinishedStat();
+  const [lineOne, lineTwo] = HERO.headline;
 
   return (
-    <>
-      {/* ── A. Hero: the front desk. Headline on the wall, the doc's line in a dialog, the discharged Mantle on the chart ── */}
-      <section className="relative overflow-x-clip">
-        <div className="max-w-7xl mx-auto px-4 md:px-10 pt-10 pb-16 md:pt-20 md:pb-24 lg:pt-24 lg:pb-28 grid gap-12 lg:gap-x-12 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-7 min-w-0">
-            <WallTab className="hero-in mb-6 md:mb-8">About Us</WallTab>
-            <h1 className="font-heading font-bold text-ink tracking-[-0.03em] leading-[1.02] text-[clamp(2.5rem,10vw,4rem)] md:text-[clamp(3.5rem,7vw,4.5rem)] lg:text-[clamp(3.25rem,4.8vw,4.5rem)]">
-              <span className="block">
-                <SplitReveal text={HERO.headline[0]} lines={["Built by", "Collectors."]} step={80} />
+    <div className="overflow-x-clip">
+      {/* ── Hero: cobalt, the founders' line, before and after in hand ─────── */}
+      <section aria-labelledby="about-heading" className="surface-cobalt relative isolate overflow-hidden">
+        <span aria-hidden className="halftone-dots -right-[8%] -top-[14%] h-[120%] w-[64%]" />
+        <span aria-hidden className="halftone-dots -bottom-[34%] -left-[22%] h-[70%] w-[56%] opacity-70" />
+        <div className="wrap grid items-center gap-x-14 gap-y-12 pt-12 pb-20 md:pt-20 md:pb-28 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+          <div className="min-w-0">
+            <p className="hero-in eyebrow mb-6 inline-flex items-center gap-2.5 text-sun">
+              <span aria-hidden className="h-[3px] w-6 rounded-full bg-sun" />
+              About Us
+            </p>
+            <h1
+              id="about-heading"
+              className="font-display text-[clamp(3.25rem,14vw,6rem)] font-black leading-[0.86] tracking-[-0.012em] lg:text-[clamp(4.5rem,7vw,7rem)]"
+            >
+              <span className="block text-white">
+                <SplitReveal text={lineOne} step={70} />
               </span>
-              <span className="block mt-[0.06em] text-coral-deep">
-                <SplitReveal text={HERO.headline[1]} lines={["Trusted with", "Collections."]} delay={240} step={80} />
+              <span className="block text-sun">
+                <SplitReveal text={lineTwo} delay={200} step={70} />
               </span>
             </h1>
-            <p className="hero-in mt-7 md:mt-8 max-w-xl text-lg md:text-xl text-ink-soft leading-relaxed [text-wrap:pretty]" style={{ ["--d" as string]: 520 }}>
+            <p
+              className="hero-in mt-8 max-w-[34rem] text-[clamp(1.125rem,1.6vw,1.375rem)] font-medium leading-[1.5] text-[#e6ebff] [text-wrap:pretty]"
+              style={{ ["--d" as string]: 420 }}
+            >
               {HERO.subheadline}
             </p>
-            <div className="hero-in mt-9 flex flex-col sm:flex-row gap-4" style={{ ["--d" as string]: 620 }}>
-              <Link href="/tier-selection" className={pixelButton({ size: "lg", className: "nudge-arrow" })}>
-                Explore Restoration Services <span className="arrow" aria-hidden>→</span>
+            <div className="hero-in mt-9 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:gap-4" style={{ ["--d" as string]: 520 }}>
+              <Link href="/tier-selection" className={cta({ size: "lg" })}>
+                Explore Restoration Services
+                <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
               </Link>
-              <a href="#founders" className={pixelButton({ tone: "panel", size: "lg" })}>
+              <a href="#founders" className={cta({ tone: "outline-light", size: "lg" })}>
                 Meet the Founders
               </a>
             </div>
           </div>
 
-          {/* The patient's chart: a real photo, framed in pixel UI */}
-          <figure className="relative mx-auto w-full max-w-[20rem] sm:max-w-[23rem] lg:max-w-[25rem] lg:col-span-5 lg:col-start-8 lg:justify-self-end">
-            <div className="specimen-land">
-              <div className="px-window-ink p-3 md:p-4">
-                <div className="relative bg-ink p-[2px]">
-                  <Image
-                    src={HERO.photo.src}
-                    alt={HERO.photo.alt}
-                    preload
-                    sizes="(min-width: 1024px) 400px, (min-width: 640px) 368px, 320px"
-                    className="block w-full h-auto"
-                  />
-                </div>
-                <figcaption className="flex items-baseline justify-between gap-3 pt-3">
-                  <span className="font-heading text-lg font-semibold text-ink">Mickey Mantle</span>
-                  <span className="rx-label text-mint-deep">After restoration</span>
-                </figcaption>
-              </div>
+          {/* The same Mantle, cracked in a black glove and restored in a blue one. */}
+          <div className="relative mx-auto aspect-[10/9] w-full max-w-[30rem] lg:max-w-none">
+            <Print
+              src={mantleBeforeHeld}
+              alt="The Mickey Mantle card before restoration, cracked, held in a black glove"
+              aspect="4/5"
+              position="50% 30%"
+              tilt={-8}
+              surface="dark"
+              enterDelay={160}
+              sizes="(min-width: 1024px) 280px, 46vw"
+              className="absolute top-[10%] left-0 w-[50%]"
+            />
+            <Print
+              src={HERO.photo.src}
+              alt={HERO.photo.alt}
+              aspect="701/922"
+              tilt={5}
+              surface="dark"
+              border="lg"
+              enterDelay={300}
+              priority
+              caption={
+                <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                  <span>Mickey Mantle</span>
+                  <span className="font-sans text-[12px] font-bold tracking-[0.08em] text-cobalt">After restoration</span>
+                </span>
+              }
+              sizes="(min-width: 1024px) 320px, 52vw"
+              className="absolute top-0 right-0 w-[56%]"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it all started ───────────────────────────────────────────── */}
+      <section aria-labelledby="story-heading" className="surface-chalk">
+        <div className="wrap section-y grid gap-x-16 gap-y-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div data-reveal>
+              <SectionHead id="story-heading" title={STORY.title} lead={STORY.lead} />
             </div>
+            {/* Cards from the collection: a holo corner and a Base Set Charmander. */}
+            <div data-reveal className="relative mt-10 h-[220px] max-w-[22rem] sm:h-[260px] sm:max-w-[26rem] lg:mt-12">
+              <SeamlessPrint
+                src={garchomp}
+                alt="A Garchomp holo card corner"
+                aspect="538/520"
+                tilt={-6}
+                sizes="200px"
+                className="absolute top-[14%] left-[2%] w-[46%]"
+              />
+              <Print
+                src={charmanderAfter}
+                alt="A Base Set Charmander card after restoration"
+                aspect="364/503"
+                tilt={7}
+                lift
+                sizes="200px"
+                className="absolute top-0 left-[46%] w-[40%]"
+              />
+            </div>
+          </div>
+
+          <div className="min-w-0">
+            <ol data-reveal="stagger" className="relative flex flex-col">
+              {STORY.chapters.map((c, i) => {
+                const last = i === STORY.chapters.length - 1;
+                return (
+                  <li key={c.title} className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-x-5 border-t border-line py-8 first:border-t-0 first:pt-0 md:grid-cols-[6rem_minmax(0,1fr)] md:gap-x-8 md:py-10">
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "font-display text-[56px] font-black leading-[0.8] tabular-nums md:text-[80px]",
+                        last ? "text-cobalt" : "text-ink/50"
+                      )}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0 pt-1">
+                      <h3 className="caps font-display text-[26px] font-extrabold leading-none text-ink md:text-[32px]">
+                        <span className="sr-only">{`Step ${i + 1}: `}</span>
+                        {c.title}
+                      </h3>
+                      <p className="mt-3 max-w-[54ch] text-[16px] leading-relaxed text-ink-soft md:text-[17px]">{c.body}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+            {STORY.photos.some((s) => s.photo) && (
+              <div data-reveal="stagger" className="mt-10 grid gap-8 md:grid-cols-[3fr_2fr] md:items-end">
+                {STORY.photos.map((s, i) => (
+                  <PhotoFigure key={i} photo={s.photo} aspect={i === 0 ? "aspect-[3/2]" : "aspect-[4/5]"} sizes="(min-width: 768px) 40vw, 92vw" />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Meet the founders ────────────────────────────────────────────── */}
+      <section id="founders" aria-labelledby="founders-heading" className="surface-ink scroll-mt-[calc(var(--header-h)+16px)]">
+        <div className="wrap section-y">
+          <h2 id="founders-heading" data-reveal className="display-lg text-white">
+            Meet the founders
+          </h2>
+          {/* Founders as a ledger until their photos arrive (about/owen.jpg, about/gavin.jpg). */}
+          <ul data-reveal="stagger" className="mt-10 grid border-t border-line-dark sm:grid-cols-2 md:mt-12">
+            {FOUNDERS.map((f, i) => (
+              <li
+                key={f.name}
+                className="flex flex-col gap-4 border-b border-line-dark py-6 sm:py-8 sm:odd:border-r sm:odd:pr-8 sm:even:pl-8"
+              >
+                {f.portrait && (
+                  <PhotoFigure photo={f.portrait} aspect="aspect-[4/5]" sizes="(min-width: 640px) 45vw, 92vw" className="max-w-[16rem]" />
+                )}
+                <div className="flex items-baseline gap-4">
+                  <span aria-hidden className="label-caps text-[15px] text-sun">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className="caps font-display text-[clamp(48px,7vw,80px)] font-black leading-[0.85] text-white">{f.name}</h3>
+                </div>
+                <ul aria-label={`About ${f.name}`} className="flex flex-wrap gap-2">
+                  {f.facts.map((fact) => (
+                    <li
+                      key={fact}
+                      className="inline-flex min-h-9 items-center rounded-full bg-white/[0.06] px-3.5 text-sm font-bold text-white shadow-[inset_0_0_0_1px_var(--line-dark)]"
+                    >
+                      {fact}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+
+          <figure data-reveal className="mt-12 grid gap-8 md:mt-16 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:gap-14">
+            <blockquote className="m-0 max-w-4xl">
+              <p className="font-display text-[clamp(2rem,4.6vw,3.75rem)] font-extrabold leading-[1.02] text-white [text-wrap:balance]">
+                <span aria-hidden className="mr-1 text-sun">&ldquo;</span>
+                {FOUNDERS_MESSAGE}
+                <span aria-hidden className="text-sun">&rdquo;</span>
+              </p>
+            </blockquote>
+            <BookCta className="self-start md:self-end" />
           </figure>
         </div>
       </section>
 
-      {/* ── B. How it all started: the clinic's history, kept as a chart log ── */}
-      <WallBand as="section" className="pt-16 md:pt-24">
-        <div className="grid gap-6 lg:grid-cols-12 lg:items-end pb-10 md:pb-14">
-          <h2 className={`${sectionTitle} text-ink lg:col-span-6`}>{STORY.title}</h2>
-          <p className="text-lg text-ink-soft leading-relaxed max-w-md lg:col-span-5 lg:col-start-8">{STORY.lead}</p>
-        </div>
-      </WallBand>
-      <section className="pt-14 pb-20 md:pt-20 md:pb-32">
-        <div className="max-w-6xl mx-auto px-4 md:px-10 grid gap-12">
-          <ol data-reveal="stagger" className="grid gap-x-12 gap-y-10 md:grid-cols-2">
-            {STORY.chapters.map((c, i) => {
-              const last = i === STORY.chapters.length - 1;
+      {/* ── Why collectors choose us ─────────────────────────────────────── */}
+      <section aria-labelledby="reasons-heading" className="surface-white">
+        <div className="wrap section-y">
+          <div data-reveal>
+            <SectionHead id="reasons-heading" title={REASONS.title} lead={REASONS.lead} />
+          </div>
+          <ul data-reveal="stagger" className="mt-12 grid gap-px overflow-hidden rounded-[22px] bg-line shadow-[0_0_0_1px_var(--line)] sm:grid-cols-2 md:mt-16">
+            {REASONS.items.map((r, i) => {
+              const Icon = REASON_ICONS[i % REASON_ICONS.length];
               return (
-                <li key={c.title} className="flex gap-4 border-t-2 border-tile pt-6 md:gap-6">
-                  <span
-                    aria-hidden
-                    className={`shrink-0 pt-1.5 font-pixel text-xs tabular-nums ${last ? "text-mint-deep" : "text-coral-deep"}`}
-                  >
-                    {String(i + 1).padStart(2, "0")}
+                <li key={r.title} className="flex flex-col gap-5 bg-white p-7 md:p-10">
+                  <span aria-hidden className="grid size-12 place-items-center rounded-[14px] bg-cobalt-wash text-cobalt">
+                    <Icon className="size-6" strokeWidth={1.75} />
                   </span>
-                  <div className="min-w-0">
-                    <h3 className="font-heading font-semibold text-xl md:text-2xl leading-snug tracking-[-0.01em] text-ink">{c.title}</h3>
-                    <p className="mt-2.5 text-base md:text-[17px] leading-relaxed text-ink-soft max-w-[56ch]">{c.body}</p>
+                  <div>
+                    <h3 className="caps font-display text-[26px] font-extrabold leading-[0.95] text-ink md:text-[30px]">{r.title}</h3>
+                    <p className="m-0 mt-3 max-w-[46ch] text-[16px] leading-relaxed text-ink-soft">{r.body}</p>
                   </div>
                 </li>
               );
             })}
-          </ol>
-          {STORY.photos.some((s) => s.photo) && (
-            <div data-reveal="stagger" className="grid gap-8 md:grid-cols-[3fr_2fr] md:items-end">
-              {STORY.photos.map((s, i) => (
-                <PhotoFigure key={i} photo={s.photo} aspect={i === 0 ? "aspect-[3/2]" : "aspect-[4/5]"} sizes="(min-width: 768px) 50vw, 92vw" />
-              ))}
-            </div>
-          )}
+          </ul>
         </div>
       </section>
 
-      {/* ── C. Meet the founders: the staff room, two ID badges and the doc's word ── */}
-      <section id="founders" className="wall-band scroll-mt-24 py-20 md:py-32 overflow-x-clip">
-        <div className="max-w-6xl mx-auto px-4 md:px-10">
-          <h2 data-reveal className={`${sectionTitle} text-ink`}>Meet the founders</h2>
-          <div data-reveal="stagger" className="mt-10 md:mt-14 grid gap-8 sm:grid-cols-2 md:gap-10">
-            {FOUNDERS.map((f) => (
-              <article key={f.name} className="px-window-ink overflow-hidden p-0 md:p-0">
-                <div className="p-5 md:p-7">
-                  <PhotoFigure photo={f.portrait} aspect="aspect-[4/5]" sizes="(min-width: 640px) 45vw, 92vw" className="mb-6" />
-                  <h3 className="font-heading font-bold text-[2.5rem] md:text-5xl leading-none tracking-[-0.03em] text-ink">
-                    {f.name}
-                  </h3>
-                  <p className="mt-4 rx-label text-ink-soft">{f.facts.join(" · ")}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-          <blockquote data-reveal className="mt-14 md:mt-20 border-l-2 border-coral-deep pl-5 md:pl-8 lg:ml-[calc(100%/12*2)]">
-            <p className="font-heading font-semibold text-[clamp(1.5rem,4.5vw,2.25rem)] leading-[1.2] tracking-[-0.015em] text-ink max-w-3xl [text-wrap:balance]">
-              {FOUNDERS_MESSAGE}
-            </p>
-          </blockquote>
-        </div>
-      </section>
-
-      {/* ── D. Why collectors choose us: written up on the clinic's Rx pad ── */}
-      <section className="py-20 md:py-32">
-        <div className="max-w-6xl mx-auto px-4 md:px-10 grid gap-10 lg:grid-cols-12 lg:gap-14 lg:items-start">
-          <div className="lg:col-span-5 lg:sticky lg:top-28">
-            <h2 className={`${sectionTitle} text-ink`}>{REASONS.title}</h2>
-            <p className="mt-6 text-lg text-ink-soft leading-relaxed">{REASONS.lead}</p>
-          </div>
-          <div data-reveal className="lg:col-span-7">
-            <dl className="border-t-2 border-tile divide-y-2 divide-tile">
-              {REASONS.items.map((r, i) => (
-                <div key={r.title} className="flex gap-4 py-6 md:gap-5 md:py-7">
-                  <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-butter/70">
-                    <PixelIcon name={REASON_ICONS[i % REASON_ICONS.length]} size={24} />
-                  </span>
-                  <div className="min-w-0">
-                    <dt className="font-heading font-semibold text-xl leading-snug tracking-[-0.01em] text-ink">{r.title}</dt>
-                    <dd className="mt-2 text-[15px] md:text-base leading-relaxed text-ink-soft max-w-[52ch]">{r.body}</dd>
-                  </div>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-      </section>
-
-      {/* ── E. Behind the restoration: the treatment room. Close-up on the light box, methods on the chart ── */}
-      <section className="bg-panel/60 pt-20 pb-24 md:pt-32 md:pb-32">
-        <div className="max-w-6xl mx-auto px-4 md:px-10 grid gap-y-10 md:gap-y-12 lg:grid-cols-12 lg:gap-x-14">
+      {/* ── Behind the restoration: sticky close-up, the methods beside it ─ */}
+      <section aria-labelledby="process-heading" className="surface-chalk">
+        <div className="wrap section-y grid gap-x-16 gap-y-12 lg:grid-cols-12">
           <div className="lg:col-span-6 lg:col-start-7 lg:row-start-1">
-            <h2 className={`${sectionTitle} text-ink`}>{PROCESS.title}</h2>
-            <p className="mt-6 text-lg text-ink-soft leading-relaxed">{PROCESS.lead}</p>
-          </div>
-
-          <div className="lg:col-span-6 lg:col-start-1 lg:row-start-1 lg:row-span-2">
-            <div className="lg:sticky lg:top-28">
-              <PhotoFigure photo={PROCESS.photo} sizes="(min-width: 1152px) 520px, (min-width: 1024px) 45vw, 92vw" />
+            <div data-reveal>
+              <SectionHead id="process-heading" title={PROCESS.title} lead={PROCESS.lead} />
             </div>
           </div>
 
-          <div className="lg:col-span-6 lg:col-start-7 lg:row-start-2 min-w-0">
-            <ul data-reveal="stagger" className="border-t-2 border-tile divide-y-2 divide-tile">
-              {PROCESS.methods.map((m, i) => (
-                <li key={m.id} className="flex gap-4 py-5">
-                  <span aria-hidden className="grid size-10 shrink-0 place-items-center bg-mint/70">
-                    <PixelIcon name={METHOD_ICONS[i % METHOD_ICONS.length]} size={24} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="font-heading font-semibold text-lg md:text-xl leading-snug tracking-[-0.01em] text-ink">{m.name}</p>
-                    <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{m.body}</p>
-                    <PhotoFigure photo={m.photo} aspect="aspect-[4/3]" sizes="(min-width: 1024px) 480px, 92vw" className="mt-4 max-w-sm" />
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <div className="lg:col-span-6 lg:col-start-1 lg:row-span-2 lg:row-start-1">
+            <figure className="m-0 lg:sticky lg:top-[calc(var(--header-h)+40px)]">
+              <div className="relative aspect-[880/760] overflow-hidden rounded-[22px] bg-ink-2 shadow-[var(--pop-shadow)]">
+                <Image
+                  src={PROCESS.photo.src}
+                  alt={PROCESS.photo.alt}
+                  fill
+                  sizes="(min-width: 1280px) 600px, (min-width: 1024px) 46vw, 92vw"
+                  className="object-cover"
+                />
+                <Sticker tone="sun" size="sm" tilt={-3} className="absolute bottom-4 left-4 md:bottom-5 md:left-5">
+                  {PROCESS.photo.caption}
+                </Sticker>
+              </div>
+            </figure>
+          </div>
 
-            <div className="mt-10 grid gap-8 sm:grid-cols-2 sm:gap-7">
-              <Window tone="ink" className="p-5 md:p-6">
-                <p className="rx-label text-ink-soft">We never</p>
-                <ul className="mt-4 space-y-2.5">
+          <div className="min-w-0 lg:col-span-6 lg:col-start-7 lg:row-start-2">
+            <ol data-reveal="stagger" className="flex flex-col">
+              {PROCESS.methods.map((m, i) => {
+                const Icon = METHOD_ICONS[i % METHOD_ICONS.length];
+                return (
+                  <li key={m.id} className="grid grid-cols-[3rem_minmax(0,1fr)] gap-x-5 border-t border-line py-6 last:border-b">
+                    <span aria-hidden className="grid size-12 place-items-center rounded-[14px] bg-white text-cobalt shadow-[0_0_0_1px_var(--line)]">
+                      <Icon className="size-6" strokeWidth={1.75} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="caps font-display text-[24px] font-extrabold leading-none text-ink md:text-[28px]">{m.name}</p>
+                      <p className="mt-2 text-[16px] leading-relaxed text-ink-soft">{m.body}</p>
+                      <PhotoFigure photo={m.photo} aspect="aspect-[4/3]" sizes="(min-width: 1024px) 480px, 92vw" className="mt-4 max-w-sm" />
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <div className="mt-10 grid gap-5 sm:grid-cols-2">
+              <div className="surface-ink rounded-[22px] p-6 md:p-7">
+                <p className="label-caps text-[18px] text-sun">We never</p>
+                <ul className="mt-5 flex flex-col gap-3">
                   {PROCESS.never.map((n) => (
-                    <li key={n} className="flex items-center gap-2.5 text-[15px] font-semibold text-ink">
-                      <X aria-hidden className="h-4 w-4 shrink-0 text-coral-deep" strokeWidth={1.75} />
+                    <li key={n} className="flex items-center gap-3 text-[15px] font-bold text-white">
+                      <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-sun text-ink">
+                        <X className="size-3.5" strokeWidth={3} />
+                      </span>
                       {n}
                     </li>
                   ))}
                 </ul>
-              </Window>
-              <div className="sm:pt-1">
-                <p className="text-[15px] leading-relaxed text-ink">{PROCESS.honesty}</p>
-                <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+              </div>
+              <div className="surface-sun flex flex-col justify-between gap-5 rounded-[22px] p-6 md:p-7">
+                <p className="text-[17px] font-bold leading-snug text-ink">{PROCESS.honesty}</p>
+                <p className="text-sm leading-relaxed text-ink">
                   Before you order, see{" "}
-                  <Link href="/what-we-can-fix" className="font-semibold text-coral-deep underline underline-offset-2 hover:text-ink">what we can fix</Link>, the{" "}
-                  <Link href="/faq" className="font-semibold text-coral-deep underline underline-offset-2 hover:text-ink">FAQ</Link> and our{" "}
-                  <Link href="/terms" className="font-semibold text-coral-deep underline underline-offset-2 hover:text-ink">Terms of Service</Link>.
+                  <Link href="/what-we-can-fix" className="font-bold underline decoration-2 underline-offset-4 hover:decoration-cobalt">what we can fix</Link>, the{" "}
+                  <Link href="/faq" className="font-bold underline decoration-2 underline-offset-4 hover:decoration-cobalt">FAQ</Link> and our{" "}
+                  <Link href="/terms" className="font-bold underline decoration-2 underline-offset-4 hover:decoration-cobalt">Terms of Service</Link>.
                 </p>
               </div>
             </div>
@@ -281,78 +390,88 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* ── F to H on the night stage: the patient wall, what customers say, the close ── */}
-      <section>
-        <ExpandingStage className="stage stage-light overflow-hidden">
-          {/* F. Real results: the framed patient wall */}
-          <div className="max-w-6xl mx-auto px-4 md:px-10 pt-20 pb-20 md:pt-28 md:pb-28">
-            <div data-reveal className="max-w-2xl">
-              <h2 className={`${sectionTitle} text-stage-fg`}>Real results</h2>
-              <p className="mt-6 text-lg text-stage-muted leading-relaxed [text-wrap:pretty]">
-                Genuine before and after photos of cards we restored. Nothing here is a mock-up.
-              </p>
-            </div>
-            <div className="mt-12 md:mt-16">
-              <ResultsGallery cases={RESULTS} />
-            </div>
+      {/* ── Real results ─────────────────────────────────────────────────── */}
+      <section aria-labelledby="results-heading" className="surface-ink">
+        <div className="wrap section-y">
+          <div data-reveal>
+            <SectionHead
+              id="results-heading"
+              tone="dark"
+              title="Real results"
+              lead="Genuine before and after photos of cards we restored. Nothing here is a mock-up."
+              actions={<BookCta />}
+            />
           </div>
+          <div className="mt-12 md:mt-16">
+            <ResultsGallery cases={RESULTS} />
+          </div>
+        </div>
+      </section>
 
-          {/* G. Trust: the customers' own words and a figure counted live */}
-          <div className="max-w-6xl mx-auto px-4 md:px-10">
-            <div className="border-t-2 border-dashed border-stage-muted/30 pt-20 md:pt-28 grid gap-10 lg:grid-cols-12 lg:items-end">
-              <h2 data-reveal className={`${sectionTitle} text-stage-fg lg:col-span-7`}>What our customers say</h2>
-              {cardsFinished && (
-                <div data-reveal className="px-window-night p-5 md:p-6 lg:col-span-5 lg:justify-self-end lg:text-right">
-                  <p className="font-heading font-bold text-[clamp(3rem,8vw,4.5rem)] leading-[0.9] tracking-[-0.03em] text-stage-fg [font-feature-settings:'lnum'_1,'tnum'_1]">
-                    <CountUp value={cardsFinished} />
-                  </p>
-                  <p className="mt-3 rx-label text-butter">Cards restored and prepped</p>
-                  <p className="mt-1 text-[13px] text-stage-muted">Counted live from finished website orders.</p>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="max-w-6xl mx-auto px-4 md:px-10 pt-12 md:pt-16 pb-24 md:pb-32">
-            <CustomerReviews compact />
-          </div>
-
-          {/* H. The close: the doc at the door */}
-          <div className="border-t-2 border-dashed border-stage-muted/30">
-            <div className="max-w-5xl mx-auto px-4 md:px-10 py-24 md:py-32 text-center">
-              <DocSprite scale={2} animate={false} className="mx-auto mb-8 block" />
-              <h2 data-reveal className="font-heading font-bold text-[clamp(2.125rem,6vw,3.5rem)] leading-[1.05] tracking-[-0.02em] text-stage-fg [text-wrap:balance]">
-                <span className="block">Your Collection Means Something.</span>
-                <span className="block text-rx-bright">We Understand Why.</span>
-              </h2>
-              <p data-reveal className="mt-7 md:mt-9 text-lg md:text-xl text-stage-muted max-w-xl mx-auto leading-relaxed">
-                From childhood favorites to prized collectibles, every card deserves thoughtful care.
-              </p>
-              <div data-reveal className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/tier-selection" className={pixelButton({ size: "lg", className: "nudge-arrow" })}>
-                  Explore Restoration Services <span className="arrow" aria-hidden>→</span>
-                </Link>
-                <a
-                  href={INSTAGRAM}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={pixelButton({ tone: "panel", size: "lg", className: "nudge-arrow" })}
+      {/* ── What our customers say ───────────────────────────────────────── */}
+      <section aria-labelledby="reviews-heading" className="surface-white">
+        <div className="wrap section-y">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
+            <h2 id="reviews-heading" data-reveal className="display-lg text-ink lg:col-span-7">
+              What our customers say
+            </h2>
+            {cardsFinished ? (
+              <div data-reveal className="lg:col-span-5 lg:justify-self-end">
+                <StatBlock
+                  tone="cobalt"
+                  value={<CountUp value={cardsFinished} />}
+                  label="Cards restored and prepped"
+                  className="min-h-0 min-w-[18rem]"
                 >
-                  Contact Us
-                  <ArrowUpRight className="arrow h-4 w-4" strokeWidth={2} aria-hidden />
-                  <span className="sr-only">on Instagram (opens in a new tab)</span>
-                </a>
+                  <p className="mt-1 text-[13px] text-cobalt-tint">Counted live from finished website orders.</p>
+                </StatBlock>
               </div>
-              <p className="mt-8 text-sm text-stage-muted">
-                Questions first? Read the{" "}
-                <Link href="/faq" className="font-semibold text-rx-bright underline underline-offset-2 hover:text-stage-fg">FAQ</Link>{" "}or DM{" "}
-                <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className="font-semibold text-rx-bright underline underline-offset-2 hover:text-stage-fg">@the_card_doc</a>.
-              </p>
-            </div>
+            ) : null}
           </div>
-        </ExpandingStage>
+          <FeaturedReview className="mt-12 max-w-5xl md:mt-14" />
+          <div className="mt-14 md:mt-20">
+            <ReviewBubbles />
+          </div>
+          <div className="mt-10 flex md:mt-12 md:justify-center">
+            <BookCta tone="ink" />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Closing ──────────────────────────────────────────────────────── */}
+      <section aria-labelledby="closing-heading" className="surface-cobalt relative isolate overflow-hidden">
+        <span aria-hidden className="halftone-dots -left-[10%] -top-[30%] h-[140%] w-[60%]" />
+        <div className="wrap section-y text-center">
+          <h2 id="closing-heading" data-reveal className="display-lg mx-auto max-w-5xl">
+            <span className="block text-white">Your Collection Means Something.</span>
+            <span className="block text-sun">We Understand Why.</span>
+          </h2>
+          <p data-reveal className="lead mx-auto mt-7 text-[#e6ebff] md:mt-9">
+            From childhood favorites to prized collectibles, every card deserves thoughtful care.
+          </p>
+          <div data-reveal className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+            <Link href="/tier-selection" className={cta({ size: "lg" })}>
+              Explore Restoration Services
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
+            <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className={cta({ tone: "outline-light", size: "lg" })}>
+              Contact Us
+              <ArrowUpRight aria-hidden className="size-5" strokeWidth={2} />
+              <InstagramNote />
+            </a>
+          </div>
+          <p className="mt-9 text-[15px] text-[#e6ebff]">
+            Questions first? Read the{" "}
+            <Link href="/faq" className="font-bold text-white underline decoration-sun decoration-2 underline-offset-4 hover:text-sun">FAQ</Link>{" "}or DM{" "}
+            <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className="font-bold text-white underline decoration-sun decoration-2 underline-offset-4 hover:text-sun">
+              @the_card_doc
+            </a>
+            .
+          </p>
+        </div>
       </section>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD).replace(/</g, "\\u003c") }} />
-    </>
+    </div>
   );
 }

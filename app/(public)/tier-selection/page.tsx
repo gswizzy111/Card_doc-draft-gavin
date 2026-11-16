@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ArrowRight, Check, Clock, Plus, Zap } from "lucide-react";
 import { TrustPills } from "@/components/marketing/trust-pills";
 import { ReviewsBand } from "@/components/marketing/comic-reviews";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -9,16 +10,19 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getRestorationsOpen, getSlotsOpenedAt } from "@/lib/store-config";
 import { TIER_MAX_SLOTS } from "@/lib/site-config";
 import { tierSlotUsage } from "@/lib/tier-slots";
-import { Check, ChevronDown, Zap } from "lucide-react";
 import { WaitlistModal } from "./waitlist-modal";
 import { DiamondCard } from "./diamond-card";
-import { CLOSED_ACTION, FACT_ROW, TOOLTIP } from "./fact-row";
+import { CLOSED_ACTION } from "./fact-row";
+import { ValueNote } from "./value-note";
 import { BulkSwitch } from "./bulk-switch";
 import { BULK_PLANS, bulkPriceCents, isBulkEligible } from "@/lib/bulk-pricing";
-import { SnapDeck } from "@/components/motion/snap-deck";
 import { PixelViewContent } from "@/components/pixel-view-content";
 import { PageHero } from "@/components/marketing/page-hero";
-import { PixelIcon, Window, pixelButton, type PixelIconName } from "@/components/pixel";
+import { Print, Seamless, cta } from "@/components/brand";
+import { cn } from "@/lib/utils";
+import charmanderPair from "@/public/home/charmander-pair.jpg";
+import { RESULTS } from "@/lib/about";
+import mantlePair from "@/public/home/mantle-pair.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -28,18 +32,15 @@ export const metadata: Metadata = {
   alternates: canonical("/tier-selection"),
 };
 
-// Each ward level's chart symbol (a pixel icon on its metal plate)
-const ICON_MAP: Record<string, PixelIconName> = {
-  regular:       "bandage",
-  expedited:     "clock",
-  premium:       "star",
-  ultra_premium: "shield",
-  elite:         "sparkle", // replaced by DiamondCard client component
-  fast_pass:     "calendar",
-};
+// A tier fact on phones: label over value, two facts to a row. From md, the
+// shared FACT_ROW behaviour (side by side when the card is wide enough).
+const FACT =
+  "flex flex-col gap-0.5 py-3 text-[15px] md:@min-[16.5rem]:flex-row md:@min-[16.5rem]:justify-between md:@min-[16.5rem]:gap-3";
+const FACT_DT_CENTER = "label-caps text-[14px] text-ink-soft md:@min-[16.5rem]:self-center";
 
-// Tier identity lives in the ward plate's polished-metal band, not in recoloring the card.
-const SWATCH: Record<string, string> = {
+// Each tier's metal: a card-shaped swatch beside its name and a hairline
+// band along the card's top edge (the highlight slides on hover).
+const METAL: Record<string, string> = {
   regular:       "metal-bronze",
   expedited:     "metal-silver",
   premium:       "metal-gold",
@@ -66,8 +67,7 @@ function TierCard({
   restorationsOpen: boolean;
   label?: React.ReactNode;
 }) {
-  const swatch = SWATCH[tier.id] ?? SWATCH.regular;
-  const icon = ICON_MAP[tier.id] ?? ICON_MAP.regular;
+  const metal = METAL[tier.id] ?? METAL.regular;
 
   const s = settingsMap[tier.id];
   // DB max_slots takes priority; fall back to site-config TIER_MAX_SLOTS constant
@@ -78,9 +78,9 @@ function TierCard({
   // Corner chip: sold out, else the owner's badge (or the card's own label).
   // Slots left sit in the facts beside the action, the same row on every card.
   const bannerLabel: React.ReactNode = isSoldOut ? "SOLD OUT" : (label ?? tier.badge ?? null);
-  const bannerCls: string = isSoldOut ? "bg-muted text-ink" : "bg-rx text-panel";
   const showSlots = !isSoldOut && slotsLeft !== null && restorationsOpen;
   const closed = isSoldOut || !restorationsOpen;
+  const featured = !!tier.badge && tier.id === "premium";
 
   const price = tier.pricing_type === "percentage"
     ? `${((tier.pricing_rate ?? 0) * 100).toFixed(0)}%`
@@ -93,107 +93,123 @@ function TierCard({
     : "per card";
 
   const action = isSoldOut ? (
-    <div className={CLOSED_ACTION}>
-      Sold Out
-    </div>
+    <div className={CLOSED_ACTION}>Sold Out</div>
   ) : !restorationsOpen ? (
-    <div className={CLOSED_ACTION}>
-      Currently Closed
-    </div>
+    <div className={CLOSED_ACTION}>Currently Closed</div>
   ) : (
     <Link
       href={`/restoration?tier=${tier.id}`}
-      className={pixelButton({ size: "md", className: "w-full" })}
+      className={cta({ tone: featured ? "sun" : "ink", size: "lg", className: "w-full" })}
     >
       Select {tier.name}
+      <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
     </Link>
   );
 
   const facts = (
-    <dl className="@container divide-y-2 divide-dashed divide-ink/20 border-t-2 border-ink">
-      <div className={FACT_ROW}>
-        <dt className="rx-label @min-[16.5rem]:self-center">Turnaround</dt>
-        <dd className="font-medium text-ink @min-[16.5rem]:text-right">
-          {formatTurnaround(tier)}{" "}
-          <span className="text-xs text-muted-foreground">(est.)</span>
-        </dd>
-      </div>
-      <div className={`${FACT_ROW} @min-[16.5rem]:items-center`}>
-        <dt className="rx-label">Card value</dt>
-        <dd className="font-medium text-ink flex items-center gap-1">
-          {tier.id === "fast_pass"
-            ? "Under $5,000"
-            : tier.max_card_value_cents === null
-            ? "Unlimited"
-            : `Up to $${(tier.max_card_value_cents / 100).toLocaleString()}`}
-          <span className="relative group">
-            <span className="text-xs text-muted-foreground cursor-help">*</span>
-            <span className={TOOLTIP}>
-              Current value, raw or graded
-            </span>
-          </span>
-        </dd>
-      </div>
-      {showSlots && (
-        <div className={FACT_ROW}>
-          <dt className="rx-label @min-[16.5rem]:self-center">Slots</dt>
-          <dd className={`tabular-nums @min-[16.5rem]:text-right ${slotsLeft! <= 3 ? "font-semibold text-red-700" : "font-medium text-ink"}`}>
-            {slotsLeft} left
+    <div className="@container border-t-2 border-ink">
+      <dl className="grid grid-cols-2 gap-x-4 md:block md:divide-y md:divide-line">
+        <div className={FACT}>
+          <dt className={FACT_DT_CENTER}>Turnaround</dt>
+          <dd className="font-bold text-ink md:@min-[16.5rem]:text-right">
+            {formatTurnaround(tier)}{" "}
+            <span className="text-xs font-medium text-ink-soft">(est.)</span>
           </dd>
         </div>
-      )}
-      {tier.id === "fast_pass" && (
-        <div className="flex items-center gap-2 py-2.5 text-sm">
-          <Check className="h-4 w-4 text-mint-deep" strokeWidth={2.5} />
-          <span className="text-ink-soft">Skips the restoration queue</span>
+        <div className={`${FACT} md:@min-[16.5rem]:items-center`}>
+          <dt className="label-caps text-[14px] text-ink-soft">Card value</dt>
+          <dd className="flex flex-wrap items-center gap-x-1 font-bold text-ink">
+            {tier.id === "fast_pass"
+              ? "Under $5,000"
+              : tier.max_card_value_cents === null
+              ? "Unlimited"
+              : `Up to $${(tier.max_card_value_cents / 100).toLocaleString()}`}
+            <ValueNote />
+          </dd>
         </div>
+        {showSlots && (
+          <div className={cn(FACT, "max-md:col-span-2 max-md:border-t max-md:border-line")}>
+            <dt className={FACT_DT_CENTER}>Slots</dt>
+            <dd className={cn("tabular-nums md:@min-[16.5rem]:text-right", slotsLeft! <= 3 ? "font-extrabold text-red-700" : "font-bold text-ink")}>
+              {slotsLeft} left
+            </dd>
+          </div>
+        )}
+      </dl>
+      {/* Not a term/value pair, so it sits under the list, not inside it */}
+      {tier.id === "fast_pass" && (
+        <p className="flex items-center gap-2.5 border-t border-line py-3 text-[15px]">
+          <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-success-tint text-success">
+            <Check className="size-3.5" strokeWidth={2.75} />
+          </span>
+          <span className="font-semibold text-ink">Skips the restoration queue</span>
+        </p>
       )}
-    </dl>
+    </div>
   );
 
   return (
-    <article className="comic-lift px-window-ink flex h-full flex-col">
-      {/* Ward plate: the tier's metal band, its chart icon and the corner chip.
-          Fixed height, so a card with a chip lines up with one without. */}
-      <div className={`metal ${swatch} flex h-16 shrink-0 items-center justify-between gap-3 border-b-2 border-ink px-4 ${closed ? "grayscale-[0.75]" : ""}`}>
-        <span aria-hidden className="grid size-11 shrink-0 place-items-center bg-panel px-frame">
-          <PixelIcon name={icon} size={32} />
-        </span>
-        {bannerLabel && (
-          <span className={`inline-flex h-7 items-center gap-1 whitespace-nowrap px-2.5 font-pixel text-xs leading-none uppercase tracking-[0.04em] px-frame ${bannerCls}`}>
-            {bannerLabel}
-          </span>
-        )}
-      </div>
+    <article
+      id={`tier-${tier.id}`}
+      className={cn(
+        "lift relative isolate flex h-full scroll-mt-[calc(var(--header-h)+5.5rem)] flex-col overflow-hidden rounded-2xl bg-white",
+        featured
+          ? "shadow-[0_0_0_3px_var(--sun),0_30px_60px_-34px_rgba(13,18,51,0.55)]"
+          : "shadow-[0_0_0_1px_var(--line),var(--panel-shadow)]"
+      )}
+    >
+      <span aria-hidden className={cn("metal absolute inset-x-0 top-0 h-1.5", metal, closed && "grayscale")} />
+      <div className="flex flex-1 flex-col p-5 md:p-7">
+        {/* The tier's metal swatch and its chip. Fixed height, so a card with a
+            chip lines up with one without. */}
+        <div className="flex min-h-9 items-center justify-between gap-3">
+          <span
+            aria-hidden
+            className={cn(
+              "metal block h-9 w-[26px] -rotate-6 rounded-[5px] shadow-[0_0_0_2px_var(--white),0_4px_10px_-4px_rgba(13,18,51,0.45)]",
+              metal,
+              closed && "grayscale"
+            )}
+          />
+          {bannerLabel && (
+            <span
+              className={cn(
+                "inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-[13px] font-extrabold uppercase tracking-[0.06em]",
+                isSoldOut ? "bg-chalk text-ink-soft" : featured ? "bg-sun text-ink" : "bg-cobalt text-white"
+              )}
+            >
+              {bannerLabel}
+            </span>
+          )}
+        </div>
 
-      <div className="flex flex-1 flex-col p-5 md:p-6">
-        <h3 className="font-heading text-[1.85rem] leading-none text-ink">{tier.name}</h3>
+        <h3 className="caps mt-3 font-display text-[36px] font-black leading-[0.9] text-ink md:mt-5 md:text-[40px]">{tier.name}</h3>
         {/* Two lines reserved, so prices line up across a row */}
-        <p className="mt-1.5 mb-5 min-h-10 text-sm text-ink-soft">{tier.description}</p>
+        <p className="mt-1.5 mb-4 text-[15px] leading-snug text-ink-soft md:mt-2 md:mb-6 md:min-h-12">{tier.description}</p>
 
-        <div className="mb-6">
+        <div className="mb-5 md:mb-6">
           {tier.pricing_type !== "percentage" && isBulkEligible(tier.id) ? (
             // One price per plan; the BulkSwitch above the grid shows the chosen one
             BULK_PLANS.map((p) => (
-              <div key={p.id} data-plan={p.id} className="flex flex-wrap items-baseline gap-x-2.5">
-                <span className="font-heading text-[3.25rem] leading-none text-ink tabular-nums lining-nums">
+              <div key={p.id} data-plan={p.id} className="flex flex-wrap items-end gap-x-3 gap-y-1">
+                <span className="font-display text-[56px] font-black leading-[0.82] md:text-[72px] tracking-[-0.01em] text-ink tabular-nums lining-nums">
                   ${(bulkPriceCents(tier.price_cents, p.percent) / 100).toFixed(2)}
                 </span>
                 {p.percent > 0 && (
-                  <span className="text-sm text-muted-foreground line-through tabular-nums" aria-label={`was ${price}`}>{price}</span>
+                  <span className="mb-1 text-base font-semibold text-ink-soft line-through" aria-label={`was ${price}`}>{price}</span>
                 )}
               </div>
             ))
           ) : (
-            <div className="font-heading text-[3.25rem] leading-none text-ink tabular-nums lining-nums">{price}</div>
+            <div className="font-display text-[56px] font-black leading-[0.82] md:text-[72px] tracking-[-0.01em] text-ink tabular-nums lining-nums">{price}</div>
           )}
-          <p className="rx-label mt-2">{priceNote}</p>
+          <p className="label-caps mt-3 text-[13px] text-cobalt">{priceNote}</p>
         </div>
 
         {facts}
 
         {/* The action sits on the card's floor, level across a row */}
-        <div className="mt-auto pt-6">{action}</div>
+        <div className="mt-auto pt-5 md:pt-7">{action}</div>
       </div>
     </article>
   );
@@ -241,6 +257,7 @@ export default async function TierSelectionPage() {
   const eliteTier = tiers.find((t) => t.id === "elite");
 
   const sharedProps = { settingsMap, slotCounts, restorationsOpen };
+  const charmander = RESULTS.find((r) => r.id === "charmander");
 
   // Diamond slot info for client component
   const eliteMaxSlots = (settingsMap["elite"]?.max_slots ?? null) ?? TIER_MAX_SLOTS["elite"] ?? null;
@@ -274,108 +291,188 @@ export default async function TierSelectionPage() {
     breadcrumbs([{ name: "Restoration Pricing", path: "/tier-selection" }]),
   ];
 
-  // Phones: the deck's track scrolls sideways, so each card keeps room for its
-  // outline and hard shadow inside it.
-  const slot = "rx-reveal h-full max-md:pt-[3px] max-md:pr-3 max-md:pb-3 max-md:pl-[3px]";
+  // Phones: the tiers stack at their natural height (no equal-height stretch),
+  // under a sticky row of price chips that jumps to each card. From md they
+  // fall into the grid, equal heights per row.
+  const slot = "rx-reveal flex flex-col md:[&>article]:flex-1";
+  const deck = [...topTiers, ...midTiers];
+
+  // The chip row: every tier's name and price, as on its card.
+  const chipTiers = [...deck, ...(eliteTier ? [eliteTier] : []), ...(fastPass ? [fastPass] : [])];
+  const chipPrice = (t: RestorationTier) =>
+    t.pricing_type === "percentage"
+      ? <span>{`${((t.pricing_rate ?? 0) * 100).toFixed(0)}%`}</span>
+      : isBulkEligible(t.id)
+      ? BULK_PLANS.map((p) => (
+          <span key={p.id} data-plan={p.id}>${(bulkPriceCents(t.price_cents, p.percent) / 100).toFixed(2)}</span>
+        ))
+      : <span>${(t.price_cents / 100).toFixed(2)}</span>;
 
   return (
-    <div className="min-h-screen page-glow">
+    <div className="min-h-screen overflow-x-clip">
       <JsonLd data={structured} />
       <PixelViewContent contentName="Restoration Tiers" contentCategory="Restoration" />
-      {/* Closed: the front desk's notice, under the night sign */}
+
+      {/* Closed: a sun notice across the top of the page */}
       {!restorationsOpen && (
-        <div className="stage stage-light border-b-2 border-ink">
-          <div className="mx-auto flex max-w-5xl items-end gap-4 px-4 pt-5 pb-7 md:gap-6 md:px-6">
-            <Window className="flex-1">
-              <p className="font-heading text-2xl leading-tight text-ink md:text-[1.75rem]">Restorations are currently closed.</p>
-              <p className="mt-1.5 text-[15px] font-semibold leading-relaxed text-ink-soft">
+        <div className="surface-sun border-b border-ink/10">
+          <div className="wrap flex items-start gap-4 py-5 md:items-center md:py-6">
+            <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-sun">
+              <Clock className="size-5" strokeWidth={1.75} />
+            </span>
+            <div className="min-w-0">
+              <p className="caps font-display text-[26px] font-black leading-[0.95] text-ink md:text-[32px]">Restorations are currently closed.</p>
+              <p className="mt-1.5 text-[15px] font-medium leading-relaxed text-ink md:text-base">
                 We&apos;re not accepting new restoration orders right now — but you can still browse our pricing below.
               </p>
-            </Window>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto px-4 md:px-10 py-12 md:py-20">
-        <PageHero
-          className="mb-8"
-          title="Choose Your Restoration Level"
-          lines={["Choose Your", "Restoration Level"]}
-          lead={restorationsOpen
-            ? "Select the tier that best fits your cards' needs."
-            : "We're temporarily closed. Browse our pricing below and join the waitlist to be notified when we reopen."}
-        />
-
-        <TrustPills align="start" className="hero-in mb-12 md:mb-14" />
-
-        {/* All six tiers on one track, equal heights per row: 3 x 2 from 1072px (where
-            a card's facts fit side by side, see fact-row.ts), 2 x 3 below that */}
-        <BulkSwitch>
-        <SnapDeck
-          labels={[...topTiers, ...midTiers, ...(eliteTier ? [eliteTier] : []), ...(fastPass ? [fastPass] : [])].map((t) => t.name)}
-          gridClassName="md:grid md:grid-cols-2 min-[67rem]:grid-cols-3 md:gap-7 min-[67rem]:gap-8"
-        >
-          {[...topTiers, ...midTiers].map((tier, i) => (
-            <div key={tier.id} className={slot} style={{ ["--i" as string]: i }}>
-              <TierCard tier={tier} {...sharedProps} />
-            </div>
-          ))}
-          {eliteTier && (
-            <div className={slot} style={{ ["--i" as string]: topTiers.length + midTiers.length }}>
-              <DiamondCard
-                slotsLeft={eliteSlotsLeft}
-                isSoldOut={eliteIsSoldOut}
-                restorationsOpen={restorationsOpen}
+      <section aria-labelledby="tiers-heading" className="surface-chalk relative">
+        <div className="wrap pt-8 pb-16 md:pt-20 md:pb-24">
+          {/* Header: the headline and lead, the Charmander before and after as a print beside them.
+              Phones go straight from the lead to the prices (the trust facts follow the tiers). */}
+          <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)]">
+            <div>
+              <PageHero
+                eyebrow="Restoration Pricing"
+                title="Choose Your Restoration Level"
+                lines={["Choose Your", "Restoration Level"]}
+                lead={restorationsOpen
+                  ? "Select the tier that best fits your cards' needs."
+                  : "We're temporarily closed. Browse our pricing below and join the waitlist to be notified when we reopen."}
               />
+              <TrustPills align="start" className="hero-in mt-8 hidden md:block" />
             </div>
-          )}
-          {fastPass && (
-            <div className={slot} style={{ ["--i" as string]: topTiers.length + midTiers.length + 1 }}>
-              <TierCard
-                tier={fastPass}
-                {...sharedProps}
-                label={<><Zap className="h-3 w-3" strokeWidth={2.25} aria-hidden />Express Option</>}
-              />
-            </div>
-          )}
-        </SnapDeck>
-        </BulkSwitch>
-
-        {/* Turnaround disclaimer: the chart's fine print, folded */}
-        <details className="group mt-10 px-window-ink md:mt-12">
-          <summary className="flex min-h-14 cursor-pointer list-none select-none items-center justify-between gap-3 bg-panel px-4 py-3 md:px-5 [&::-webkit-details-marker]:hidden">
-            <span className="font-heading text-lg leading-tight text-ink md:text-xl">About our turnaround time estimates</span>
-            <ChevronDown className="h-5 w-5 shrink-0 text-ink group-open:rotate-180" strokeWidth={2} />
-          </summary>
-          <div className="space-y-2 border-t-2 border-ink px-4 pt-4 pb-5 text-sm leading-relaxed text-ink md:px-5">
-            <p>
-              All turnaround times shown are <strong>rough estimates only</strong> and are not a guarantee or promise of completion within any specific timeframe.
-            </p>
-            <p>
-              Actual processing times may be affected by order volume, card condition, shipping delays, holidays, or other circumstances outside our control. We will always do our best to meet or beat the estimated range, but <strong>The Card Doc cannot be held liable</strong> for delays.
-            </p>
-            <p className="text-xs text-ink-soft">
-              By placing an order you acknowledge that turnaround times are estimates and agree that delays do not entitle you to a refund or cancellation. See our{" "}
-              <Link href="/terms" className="font-semibold text-coral-deep underline underline-offset-2 hover:text-ink">Terms of Service</Link> for full details.
-            </p>
+            <Print
+              src={charmanderPair}
+              alt="A Charmander card before and after restoration, side by side"
+              aspect="576/513"
+              tilt={3.5}
+              border="lg"
+              enterDelay={120}
+              priority
+              caption={
+                charmander && (
+                  <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                    <span>{charmander.card}</span>
+                    <span className="font-sans text-[12px] font-bold tracking-[0.08em] text-cobalt">{charmander.detail}</span>
+                  </span>
+                )
+              }
+              sizes="(min-width: 1024px) 400px, 0px"
+              className="hidden lg:block"
+            />
           </div>
-        </details>
 
-        {/* Waitlist modal — auto-opens when closed */}
-        {!restorationsOpen && <WaitlistModal />}
+          {/* The tiers. The id anchors the heading for screen readers. */}
+          <h2 id="tiers-heading" className="sr-only">Restoration tiers</h2>
+          <div className="mt-6 md:mt-16">
+            <BulkSwitch>
+              <nav
+                aria-label="Jump to a tier"
+                className="sticky top-[var(--header-h)] z-20 -mx-5 mb-4 bg-chalk/95 py-2.5 shadow-[0_1px_0_var(--line)] backdrop-blur-sm md:hidden"
+              >
+                <ul className="flex gap-2 overflow-x-auto px-5 py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {chipTiers.map((t) => (
+                    <li key={t.id} className="shrink-0">
+                      <a
+                        href={`#tier-${t.id}`}
+                        className="group inline-flex min-h-11 items-center gap-1.5 rounded-full bg-white px-3.5 text-[14px] font-extrabold whitespace-nowrap text-ink shadow-[0_0_0_1px_var(--line)] transition-colors hover:bg-ink hover:text-white focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-cobalt motion-reduce:transition-none"
+                      >
+                        {t.name}
+                        <span className="text-cobalt tabular-nums group-hover:text-sun">{chipPrice(t)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:gap-7 min-[67rem]:grid-cols-3 min-[67rem]:gap-8">
+                {deck.map((tier, i) => (
+                  <div key={tier.id} className={slot} style={{ ["--i" as string]: i }}>
+                    <TierCard tier={tier} {...sharedProps} />
+                  </div>
+                ))}
+                {eliteTier && (
+                  <div className={slot} style={{ ["--i" as string]: deck.length }}>
+                    <DiamondCard
+                      slotsLeft={eliteSlotsLeft}
+                      isSoldOut={eliteIsSoldOut}
+                      restorationsOpen={restorationsOpen}
+                    />
+                  </div>
+                )}
+                {fastPass && (
+                  <div className={slot} style={{ ["--i" as string]: deck.length + 1 }}>
+                    <TierCard
+                      tier={fastPass}
+                      {...sharedProps}
+                      label={<><Zap className="size-3.5" strokeWidth={2.25} aria-hidden />Express Option</>}
+                    />
+                  </div>
+                )}
+              </div>
+            </BulkSwitch>
+            <TrustPills align="start" className="mt-10 md:hidden" />
+          </div>
 
-        {/* Footer info: the doc's pointer to the symptoms chart */}
-        <div className="mt-10 border-t-2 border-ink/15 pt-8 md:mt-12">
-            <p className="text-ink">
-              Not sure which tier fits?{" "}
-              <Link href="/how-it-works" className="font-semibold text-coral-deep underline decoration-2 underline-offset-4 hover:text-ink">
-                Learn what we can restore
-              </Link>
-              .
-            </p>
+          {/* Turnaround disclaimer: the fine print, folded */}
+          <details className="group mt-12 rounded-2xl bg-white shadow-[0_0_0_1px_var(--line)] md:mt-16">
+            <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-5 py-4 select-none md:px-7 [&::-webkit-details-marker]:hidden">
+              <span className="text-lg font-extrabold leading-snug text-ink transition-colors group-hover:text-cobalt md:text-xl">About our turnaround time estimates</span>
+              <span
+                aria-hidden
+                className="grid size-10 shrink-0 place-items-center rounded-full bg-chalk text-ink transition-[rotate,background-color] duration-300 ease-[var(--ease-out)] group-open:rotate-45 group-open:bg-sun motion-reduce:transition-none"
+              >
+                <Plus className="size-5" strokeWidth={2} />
+              </span>
+            </summary>
+            <div className="space-y-3 border-t border-line px-5 pt-5 pb-6 text-[15px] leading-relaxed text-ink md:px-7">
+              <p>
+                All turnaround times shown are <strong>rough estimates only</strong> and are not a guarantee or promise of completion within any specific timeframe.
+              </p>
+              <p>
+                Actual processing times may be affected by order volume, card condition, shipping delays, holidays, or other circumstances outside our control. We will always do our best to meet or beat the estimated range, but <strong>The Card Doc cannot be held liable</strong> for delays.
+              </p>
+              <p className="text-sm text-ink-soft">
+                By placing an order you acknowledge that turnaround times are estimates and agree that delays do not entitle you to a refund or cancellation. See our{" "}
+                <Link href="/terms" className="tlink font-semibold text-cobalt">Terms of Service</Link> for full details.
+              </p>
+            </div>
+          </details>
         </div>
+      </section>
 
-      </div>
+      {/* Waitlist modal — auto-opens when closed */}
+      {!restorationsOpen && <WaitlistModal />}
+
+      {/* Not sure which tier fits: the Mantle pair on a seamless, and the pointer */}
+      <section aria-labelledby="fit-heading" className="surface-ink">
+        <div className="wrap grid items-center gap-x-16 gap-y-10 py-16 md:py-24 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+          <figure data-reveal className="m-0">
+            <Seamless
+              src={mantlePair}
+              alt="A cracked Mickey Mantle card in a black glove next to the same card after restoration in a blue glove"
+              aspect="1446/902"
+              inset="4% 4% 3%"
+              sizes="(min-width: 1024px) 620px, 92vw"
+            >
+              <span className="ba-label left-4">Before</span>
+              <span className="ba-label right-4" style={{ background: "var(--sun)", color: "var(--ink)" }}>After</span>
+            </Seamless>
+          </figure>
+          <div data-reveal>
+            <h2 id="fit-heading" className="display-md text-white">Not sure which tier fits?</h2>
+            <Link href="/how-it-works" className={cta({ size: "lg", className: "mt-8" })}>
+              Learn what we can restore
+              <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <ReviewsBand title="What Our Customers Say" compact id="tier-reviews-heading" />
     </div>
   );

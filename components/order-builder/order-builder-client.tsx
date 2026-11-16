@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Gem } from "lucide-react";
+import { AlertTriangle, ArrowLeft, ArrowRight, Copy, Gem } from "lucide-react";
 import { useAccountPrefill } from "@/lib/use-account-prefill";
 import { useState, useRef, useSyncExternalStore } from "react";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ import { cardProblems } from "./step-cards";
 import type { Service, CardEntry, CustomerInfo, ShippingRate, InsuranceSelection } from "@/lib/types";
 import type { RestorationTier, RestorationTierId } from "@/lib/restoration-tiers";
 import { fbq } from "@/lib/pixel";
+import { INSET, NOTE_SUN } from "@/components/checkout/form-styles";
 
 function defaultCard(serviceId: string, tier?: RestorationTierId): CardEntry {
   return {
@@ -51,8 +52,8 @@ function InAppBrowserBanner() {
   );
   if (!show) return null;
   return (
-    <div className="mb-8 border-l-[6px] border-destructive bg-panel p-4 text-sm text-ink px-frame-shadow">
-      <p className="mb-2 flex items-center gap-2 font-heading text-xl leading-tight text-destructive"><AlertTriangle className="h-5 w-5 shrink-0" strokeWidth={2.25} />You must open this in Safari or Chrome</p>
+    <div className="mb-8 rounded-[18px] bg-white p-5 text-sm text-ink shadow-[inset_6px_0_0_var(--danger),0_0_0_1px_var(--line),var(--panel-shadow)]">
+      <p className="mb-2 flex items-center gap-2 font-heading text-[1.5rem] leading-tight font-extrabold text-destructive"><AlertTriangle className="h-5 w-5 shrink-0" strokeWidth={2.25} />You must open this in Safari or Chrome</p>
       <p className="mb-3 leading-relaxed text-ink">
         Instagram&apos;s built-in browser <strong>blocks photo uploads and payments</strong>. You won&apos;t be able to complete your order here.
       </p>
@@ -286,15 +287,15 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 md:px-10 md:py-12">
+    <div className="wrap py-8 md:py-12">
       <InAppBrowserBanner />
       <SlabAuthorizationDialog card={slabDialogCard} state={signing} onChange={changeSigning} onClose={closeSlabDialog} />
-      <div className="mb-12 border-b-2 border-ink/10 px-1 pt-2 pb-6 sm:px-6">
+      <div className="mb-10 rounded-[22px] bg-white px-2 pt-5 pb-4 shadow-[0_0_0_1px_var(--line)] sm:px-8 md:mb-14">
         <ProgressIndicator currentStep={step} />
       </div>
 
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-10">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10 xl:gap-14">
+        <div className="min-w-0">
           {step === 1 && (
             <StepCards
               cards={cards}
@@ -375,31 +376,32 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
           )}
 
           {step === 4 && checkoutError && (
-            <div ref={errorRef} className="mt-8 border-l-[6px] border-destructive bg-panel p-5 text-ink px-frame-shadow">
+            <div ref={errorRef} className="mt-8 rounded-[22px] bg-white p-5 text-ink shadow-[inset_6px_0_0_var(--danger),0_0_0_1px_var(--line),var(--panel-shadow)] sm:p-6">
               <div className="flex gap-3">
                 <AlertTriangle className="h-6 w-6 shrink-0 text-destructive" strokeWidth={2} />
                 <div className="flex-1 min-w-0">
-                  <p className="mb-1 font-heading text-2xl text-destructive">Checkout failed</p>
+                  <p className="mb-1 font-heading text-[1.75rem] leading-none font-black text-destructive">Checkout failed</p>
                   <p className="mb-4 text-sm leading-relaxed text-ink">{checkoutError.message}</p>
 
-                  <div className="mb-4 bg-rx-soft px-3 py-3 px-frame">
-                    <p className="mb-1.5 font-pixel text-xs uppercase tracking-[0.04em] text-ink">Error Reference</p>
+                  <div className={`${INSET} mb-4 px-4 py-3`}>
+                    <p className="label-caps mb-1.5 text-[15px] text-ink-soft">Error Reference</p>
                     <div className="flex items-center justify-between gap-3">
                       <span className="select-all break-all font-mono text-sm font-bold text-ink">{checkoutError.ref}</span>
                       <button
                         type="button"
-                        className="px-btn px-btn-danger h-10 shrink-0 px-3 text-sm"
+                        className="btn btn-danger btn-sm shrink-0 gap-1.5 px-4"
                         onClick={() => {
                           navigator.clipboard.writeText(`Error ref: ${checkoutError.ref}\n${checkoutError.message}`);
                           toast.success("Copied!");
                         }}
                       >
+                        <Copy aria-hidden className="size-4" strokeWidth={2} />
                         Copy
                       </button>
                     </div>
                   </div>
 
-                  <div className="bg-muted p-3 px-frame">
+                  <div className={NOTE_SUN}>
                     <p className="mb-1 text-sm font-semibold text-ink">What to do:</p>
                     <p className="text-sm leading-relaxed text-ink">
                       Screenshot this screen and DM <strong>@the_card_doc</strong>{" "}on Instagram — include the error reference above and we&apos;ll complete your order manually right away.
@@ -413,7 +415,7 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
           {/* Diamond minimum value warning */}
           {step === 1 && isDiamondOrder && !diamondValueOk && (
             <Need missing={showMissing} note={null} className="mt-6">
-            <div className="flex items-start gap-3 bg-butter/45 px-5 py-4 px-frame">
+            <div className={`${NOTE_SUN} flex items-start gap-3 px-5 py-4`}>
               <Gem className="h-6 w-6 shrink-0 text-ink" strokeWidth={1.75} />
               <div>
                 <p className="text-sm font-bold text-ink">Diamond tier requires $5,000+ in total card value</p>
@@ -425,21 +427,24 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
             </Need>
           )}
 
-          <div className="mt-10 flex justify-between gap-3 border-t-2 border-dashed border-ink/30 pt-6">
+          <div className="mt-10 flex items-center justify-between gap-3 border-t border-line pt-6">
             <Button
               variant="outline"
               size="lg"
               onClick={() => goToStep(step - 1)}
               disabled={step === 1}
+              className="gap-1.5"
             >
+              <ArrowLeft aria-hidden className="size-4" strokeWidth={2.25} />
               Back
             </Button>
             {step < 4 ? (
-              <Button size="lg" onClick={tryContinue} className="px-7">
+              <Button size="lg" onClick={tryContinue} className="gap-2 px-8">
                 Continue
+                <ArrowRight aria-hidden className="size-5" strokeWidth={2.25} />
               </Button>
             ) : (
-              <Button size="lg" onClick={trySign} disabled={submitting} className="h-auto min-h-11 px-6 whitespace-normal py-2 sm:px-8">
+              <Button size="lg" onClick={trySign} disabled={submitting} className="h-auto min-h-14 px-6 py-3 leading-tight whitespace-normal sm:px-8">
                 {submitting ? "Redirecting..." : SIGN_BUTTON_LABEL}
               </Button>
             )}
@@ -447,8 +452,8 @@ export function OrderBuilderClient({ services, selectedTier, tiers }: { services
           <MissingNote show={showMissing && (step === 4 ? !readyToSign : !canAdvance())} />
         </div>
 
-        <div className="lg:col-span-1">
-          <div className="sticky top-24">
+        <div>
+          <div className="lg:sticky lg:top-[calc(var(--header-h)+24px)]">
             <OrderSummary
               cards={cards}
               shippingMethod={shippingMethod}
