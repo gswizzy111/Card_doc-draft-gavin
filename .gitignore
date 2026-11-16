@@ -48,3 +48,6 @@ next-env.d.ts
 
 # Netlify MCP deploy uploads
 deploy-*.zip
+
+# Competitor study screenshots (reference only, not ours to publish)
+docs/redesign/mint-shots/
