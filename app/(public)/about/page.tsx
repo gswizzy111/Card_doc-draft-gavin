@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { canonical } from "@/lib/seo";
 import {
@@ -21,16 +20,14 @@ import { SplitReveal } from "@/components/motion/split-reveal";
 import { CountUp } from "@/components/motion/count-up";
 import { FeaturedReview, ReviewBubbles } from "@/components/marketing/comic-reviews";
 import { PhotoFigure } from "@/components/about/photo-figure";
-import { ResultsGallery } from "@/components/about/results-gallery";
-import { Print, SectionHead, StatBlock, Sticker, cta } from "@/components/brand";
+import { AcrylicHolder, SectionHead, StatBlock, cta } from "@/components/brand";
 import { getCardsFinishedStat } from "@/lib/site-stats";
-import { FOUNDERS, FOUNDERS_MESSAGE, HERO, PROCESS, REASONS, RESULTS, STORY } from "@/lib/about";
+import { FOUNDERS, FOUNDERS_MESSAGE, HERO, PROCESS, REASONS, STORY } from "@/lib/about";
 import { siteUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
-import { SeamlessPrint } from "../seamless-print";
-import mantleBeforeHeld from "@/public/home/mantle-before-held.jpg";
-import charmanderAfter from "@/public/home/charmander-after.jpg";
-import garchomp from "@/public/home/garchomp.jpg";
+import gyaradosBefore from "@/public/specimen-gyarados-before.jpg";
+import gyaradosAfter from "@/public/specimen-gyarados-after.jpg";
+import { BeforeAfter } from "@/components/motion/before-after";
 
 // The finished-cards figure is read from the database; refresh it hourly.
 export const revalidate = 3600;
@@ -144,37 +141,20 @@ export default async function AboutPage() {
             </div>
           </div>
 
-          {/* The same Mantle, cracked in a black glove and restored in a blue one. */}
-          <div className="relative mx-auto aspect-[10/9] w-full max-w-[30rem] lg:max-w-none">
-            <Print
-              src={mantleBeforeHeld}
-              alt="The Mickey Mantle card before restoration, cracked, held in a black glove"
-              aspect="4/5"
-              position="50% 30%"
-              tilt={-8}
-              surface="dark"
-              enterDelay={160}
-              sizes="(min-width: 1024px) 280px, 46vw"
-              className="absolute top-[10%] left-0 w-[50%]"
-            />
-            <Print
-              src={HERO.photo.src}
-              alt={HERO.photo.alt}
-              aspect="701/922"
-              tilt={5}
-              surface="dark"
-              border="lg"
-              enterDelay={300}
-              priority
-              caption={
-                <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                  <span>Mickey Mantle</span>
-                  <span className="font-sans text-[12px] font-bold tracking-[0.08em] text-cobalt">After restoration</span>
-                </span>
-              }
-              sizes="(min-width: 1024px) 320px, 52vw"
-              className="absolute top-0 right-0 w-[56%]"
-            />
+          {/* The Gyarados, drag to compare, in its one-touch holder (as on the home page). */}
+          <div className="relative mx-auto w-full max-w-[30rem] lg:max-w-none">
+            <div className="hero-in relative z-[1] lg:rotate-[1.5deg]" style={{ ["--d" as string]: 160 }}>
+              <AcrylicHolder title="Gyarados" detail="Delta Species">
+                <BeforeAfter
+                  before={gyaradosBefore}
+                  after={gyaradosAfter}
+                  beforeAlt="Close-up of a Gyarados holo card before restoration: a crease runs from the top edge through the name bar into the artwork, and the colors are dull"
+                  afterAlt="The same corner of the Gyarados card after restoration: the crease is gone and the colors are bright"
+                  sizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, 92vw"
+                  priority
+                />
+              </AcrylicHolder>
+            </div>
           </div>
         </div>
       </section>
@@ -185,26 +165,6 @@ export default async function AboutPage() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <div data-reveal>
               <SectionHead id="story-heading" title={STORY.title} lead={STORY.lead} />
-            </div>
-            {/* Cards from the collection: a holo corner and a Base Set Charmander. */}
-            <div data-reveal className="relative mt-10 h-[220px] max-w-[22rem] sm:h-[260px] sm:max-w-[26rem] lg:mt-12">
-              <SeamlessPrint
-                src={garchomp}
-                alt="A Garchomp holo card corner"
-                aspect="538/520"
-                tilt={-6}
-                sizes="200px"
-                className="absolute top-[14%] left-[2%] w-[46%]"
-              />
-              <Print
-                src={charmanderAfter}
-                alt="A Base Set Charmander card after restoration"
-                aspect="364/503"
-                tilt={7}
-                lift
-                sizes="200px"
-                className="absolute top-0 left-[46%] w-[40%]"
-              />
             </div>
           </div>
 
@@ -317,33 +277,16 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* ── Behind the restoration: sticky close-up, the methods beside it ─ */}
+      {/* ── Behind the restoration: the heading, the methods beside it ─── */}
       <section aria-labelledby="process-heading" className="surface-chalk">
         <div className="wrap section-y grid gap-x-16 gap-y-12 lg:grid-cols-12">
-          <div className="lg:col-span-6 lg:col-start-7 lg:row-start-1">
+          <div className="lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:sticky lg:top-[calc(var(--header-h)+40px)] lg:self-start">
             <div data-reveal>
               <SectionHead id="process-heading" title={PROCESS.title} lead={PROCESS.lead} />
             </div>
           </div>
 
-          <div className="lg:col-span-6 lg:col-start-1 lg:row-span-2 lg:row-start-1">
-            <figure className="m-0 lg:sticky lg:top-[calc(var(--header-h)+40px)]">
-              <div className="relative aspect-[880/760] overflow-hidden rounded-[22px] bg-ink-2 shadow-[var(--pop-shadow)]">
-                <Image
-                  src={PROCESS.photo.src}
-                  alt={PROCESS.photo.alt}
-                  fill
-                  sizes="(min-width: 1280px) 600px, (min-width: 1024px) 46vw, 92vw"
-                  className="object-cover"
-                />
-                <Sticker tone="sun" size="sm" tilt={-3} className="absolute bottom-4 left-4 md:bottom-5 md:left-5">
-                  {PROCESS.photo.caption}
-                </Sticker>
-              </div>
-            </figure>
-          </div>
-
-          <div className="min-w-0 lg:col-span-6 lg:col-start-7 lg:row-start-2">
+          <div className="min-w-0 lg:col-span-7 lg:col-start-6 lg:row-start-1">
             <ol data-reveal="stagger" className="flex flex-col">
               {PROCESS.methods.map((m, i) => {
                 const Icon = METHOD_ICONS[i % METHOD_ICONS.length];
@@ -386,24 +329,6 @@ export default async function AboutPage() {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Real results ─────────────────────────────────────────────────── */}
-      <section aria-labelledby="results-heading" className="surface-ink">
-        <div className="wrap section-y">
-          <div data-reveal>
-            <SectionHead
-              id="results-heading"
-              tone="dark"
-              title="Real results"
-              lead="Genuine before and after photos of cards we restored. Nothing here is a mock-up."
-              actions={<BookCta />}
-            />
-          </div>
-          <div className="mt-12 md:mt-16">
-            <ResultsGallery cases={RESULTS} />
           </div>
         </div>
       </section>

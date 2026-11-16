@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { AddToCartButton } from "./add-to-cart-button";
 import { isSoldOut } from "@/lib/site-config";
 import { CtaPanel, Print, Sticker, cta } from "@/components/brand";
-import mantleInHand from "@/public/about/mantle-in-hand.jpg";
+import charizardPsa from "@/public/home/charizard-psa.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -239,10 +239,9 @@ export default async function ShopPage() {
             aside={
               <div className="hidden justify-center md:flex">
                 <Print
-                  src={mantleInHand}
-                  alt="A restored Mickey Mantle card held in a blue nitrile glove"
-                  aspect="4/5"
-                  position="50% 30%"
+                  src={charizardPsa}
+                  alt="A Charizard Gold Star card in a PSA slab, held in a blue glove"
+                  aspect="800/1407"
                   surface="dark"
                   tilt={-5}
                   border="md"
