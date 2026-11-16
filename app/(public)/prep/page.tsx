@@ -100,7 +100,7 @@ export default async function PrepPage() {
       <section aria-labelledby="prep-pricing-heading" className="surface-chalk">
         <div className="wrap pt-6 pb-16 md:pt-10 md:pb-24">
           {/* Header, with the cleaning warning and the Bulbasaur Delta Species photo */}
-          <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 gap-y-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)]">
+          <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 gap-y-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)]">
             <div>
               <PageHero
                 eyebrow="Prep Service"
@@ -112,7 +112,7 @@ export default async function PrepPage() {
             </div>
             {/* The warning, then the Ditto (Bulbasaur, EX Delta Species) photo. */}
             {/* Side by side and compact, so the prices start in the first screen. */}
-            <figure className="hero-in m-0 grid w-full grid-cols-[minmax(0,1fr)_7.5rem] items-center gap-x-5 sm:grid-cols-[minmax(0,1fr)_9.5rem] lg:grid-cols-[minmax(0,1fr)_11rem]">
+            <figure className="hero-in m-0 grid w-full grid-cols-[minmax(0,1fr)_7.5rem] items-center gap-x-5 sm:grid-cols-[minmax(0,1fr)_9.5rem] lg:grid-cols-[minmax(0,1fr)_15.5rem]">
               <h2 className="caps font-display text-[clamp(1.5rem,6vw,2.125rem)] font-black leading-[0.95] tracking-[0.005em] text-ink [text-wrap:balance]">
                 <span className="mb-3 block h-1.5 w-14 rounded-full bg-sun" aria-hidden />
                 DONT LEAVE <span className="text-cobalt">DIRT or RESIDUE</span> on your card before Grading!
@@ -124,7 +124,7 @@ export default async function PrepPage() {
                 tilt={2.5}
                 lift
                 priority
-                sizes="(min-width: 1024px) 176px, 152px"
+                sizes="(min-width: 1024px) 248px, 152px"
                 className="w-full"
               />
             </figure>
