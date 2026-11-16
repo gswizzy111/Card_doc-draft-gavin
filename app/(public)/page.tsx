@@ -30,8 +30,8 @@ import { SERVICE_CARDS } from "@/lib/service-cards";
 import { HERO, PROCESS, REASONS, RESULTS } from "@/lib/about";
 import { AcrylicHolder, Marquee, Print, Seamless, SectionHead, StatBlock, cta } from "@/components/brand";
 import { cn } from "@/lib/utils";
-import mantleBefore from "@/public/specimen-mantle-before.jpg";
-import mantleAfter from "@/public/specimen-mantle-after.jpg";
+import gyaradosBefore from "@/public/specimen-gyarados-before.jpg";
+import gyaradosAfter from "@/public/specimen-gyarados-after.jpg";
 import mantleInHand from "@/public/about/mantle-in-hand.jpg";
 import mantleDetail from "@/public/about/mantle-detail-before.jpg";
 import mantlePair from "@/public/home/mantle-pair.jpg";
@@ -209,15 +209,16 @@ export default function HomePage() {
             <span className="block text-sun">{HERO.headline[1]}</span>
           </h1>
 
-          {/* The Mantle, drag to compare, in its one-touch holder. */}
+          {/* The Gyarados, drag to compare, in its one-touch holder. Both
+              photos are aligned to the same angle and crop. */}
           <div className="relative mx-auto mt-7 w-full max-w-[25rem] sm:mt-10 sm:max-w-[28rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-2 lg:max-w-none lg:self-start">
             <div className="hero-in relative z-[1] lg:rotate-[1.5deg]" style={{ ["--d" as string]: 120 }}>
-              <AcrylicHolder title={mantle?.card ?? "Mickey Mantle"} detail={mantle?.detail}>
+              <AcrylicHolder title="Gyarados" detail="Delta Species">
                 <BeforeAfter
-                  before={mantleBefore}
-                  after={mantleAfter}
-                  beforeAlt="A Mickey Mantle card before restoration, cracked across the face and jersey"
-                  afterAlt="The same Mickey Mantle card after restoration"
+                  before={gyaradosBefore}
+                  after={gyaradosAfter}
+                  beforeAlt="A Gyarados holo card before restoration, creased along the top and dull across the holo"
+                  afterAlt="The same Gyarados card after restoration"
                   sizes="(min-width: 1280px) 500px, (min-width: 1024px) 432px, (min-width: 640px) 448px, 92vw"
                   priority
                 />
