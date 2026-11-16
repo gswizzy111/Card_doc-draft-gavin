@@ -18,11 +18,8 @@ import { BulkSwitch } from "./bulk-switch";
 import { BULK_PLANS, bulkPriceCents, isBulkEligible } from "@/lib/bulk-pricing";
 import { PixelViewContent } from "@/components/pixel-view-content";
 import { PageHero } from "@/components/marketing/page-hero";
-import { Print, Seamless, cta } from "@/components/brand";
+import { cta } from "@/components/brand";
 import { cn } from "@/lib/utils";
-import charmanderPair from "@/public/home/charmander-pair.jpg";
-import { RESULTS } from "@/lib/about";
-import mantlePair from "@/public/home/mantle-pair.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -257,7 +254,6 @@ export default async function TierSelectionPage() {
   const eliteTier = tiers.find((t) => t.id === "elite");
 
   const sharedProps = { settingsMap, slotCounts, restorationsOpen };
-  const charmander = RESULTS.find((r) => r.id === "charmander");
 
   // Diamond slot info for client component
   const eliteMaxSlots = (settingsMap["elite"]?.max_slots ?? null) ?? TIER_MAX_SLOTS["elite"] ?? null;
@@ -298,7 +294,7 @@ export default async function TierSelectionPage() {
   const deck = [...topTiers, ...midTiers];
 
   // The chip row: every tier's name and price, as on its card.
-  const chipTiers = [...deck, ...(eliteTier ? [eliteTier] : []), ...(fastPass ? [fastPass] : [])];
+  const chipTiers = [...deck, ...(fastPass ? [fastPass] : []), ...(eliteTier ? [eliteTier] : [])];
   const chipPrice = (t: RestorationTier) =>
     t.pricing_type === "percentage"
       ? <span>{`${((t.pricing_rate ?? 0) * 100).toFixed(0)}%`}</span>
@@ -331,10 +327,10 @@ export default async function TierSelectionPage() {
       )}
 
       <section aria-labelledby="tiers-heading" className="surface-chalk relative">
-        <div className="wrap pt-8 pb-16 md:pt-20 md:pb-24">
-          {/* Header: the headline and lead, the Charmander before and after as a print beside them.
+        <div className="wrap pt-6 pb-16 md:pt-10 md:pb-24">
+          {/* Header: the headline and lead, kept short so the prices show in the first screen.
               Phones go straight from the lead to the prices (the trust facts follow the tiers). */}
-          <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)]">
+          <div>
             <div>
               <PageHero
                 eyebrow="Restoration Pricing"
@@ -344,32 +340,13 @@ export default async function TierSelectionPage() {
                   ? "Select the tier that best fits your cards' needs."
                   : "We're temporarily closed. Browse our pricing below and join the waitlist to be notified when we reopen."}
               />
-              <TrustPills align="start" className="hero-in mt-8 hidden md:block" />
-            </div>
-            <Print
-              src={charmanderPair}
-              alt="A Charmander card before and after restoration, side by side"
-              aspect="576/513"
-              tilt={3.5}
-              border="lg"
-              enterDelay={120}
-              priority
-              caption={
-                charmander && (
-                  <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                    <span>{charmander.card}</span>
-                    <span className="font-sans text-[12px] font-bold tracking-[0.08em] text-cobalt">{charmander.detail}</span>
-                  </span>
-                )
-              }
-              sizes="(min-width: 1024px) 400px, 0px"
-              className="hidden lg:block"
-            />
+              </div>
+
           </div>
 
           {/* The tiers. The id anchors the heading for screen readers. */}
           <h2 id="tiers-heading" className="sr-only">Restoration tiers</h2>
-          <div className="mt-6 md:mt-16">
+          <div className="mt-6 md:mt-10">
             <BulkSwitch>
               <nav
                 aria-label="Jump to a tier"
@@ -395,17 +372,8 @@ export default async function TierSelectionPage() {
                     <TierCard tier={tier} {...sharedProps} />
                   </div>
                 ))}
-                {eliteTier && (
-                  <div className={slot} style={{ ["--i" as string]: deck.length }}>
-                    <DiamondCard
-                      slotsLeft={eliteSlotsLeft}
-                      isSoldOut={eliteIsSoldOut}
-                      restorationsOpen={restorationsOpen}
-                    />
-                  </div>
-                )}
                 {fastPass && (
-                  <div className={slot} style={{ ["--i" as string]: deck.length + 1 }}>
+                  <div className={slot} style={{ ["--i" as string]: deck.length }}>
                     <TierCard
                       tier={fastPass}
                       {...sharedProps}
@@ -413,9 +381,18 @@ export default async function TierSelectionPage() {
                     />
                   </div>
                 )}
+                {eliteTier && (
+                  <div className={slot} style={{ ["--i" as string]: deck.length + 1 }}>
+                    <DiamondCard
+                      slotsLeft={eliteSlotsLeft}
+                      isSoldOut={eliteIsSoldOut}
+                      restorationsOpen={restorationsOpen}
+                    />
+                  </div>
+                )}
               </div>
             </BulkSwitch>
-            <TrustPills align="start" className="mt-10 md:hidden" />
+            <TrustPills align="start" className="mt-10 md:mt-12" />
           </div>
 
           {/* Turnaround disclaimer: the fine print, folded */}
@@ -448,24 +425,12 @@ export default async function TierSelectionPage() {
       {/* Waitlist modal — auto-opens when closed */}
       {!restorationsOpen && <WaitlistModal />}
 
-      {/* Not sure which tier fits: the Mantle pair on a seamless, and the pointer */}
+      {/* Not sure which tier fits: the question and the pointer */}
       <section aria-labelledby="fit-heading" className="surface-ink">
-        <div className="wrap grid items-center gap-x-16 gap-y-10 py-16 md:py-24 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-          <figure data-reveal className="m-0">
-            <Seamless
-              src={mantlePair}
-              alt="A cracked Mickey Mantle card in a black glove next to the same card after restoration in a blue glove"
-              aspect="1446/902"
-              inset="4% 4% 3%"
-              sizes="(min-width: 1024px) 620px, 92vw"
-            >
-              <span className="ba-label left-4">Before</span>
-              <span className="ba-label right-4" style={{ background: "var(--sun)", color: "var(--ink)" }}>After</span>
-            </Seamless>
-          </figure>
-          <div data-reveal>
+        <div className="wrap py-14 md:py-20">
+          <div data-reveal className="flex flex-col items-start gap-x-10 gap-y-7 md:flex-row md:items-center md:justify-between">
             <h2 id="fit-heading" className="display-md text-white">Not sure which tier fits?</h2>
-            <Link href="/how-it-works" className={cta({ size: "lg", className: "mt-8" })}>
+            <Link href="/how-it-works" className={cta({ size: "lg", className: "shrink-0" })}>
               Learn what we can restore
               <ArrowRight aria-hidden className="size-5" strokeWidth={2} />
             </Link>

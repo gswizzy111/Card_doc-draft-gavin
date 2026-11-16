@@ -42,6 +42,7 @@ export const REELS: Reel[] = [
     title: "Tom Brady",
     href: "https://www.instagram.com/reel/DeKl_T2yC-8/",
     platform: "Instagram",
+    views: "100K Views",
     cover: brady,
     alt: "A 2000 Bowman Tom Brady rookie card in a PSA slab, held in black gloves",
   },

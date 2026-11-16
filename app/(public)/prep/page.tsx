@@ -98,9 +98,9 @@ export default async function PrepPage() {
       )}
 
       <section aria-labelledby="prep-pricing-heading" className="surface-chalk">
-        <div className="wrap pt-12 pb-16 md:pt-20 md:pb-24">
+        <div className="wrap pt-6 pb-16 md:pt-10 md:pb-24">
           {/* Header, with the cleaning warning and the Bulbasaur Delta Species photo */}
-          <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 gap-y-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+          <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-16 gap-y-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)]">
             <div>
               <PageHero
                 eyebrow="Prep Service"
@@ -108,11 +108,12 @@ export default async function PrepPage() {
                 lines={["Get Your Cards", "Grade-Ready"]}
                 lead={<>We surface-clean and prep your cards so they&apos;re submission-ready. Graders make their own call, so no grade is ever guaranteed.</>}
               />
-              <TrustPills align="start" className="hero-in mt-8" />
+              <TrustPills align="start" className="hero-in mt-8 hidden md:block" />
             </div>
             {/* The warning, then the Ditto (Bulbasaur, EX Delta Species) photo. */}
-            <figure className="hero-in mx-auto w-full max-w-[22rem] lg:max-w-none">
-              <h2 className="caps font-display text-[clamp(1.75rem,6.5vw,2.375rem)] font-black leading-[0.95] tracking-[0.005em] text-ink [text-wrap:balance]">
+            {/* Side by side and compact, so the prices start in the first screen. */}
+            <figure className="hero-in m-0 grid w-full grid-cols-[minmax(0,1fr)_7.5rem] items-center gap-x-5 sm:grid-cols-[minmax(0,1fr)_9.5rem] lg:grid-cols-[minmax(0,1fr)_11rem]">
+              <h2 className="caps font-display text-[clamp(1.5rem,6vw,2.125rem)] font-black leading-[0.95] tracking-[0.005em] text-ink [text-wrap:balance]">
                 <span className="mb-3 block h-1.5 w-14 rounded-full bg-sun" aria-hidden />
                 DONT LEAVE <span className="text-cobalt">DIRT or RESIDUE</span> on your card before Grading!
               </h2>
@@ -123,13 +124,13 @@ export default async function PrepPage() {
                 tilt={2.5}
                 lift
                 priority
-                sizes="(min-width: 1024px) 384px, 352px"
-                className="mt-6 w-full"
+                sizes="(min-width: 1024px) 176px, 152px"
+                className="w-full"
               />
             </figure>
           </div>
 
-          <div className="mt-14 grid gap-10 md:mt-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
+          <div className="mt-8 grid gap-10 md:mt-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
             {/* Pricing, per number of cards (bulk pricing, lib/bulk-pricing.ts), as on the Restorations page */}
             <BulkSwitch stacked note="Bulk pricing is applied automatically at checkout to every card. Add-ons and shipping aren't discounted.">
               <div className="overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_var(--line),var(--panel-shadow)]">
@@ -267,6 +268,8 @@ export default async function PrepPage() {
               </div>
             </div>
           </div>
+          {/* Phones: the trust facts follow the prices, as on the Restorations page. */}
+          <TrustPills align="start" className="mt-10 md:hidden" />
         </div>
       </section>
 
