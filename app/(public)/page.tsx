@@ -217,8 +217,8 @@ export default function HomePage() {
                 <BeforeAfter
                   before={gyaradosBefore}
                   after={gyaradosAfter}
-                  beforeAlt="A Gyarados holo card before restoration, creased along the top and dull across the holo"
-                  afterAlt="The same Gyarados card after restoration"
+                  beforeAlt="Close-up of a Gyarados holo card before restoration: a crease runs from the top edge through the name bar into the artwork, and the colors are dull"
+                  afterAlt="The same corner of the Gyarados card after restoration: the crease is gone and the colors are bright"
                   sizes="(min-width: 1280px) 500px, (min-width: 1024px) 432px, (min-width: 640px) 448px, 92vw"
                   priority
                 />
