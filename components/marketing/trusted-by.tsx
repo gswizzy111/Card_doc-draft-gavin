@@ -1,73 +1,63 @@
 import { ArrowUpRight } from "lucide-react";
+import { Marquee } from "@/components/brand";
 import { TRUSTED_BY, type TrustedPage } from "@/lib/trusted-by";
 import { cn } from "@/lib/utils";
 
-/** One person as an ink nameplate: name, role, handle, followers and the platform tag. */
-function Nameplate({ page, i }: { page: TrustedPage; i: number }) {
+/** One person on the belt: name, what they're known for, handle and followers, linking to their page. */
+function Person({ page }: { page: TrustedPage }) {
   return (
-    <li data-reveal style={{ transitionDelay: `${i * 90}ms` }} className="min-w-0">
-      <a
-        href={page.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-[18px] bg-ink p-6 text-white shadow-[var(--print-shadow)] transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:outline-cobalt motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:p-7"
-      >
-        {/* Brushed plate highlight along the top edge. */}
-        <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-        <span className="flex items-start justify-between gap-4">
-          <span className="min-w-0">
-            <span className="caps block font-display text-[34px] font-black leading-[0.9] tracking-[0.005em] md:text-[44px]">
-              {page.name}
-            </span>
-            {page.role && <span className="mt-2.5 block text-[15px] leading-snug text-on-dark-muted">{page.role}</span>}
+    <a
+      href={page.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-baseline gap-3 rounded-full px-1 py-1 text-white focus-visible:outline-sun"
+    >
+      <span className="caps font-display text-[26px] font-extrabold leading-none tracking-[0.01em] transition-colors duration-200 group-hover:text-sun md:text-[34px]">
+        {page.name}
+      </span>
+      <span className="flex items-baseline gap-2 text-[13px] leading-none md:text-sm">
+        {page.role && <span className="text-on-dark-muted">{page.role}</span>}
+        <span className="font-bold text-white/90">{page.handle}</span>
+        {page.followers && (
+          <span className="text-on-dark-muted">
+            <span className="font-display text-base font-black text-sun md:text-lg">{page.followers}</span> followers
           </span>
-          <span
-            aria-hidden
-            className="grid size-11 shrink-0 place-items-center rounded-full bg-white/10 text-white transition-colors duration-200 group-hover:bg-sun group-hover:text-ink"
-          >
-            <ArrowUpRight className="size-5" strokeWidth={1.75} />
-          </span>
-        </span>
-        <span className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/15 pt-4 text-sm">
-          <span className="font-bold text-white">{page.handle}</span>
-          {page.followers && (
-            <span className="text-on-dark-muted">
-              <span className="font-display text-lg font-black text-sun">{page.followers}</span> followers
-            </span>
-          )}
-          <span className="label-caps ml-auto rounded-[5px] bg-sun px-2 py-1 text-[13px] text-ink">{page.platform}</span>
-        </span>
-        <span className="sr-only">(opens in a new tab)</span>
-      </a>
-    </li>
+        )}
+        <ArrowUpRight aria-hidden className="size-4 self-center text-sun" strokeWidth={1.75} />
+      </span>
+      <span className="sr-only">(opens {page.platform} in a new tab)</span>
+    </a>
   );
 }
 
 /**
- * "Trusted by": people The Card Doc has restored cards for, as ink
- * nameplates (role, handle, followers and the platform), each linking to
- * their page. No photos or likeness. Renders nothing until lib/trusted-by.ts
- * has entries. `bare` drops the section wrapper so it can sit inside another
- * band (the home page's reviews).
+ * "Trusted by": the people The Card Doc has restored cards for, as an ink
+ * belt sliding the opposite way to the symptoms ticker above it. Each name
+ * links to their page. No photos or likeness. Renders nothing until
+ * lib/trusted-by.ts has entries.
  */
-export function TrustedBy({ bare = false, className = "" }: { bare?: boolean; className?: string }) {
+export function TrustedBy({ className = "" }: { className?: string }) {
   if (TRUSTED_BY.length === 0) return null;
 
-  const body = (
-    <div className={cn("grid gap-8 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:items-center lg:gap-14", className)}>
-      <h2 id="trusted-by" data-reveal className="display-md text-ink">
-        Trusted by
-      </h2>
-      <ul className={cn("grid gap-5", TRUSTED_BY.length > 1 && "md:grid-cols-2", TRUSTED_BY.length > 2 && "xl:grid-cols-3")}>
-        {TRUSTED_BY.map((page, i) => <Nameplate key={page.href} page={page} i={i} />)}
-      </ul>
-    </div>
-  );
-
-  if (bare) return body;
   return (
-    <section aria-labelledby="trusted-by" className="surface-chalk">
-      <div className="wrap py-16 md:py-24">{body}</div>
+    <section aria-labelledby="trusted-by" className={cn("surface-ink relative", className)}>
+      <div className="flex flex-col md:flex-row md:items-stretch">
+        <h2
+          id="trusted-by"
+          className="caps relative z-[2] flex shrink-0 items-center gap-2 bg-sun px-[var(--gut)] py-2 font-display text-lg font-black leading-none tracking-[0.02em] text-ink md:px-7 md:text-[22px] md:shadow-[18px_0_24px_-6px_rgb(13_18_51/0.9)]"
+        >
+          Trusted by
+        </h2>
+        <Marquee
+          reverse
+          tone="dark"
+          label="Trusted by"
+          speed={40}
+          className="min-w-0 flex-1 py-3 md:py-4"
+          items={TRUSTED_BY.map((page) => <Person key={page.href} page={page} />)}
+          separator={<span aria-hidden className="mx-7 block size-2 rotate-45 rounded-[2px] bg-sun md:mx-10" />}
+        />
+      </div>
     </section>
   );
 }

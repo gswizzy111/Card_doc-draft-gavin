@@ -272,6 +272,9 @@ export default function HomePage() {
         />
       </section>
 
+      {/* ── Trusted by: a second belt, sliding the other way ─────────── */}
+      <TrustedBy />
+
       {/* ── We do all cards. ──────────────────────────────────────────── */}
       <section aria-labelledby="all-cards-heading" className="surface-chalk">
         <div className="wrap grid items-start gap-x-16 gap-y-8 py-16 md:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -493,9 +496,6 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-16 border-t border-line pt-16">
-            <TrustedBy bare />
-          </div>
         </div>
       </section>
 

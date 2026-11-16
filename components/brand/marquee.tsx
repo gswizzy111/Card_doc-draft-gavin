@@ -13,6 +13,8 @@ export type MarqueeProps = {
   separator?: React.ReactNode;
   /** Also pause while a mouse is over the track (default true). Focus and the toggle always pause. */
   pauseOnHover?: boolean;
+  /** Slide the other way (left to right), e.g. a second belt under another. */
+  reverse?: boolean;
   /** Accessible name for the list, e.g. "Why collectors trust us". */
   label?: string;
   /** Hide both copies from screen readers (when the caller renders its own plain list). */
@@ -37,6 +39,7 @@ export function Marquee({
   speed = 38,
   separator,
   pauseOnHover = true,
+  reverse = false,
   label,
   decorative = false,
   tone = "light",
@@ -45,7 +48,7 @@ export function Marquee({
 }: MarqueeProps) {
   const [paused, setPaused] = useState(false);
   const row = (hidden: boolean) => (
-    <ul className="bm-marquee-list" aria-hidden={hidden || undefined} aria-label={hidden ? undefined : label}>
+    <ul className="bm-marquee-list" aria-hidden={hidden || undefined} inert={hidden || undefined} aria-label={hidden ? undefined : label}>
       {items.map((item, i) => (
         <Fragment key={i}>
           <li className={cn("bm-marquee-item", itemClassName)}>{item}</li>
@@ -64,6 +67,7 @@ export function Marquee({
         className="bm-marquee min-w-0 flex-1"
         data-pause={pauseOnHover ? "" : undefined}
         data-paused={paused ? "" : undefined}
+        data-reverse={reverse ? "" : undefined}
         aria-hidden={decorative || undefined}
         style={{ ["--bm-speed" as string]: `${speed}s` }}
       >

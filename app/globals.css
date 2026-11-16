@@ -924,6 +924,9 @@
   width: max-content;
   animation: bm-slide var(--bm-speed, 38s) linear infinite;
 }
+.bm-marquee[data-reverse] .bm-marquee-track {
+  animation-direction: reverse;
+}
 .bm-marquee[data-pause] .bm-marquee-track:hover,
 .bm-marquee:focus-within .bm-marquee-track,
 .bm-marquee[data-paused] .bm-marquee-track {
