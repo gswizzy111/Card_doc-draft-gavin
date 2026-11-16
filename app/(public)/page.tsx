@@ -200,7 +200,7 @@ export default function HomePage() {
       <section aria-labelledby="hero-heading" className="surface-cobalt relative isolate overflow-hidden">
         <span aria-hidden className="halftone-dots -right-[10%] -top-[18%] h-[120%] w-[70%]" />
         <span aria-hidden className="halftone-dots -bottom-[30%] -left-[20%] h-[70%] w-[60%] opacity-70" />
-        <div className="wrap grid gap-x-14 pt-7 pb-16 sm:pt-10 md:pt-14 md:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] lg:grid-rows-[auto_1fr] lg:pt-16 lg:pb-24 xl:grid-cols-[minmax(0,1fr)_minmax(0,31rem)] xl:gap-x-20">
+        <div className="wrap grid gap-x-14 pt-7 pb-16 sm:pt-10 md:pt-14 md:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,33rem)] lg:grid-rows-[auto_1fr] lg:pt-16 lg:pb-24 xl:grid-cols-[minmax(0,1fr)_minmax(0,38rem)] xl:gap-x-20">
           <h1
             id="hero-heading"
             className="hero-in font-display text-[clamp(3.25rem,14.2vw,6rem)] font-black leading-[0.86] tracking-[-0.012em] lg:col-start-1 lg:row-start-1 lg:text-[clamp(4.25rem,6.6vw,6.5rem)]"
@@ -211,7 +211,7 @@ export default function HomePage() {
 
           {/* The Gyarados, drag to compare, in its one-touch holder. Both
               photos are aligned to the same angle and crop. */}
-          <div className="relative mx-auto mt-7 w-full max-w-[25rem] sm:mt-10 sm:max-w-[28rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-2 lg:max-w-none lg:self-start">
+          <div className="relative mx-auto mt-7 w-full max-w-[30rem] sm:mt-10 sm:max-w-[34rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-2 lg:max-w-none lg:self-start">
             <div className="hero-in relative z-[1] lg:rotate-[1.5deg]" style={{ ["--d" as string]: 120 }}>
               <AcrylicHolder title="Gyarados" detail="Delta Species">
                 <BeforeAfter
@@ -219,7 +219,7 @@ export default function HomePage() {
                   after={gyaradosAfter}
                   beforeAlt="Close-up of a Gyarados holo card before restoration: a crease runs from the top edge through the name bar into the artwork, and the colors are dull"
                   afterAlt="The same corner of the Gyarados card after restoration: the crease is gone and the colors are bright"
-                  sizes="(min-width: 1280px) 500px, (min-width: 1024px) 432px, (min-width: 640px) 448px, 92vw"
+                  sizes="(min-width: 1280px) 608px, (min-width: 1024px) 528px, (min-width: 640px) 544px, 96vw"
                   priority
                 />
               </AcrylicHolder>
